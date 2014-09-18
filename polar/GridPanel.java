@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
@@ -20,7 +19,7 @@ import javax.swing.JPanel;
 
 public class GridPanel extends JLayeredPane{
 	
-	private JLabel coord_label;
+	private CrossPoint nearestCrossPoint;
 	
 	private int center_x, center_y, slice, width, height, radius;
 
@@ -34,7 +33,7 @@ public class GridPanel extends JLayeredPane{
 	private int px, py;
 
 	private Dimension size;
-	private ArrayList<Point> points = new ArrayList<Point>();
+	private ArrayList<CrossPoint> points = new ArrayList<CrossPoint>();
 	
 	//Radian values for diagonals
 	private final double RADIAN1 = Math.PI / 6.0;
@@ -67,17 +66,23 @@ public class GridPanel extends JLayeredPane{
 				int mouse_x = e.getX();
 				int mouse_y = e.getY();
 				System.out.println("(" + mouse_x + ", " + mouse_y + ")");
-				NodeLabel x = new NodeLabel("X", nearestPoint(mouse_x, mouse_y));
-				grid.add(x, 1);
+				nearestCrossPoint = nearestPoint(mouse_x, mouse_y);
+				if (!nearestCrossPoint.isMarked()) {
+					nearestCrossPoint.setMarked(true);
+					NodeLabel x = new NodeLabel("X", nearestPoint(mouse_x, mouse_y));
+					grid.add(x, 1);
+				} else {
+					System.out.println("ALREADY MARKED");
+				}
 			}
 		});
 	}
 	
-	public Point nearestPoint(int x, int y) {
-		Point nearest = new Point();
+	public CrossPoint nearestPoint(int x, int y) {
+		CrossPoint nearest = new CrossPoint();
 		double min_distance = Double.MAX_VALUE;
 		double current_distance;
-		for (Point p : points) {
+		for (CrossPoint p : points) {
 			current_distance = p.distance(x,y);
 			if ( current_distance < min_distance) {
 				min_distance = current_distance;
@@ -102,7 +107,7 @@ public class GridPanel extends JLayeredPane{
 		center_y = (int) Math.ceil(height / 2.0);
 		
 		//Draw circles and note crosspoints
-		points.clear();
+		//points.clear();
 		for (int i = 1; i <= 4; i++) {
 			radius += slice;
 			for (Point2D.Double radian : RADIANS) {
@@ -111,15 +116,15 @@ public class GridPanel extends JLayeredPane{
 				py = (int) Math.ceil( center_y + ( radius * radian.y) );
 
 				//Each radian has two associated crosspoints
-				points.add(new Point(px, py));
-				points.add(new Point(center_x-(px-center_x), center_y-(py-center_y)));
+				points.add(new CrossPoint(px, py));
+				points.add(new CrossPoint(center_x-(px-center_x), center_y-(py-center_y)));
 			}
 			
 			//Vertical/horizontal crosspoints
-			points.add(new Point(center_x-radius, center_y));
-			points.add(new Point(center_x+radius, center_y));
-			points.add(new Point(center_x, center_y-radius));
-			points.add(new Point(center_x, center_y+radius));
+			points.add(new CrossPoint(center_x-radius, center_y));
+			points.add(new CrossPoint(center_x+radius, center_y));
+			points.add(new CrossPoint(center_x, center_y-radius));
+			points.add(new CrossPoint(center_x, center_y+radius));
 			
 			g2.draw(new Ellipse2D.Double(
 					center_x-radius, 
