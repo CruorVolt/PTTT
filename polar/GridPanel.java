@@ -1,7 +1,9 @@
 package polar;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
@@ -10,9 +12,10 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
-public class GridPanel extends JPanel{
+public class GridPanel extends JLayeredPane{
 	
 	private JLabel coord_label;
 	
@@ -23,25 +26,37 @@ public class GridPanel extends JPanel{
 	
 	public GridPanel() {
 		
+		setLayout(null);
 		Graphics2D g2 = (Graphics2D) this.getGraphics();
-		
-		this.addMouseListener( new MouseAdapter() {
+		GridPanel grid = this;
+		grid.addMouseListener( new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int mouse_x = e.getX();
 				int mouse_y = e.getY();
 				System.out.println("(" + mouse_x + ", " + mouse_y + ")");
-
-			g2.draw(new Ellipse2D.Double( mouse_x-5, mouse_y-5, 10, 10));
-				
+				JLabel x = createPoint("X", mouse_x, mouse_y);
+				grid.add(x, 1);
 			}
 		});
 	}
 	
+	private JLabel createPoint(String player, int x, int y) {
+		JLabel label = new JLabel(player);
+		label.setVerticalAlignment(JLabel.TOP);
+		label.setHorizontalAlignment(JLabel.CENTER);
+		label.setOpaque(false);
+		label.setForeground(Color.RED);
+		label.setFont(new Font("Arial", Font.BOLD, 20));
+		label.setBounds(x-10, y-10, 20, 20);
+		return label;
+	}
+	
 	@Override
-	public void paint(Graphics g) {
+	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setStroke(new BasicStroke(2));
+		g2.setColor(Color.GRAY);
 		
 		radius = 0;
 		size = this.getSize();

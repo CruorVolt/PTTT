@@ -41,7 +41,7 @@ public class GameWindow {
 		gridBagLayout.rowWeights = new double[]{1.0};
 		frame.getContentPane().setLayout(gridBagLayout);
 		
-		JPanel game_panel = new GridPanel();
+		GridPanel game_panel = new GridPanel();
 		game_panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		GridBagConstraints gbc_game_panel = new GridBagConstraints();
 		gbc_game_panel.insets = new Insets(0, 0, 5, 0);
