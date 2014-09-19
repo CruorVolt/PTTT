@@ -12,6 +12,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -19,7 +20,7 @@ import javax.swing.JPanel;
 
 public class GridPanel extends JLayeredPane{
 	
-	private CrossPoint nearestCrossPoint;
+	private CrossPointLabel nearestCrossPoint;
 	
 	private int center_x, center_y, slice, width, height, radius;
 
@@ -33,7 +34,7 @@ public class GridPanel extends JLayeredPane{
 	private int px, py;
 
 	private Dimension size;
-	private ArrayList<CrossPoint> points = new ArrayList<CrossPoint>();
+	private CrossPointLabel[] points = new CrossPointLabel[48];
 	
 	//Radian values for diagonals
 	private final double RADIAN1 = Math.PI / 6.0;
@@ -57,10 +58,11 @@ public class GridPanel extends JLayeredPane{
 	
 	public GridPanel() {
 		
-		setLayout(null);
-		Graphics2D g2 = (Graphics2D) this.getGraphics();
-		GridPanel grid = this;
-		grid.addMouseListener( new MouseAdapter() {
+		for (int index = 0; index < 48; index ++) {
+			points[index] = new CrossPointLabel();
+		}
+		
+		addMouseListener( new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int mouse_x = e.getX();
@@ -70,7 +72,7 @@ public class GridPanel extends JLayeredPane{
 				if (!nearestCrossPoint.isMarked()) {
 					nearestCrossPoint.setMarked(true);
 					NodeLabel x = new NodeLabel("X", nearestPoint(mouse_x, mouse_y));
-					grid.add(x, 1);
+					add(x, 1);
 				} else {
 					System.out.println("ALREADY MARKED");
 				}
@@ -78,11 +80,11 @@ public class GridPanel extends JLayeredPane{
 		});
 	}
 	
-	public CrossPoint nearestPoint(int x, int y) {
-		CrossPoint nearest = new CrossPoint();
+	public CrossPointLabel nearestPoint(int x, int y) {
+		CrossPointLabel nearest = new CrossPointLabel();
 		double min_distance = Double.MAX_VALUE;
 		double current_distance;
-		for (CrossPoint p : points) {
+		for (CrossPointLabel p : points) {
 			current_distance = p.distance(x,y);
 			if ( current_distance < min_distance) {
 				min_distance = current_distance;
@@ -94,6 +96,30 @@ public class GridPanel extends JLayeredPane{
 	
 	@Override
 	public void paintComponent(Graphics g) {
+		
+		
+		// --------------------------------------------------------
+		final GridPanel grid = this;
+		double radian = Math.PI / 6.0;
+		double current_radian = 0;
+		int index = 0;
+		
+		setLayout(null);
+		
+		//Setup 48 playable cross-points
+		for (int i = 1; i <= 4; i++) {
+			for (int j = 1; j <= 12; j++) {
+				System.out.println(getSize().toString());
+				points[index].setLocation(getSize(), current_radian, i, 0.1);
+				current_radian += radian;
+				index++;
+			}
+			current_radian = 0;
+		}
+		
+		// --------------------------------------------------------
+		
+		
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setStroke(new BasicStroke(2));
 		g2.setColor(Color.GRAY);
@@ -102,30 +128,14 @@ public class GridPanel extends JLayeredPane{
 		size = this.getSize();
 		width = size.width;
 		height = size.height;
+		//Each 'donut' is 1/10th of the screen's width
 		slice = (int) Math.ceil(width/10);
 		center_x = (int) Math.ceil(width / 2.0);
 		center_y = (int) Math.ceil(height / 2.0);
 		
-		//Draw circles and note crosspoints
-		//points.clear();
+		//Draw layered circles
 		for (int i = 1; i <= 4; i++) {
 			radius += slice;
-			for (Point2D.Double radian : RADIANS) {
-
-				px = (int) Math.ceil( center_x + ( radius * radian.x) );
-				py = (int) Math.ceil( center_y + ( radius * radian.y) );
-
-				//Each radian has two associated crosspoints
-				points.add(new CrossPoint(px, py));
-				points.add(new CrossPoint(center_x-(px-center_x), center_y-(py-center_y)));
-			}
-			
-			//Vertical/horizontal crosspoints
-			points.add(new CrossPoint(center_x-radius, center_y));
-			points.add(new CrossPoint(center_x+radius, center_y));
-			points.add(new CrossPoint(center_x, center_y-radius));
-			points.add(new CrossPoint(center_x, center_y+radius));
-			
 			g2.draw(new Ellipse2D.Double(
 					center_x-radius, 
 					center_y-radius, 
