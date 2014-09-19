@@ -33,7 +33,7 @@ public class GameWindow {
 	private void initialize() {
 		frame = new JFrame("Polar Tic-Tac-Toe");
 		frame.setResizable(true);
-		frame.setBounds(100, 100, 800, 600);
+		frame.setBounds(100, 100, 1000, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0};

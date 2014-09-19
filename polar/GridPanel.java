@@ -60,24 +60,9 @@ public class GridPanel extends JLayeredPane{
 		
 		for (int index = 0; index < 48; index ++) {
 			points[index] = new CrossPointLabel();
+			add(points[index]);
 		}
 		
-		addMouseListener( new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				int mouse_x = e.getX();
-				int mouse_y = e.getY();
-				System.out.println("(" + mouse_x + ", " + mouse_y + ")");
-				nearestCrossPoint = nearestPoint(mouse_x, mouse_y);
-				if (!nearestCrossPoint.isMarked()) {
-					nearestCrossPoint.setMarked(true);
-					NodeLabel x = new NodeLabel("X", nearestPoint(mouse_x, mouse_y));
-					add(x, 1);
-				} else {
-					System.out.println("ALREADY MARKED");
-				}
-			}
-		});
 	}
 	
 	public CrossPointLabel nearestPoint(int x, int y) {
@@ -97,7 +82,6 @@ public class GridPanel extends JLayeredPane{
 	@Override
 	public void paintComponent(Graphics g) {
 		
-		
 		// --------------------------------------------------------
 		final GridPanel grid = this;
 		double radian = Math.PI / 6.0;
@@ -116,9 +100,7 @@ public class GridPanel extends JLayeredPane{
 			}
 			current_radian = 0;
 		}
-		
 		// --------------------------------------------------------
-		
 		
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setStroke(new BasicStroke(2));
