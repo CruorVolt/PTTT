@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
@@ -18,7 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
-public class GridPanel extends JLayeredPane{
+public class GridPanel extends JLayeredPane implements ComponentListener{
 	
 	private CrossPointLabel nearestCrossPoint;
 	
@@ -57,14 +59,35 @@ public class GridPanel extends JLayeredPane{
 	};
 	
 	public GridPanel() {
-		
 		for (int index = 0; index < 48; index ++) {
 			points[index] = new CrossPointLabel();
 			add(points[index]);
 		}
-		
+		addComponentListener(this);
 	}
 	
+	public void componentResized(ComponentEvent e) { 
+		double radian = Math.PI / 6.0;
+		double current_radian = 0;
+		int index = 0;
+		
+		// The cross-points need to be repositioned whenever the panel changes size
+		for (int i = 1; i <= 4; i++) {
+			for (int j = 1; j <= 12; j++) {
+				points[index].setLocation(getSize(), current_radian, i, 0.1);
+				current_radian += radian;
+				index++;
+			}
+			current_radian = 0;
+		}
+	}
+	
+	public void componentMoved(ComponentEvent e) { }
+
+	public void componentShown(ComponentEvent e) { }
+
+	public void componentHidden(ComponentEvent e) { }
+
 	public CrossPointLabel nearestPoint(int x, int y) {
 		CrossPointLabel nearest = new CrossPointLabel();
 		double min_distance = Double.MAX_VALUE;
@@ -82,25 +105,6 @@ public class GridPanel extends JLayeredPane{
 	@Override
 	public void paintComponent(Graphics g) {
 		
-		// --------------------------------------------------------
-		final GridPanel grid = this;
-		double radian = Math.PI / 6.0;
-		double current_radian = 0;
-		int index = 0;
-		
-		setLayout(null);
-		
-		//Setup 48 playable cross-points
-		for (int i = 1; i <= 4; i++) {
-			for (int j = 1; j <= 12; j++) {
-				System.out.println(getSize().toString());
-				points[index].setLocation(getSize(), current_radian, i, 0.1);
-				current_radian += radian;
-				index++;
-			}
-			current_radian = 0;
-		}
-		// --------------------------------------------------------
 		
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setStroke(new BasicStroke(2));
@@ -147,5 +151,6 @@ public class GridPanel extends JLayeredPane{
 		g2.draw(new Line2D.Double(r4x,r4y,center_x-(r4x-center_x),center_y-(r4y-center_y)));
 		
 	}
+
 
 }

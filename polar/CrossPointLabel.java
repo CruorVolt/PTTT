@@ -19,10 +19,11 @@ public class CrossPointLabel extends JLabel{
 		
 		marked = false;
 		
-		setText("X");
-		setVerticalAlignment(JLabel.TOP);
+		setText("O");
+		setVerticalAlignment(JLabel.CENTER);
 		setHorizontalAlignment(JLabel.CENTER);
 		setForeground(Color.RED);
+		setBackground(Color.BLUE);
 		setFont(new Font("Arial", Font.BOLD, 20));
 		setLocation( size, radian, layer, slice);
 		setMouseAction();
@@ -35,6 +36,7 @@ public class CrossPointLabel extends JLabel{
 		setVerticalAlignment(JLabel.TOP);
 		setHorizontalAlignment(JLabel.CENTER);
 		setForeground(Color.RED);
+		setBackground(Color.BLUE);
 		setFont(new Font("Arial", Font.BOLD, 20));
 		location = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
 		marked = false;
@@ -45,12 +47,12 @@ public class CrossPointLabel extends JLabel{
 		this.addMouseListener( new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.out.println("CLICK!");
 				if (marked) {
 					setText("");
 					marked = false;
 				} else {
-					setText("X");
+					setText("O");
+					//setOpaque(true);
 					marked = true;
 				}
 			}
@@ -67,7 +69,7 @@ public class CrossPointLabel extends JLabel{
 		int py = (int) Math.ceil( center_y + ( radius * Math.sin(radian)));
 		
 		location = new Point(px, py);
-		setBounds(location.x-22, location.y-11, 44, 22);
+		setBounds(location.x-12, location.y-12, 24, 24);
 		repaint();
 	
 	}
