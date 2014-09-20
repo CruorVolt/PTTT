@@ -23,7 +23,7 @@ public class CrossPointLabel extends JLabel{
 		setVerticalAlignment(JLabel.CENTER);
 		setHorizontalAlignment(JLabel.CENTER);
 		setForeground(Color.RED);
-		setBackground(Color.BLUE);
+		setBackground(Color.GRAY);
 		setFont(new Font("Arial", Font.BOLD, 20));
 		setLocation( size, radian, layer, slice);
 		setMouseAction();
@@ -36,7 +36,7 @@ public class CrossPointLabel extends JLabel{
 		setVerticalAlignment(JLabel.TOP);
 		setHorizontalAlignment(JLabel.CENTER);
 		setForeground(Color.RED);
-		setBackground(Color.BLUE);
+		setBackground(Color.GRAY);
 		setFont(new Font("Arial", Font.BOLD, 20));
 		location = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
 		marked = false;
@@ -44,7 +44,9 @@ public class CrossPointLabel extends JLabel{
 	}
 	
 	public void setMouseAction() {
+		CrossPointLabel grid = this;
 		this.addMouseListener( new MouseAdapter() {
+			
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (marked) {
@@ -56,6 +58,19 @@ public class CrossPointLabel extends JLabel{
 					marked = true;
 				}
 			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				CrossPointLabel.this.setOpaque(true);
+				CrossPointLabel.this.repaint();
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				CrossPointLabel.this.setOpaque(false);
+				CrossPointLabel.this.repaint();
+			}
+			
 		});
 	}
 	
