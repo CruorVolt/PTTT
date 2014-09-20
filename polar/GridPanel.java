@@ -3,26 +3,16 @@ package polar;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
 
 public class GridPanel extends JLayeredPane implements ComponentListener{
-	
-	private CrossPointLabel nearestCrossPoint;
 	
 	private int center_x, center_y, slice, width, height, radius;
 
@@ -31,9 +21,6 @@ public class GridPanel extends JLayeredPane implements ComponentListener{
 
 	// Y values for line segments
 	private int r1y, r2y, r3y, r4y;
-
-	// Coordinates for crosspoints
-	private int px, py;
 
 	private Dimension size;
 	private CrossPointLabel[] points = new CrossPointLabel[48];
@@ -105,7 +92,6 @@ public class GridPanel extends JLayeredPane implements ComponentListener{
 	@Override
 	public void paintComponent(Graphics g) {
 		
-		
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setStroke(new BasicStroke(2));
 		g2.setColor(Color.GRAY);
@@ -122,12 +108,7 @@ public class GridPanel extends JLayeredPane implements ComponentListener{
 		//Draw layered circles
 		for (int i = 1; i <= 4; i++) {
 			radius += slice;
-			g2.draw(new Ellipse2D.Double(
-					center_x-radius, 
-					center_y-radius, 
-					radius*2, 
-					radius*2
-			));
+			g2.draw(new Ellipse2D.Double( center_x-radius, center_y-radius, radius*2, radius*2));
 		}
 
 		// Draw vertical and horizontal lines

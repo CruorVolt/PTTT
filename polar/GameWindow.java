@@ -3,10 +3,15 @@ package polar;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+
 import java.awt.GridBagLayout;
+
 import javax.swing.JPanel;
+
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+
 import javax.swing.border.BevelBorder;
 
 public class GameWindow {
@@ -33,7 +38,8 @@ public class GameWindow {
 	private void initialize() {
 		frame = new JFrame("Polar Tic-Tac-Toe");
 		frame.setResizable(true);
-		frame.setBounds(100, 100, 1000, 600);
+		frame.setMinimumSize(new Dimension(600,400));
+		frame.setBounds(100, 100, 1000, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0};
