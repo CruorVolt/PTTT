@@ -5,6 +5,7 @@ public class Game {
 	private Play play1;
 	private Play play2;
 	private Map map;
+	private boolean notWin;
 	private boolean turn2; // false when player1's turn, true when player2's turn
 	
 	public Game(String player1, String player2) {
@@ -14,6 +15,17 @@ public class Game {
 		play1 = new ManualPlay(playerX);
 		play2 = new ManualPlay(playerY);
 		turn2 = false;
+		notWin = true;
+	}
+	public void setPlayStyle(Play style1, Play style2) {
+		play1 = style1;
+		play2 = style2;
+	}
+	// start the game.
+	public void begin() {
+		while(notWin) {
+			nextTurn();
+		}
 	}
 	public Map getMap() {
 		return map;
