@@ -1,6 +1,6 @@
 package polar;
 public class Move {
-	Move[] adjMoves;
+	Move[] adjMoves = new Move[8];
 	char player;
 	PolarCoordinate loc;
 	public Move(char player, PolarCoordinate loc) {

@@ -14,6 +14,8 @@ public class CrossPointLabel extends JLabel{
 	private boolean marked;
 	private Point location;
 	private double radian;
+	private PolarCoordinate gameCoordinate;
+	private Game game;
 
 	public CrossPointLabel (Dimension size, double radian, int layer, double slice) {
 		
@@ -31,12 +33,14 @@ public class CrossPointLabel extends JLabel{
 	}
 	
 	//A dummy label initialized as far as possible from points on the grid
-	public CrossPointLabel () {
+	public CrossPointLabel (Game g, PolarCoordinate c) {
+		game = g;
+		gameCoordinate = c;
 		setText("");
 		setVerticalAlignment(JLabel.TOP);
 		setHorizontalAlignment(JLabel.CENTER);
 		setForeground(Color.RED);
-		setBackground(Color.GRAY);
+		setBackground(Color.LIGHT_GRAY);
 		setFont(new Font("Arial", Font.BOLD, 20));
 		location = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
 		marked = false;
@@ -49,13 +53,14 @@ public class CrossPointLabel extends JLabel{
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (marked) {
-					setText("");
-					marked = false;
+				boolean turn = game.nextTurn(new UnTestedCoordinates(gameCoordinate.getX(), gameCoordinate.getY()));
+				if (turn) {
+					setText(game.currentPlayer().toString());
+					String string = "New Move: (" + gameCoordinate.getX() + "," + gameCoordinate.getY() + ")";
+					System.out.println(string);
 				} else {
-					setText("O");
-					//setOpaque(true);
-					marked = true;
+					//Turn failed
+					System.out.println("Turn Failed");
 				}
 			}
 			

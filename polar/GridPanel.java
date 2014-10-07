@@ -45,12 +45,21 @@ public class GridPanel extends JLayeredPane implements ComponentListener{
 			new Point2D.Double(RADIAN4_X, RADIAN4_Y)
 	};
 	
-	public GridPanel() {
-		for (int index = 0; index < 48; index ++) {
-			points[index] = new CrossPointLabel();
-			add(points[index]);
+	public GridPanel(Game game) throws BadCoordinateException {
+		int index = 0;
+		// Which ring layer of the grid the point belongs to
+		for (int x = 1; x <= 4; x++) {
+			// Which radian of the grid the point belongs to
+			for (int y = 0; y <= 11; y++) {
+				points[index] = new CrossPointLabel(game, new PolarCoordinate(new UnTestedCoordinates(x,y)));
+				add(points[index]);
+				index++;
+			}
 		}
 		addComponentListener(this);
+		
+		//new stuff
+		Map map = game.getMap();
 	}
 	
 	public void componentResized(ComponentEvent e) { 
@@ -75,8 +84,9 @@ public class GridPanel extends JLayeredPane implements ComponentListener{
 
 	public void componentHidden(ComponentEvent e) { }
 
+	// Unused unless we go back to raw Swing coordinate for finding points
 	public CrossPointLabel nearestPoint(int x, int y) {
-		CrossPointLabel nearest = new CrossPointLabel();
+		CrossPointLabel nearest = new CrossPointLabel(null, null);
 		double min_distance = Double.MAX_VALUE;
 		double current_distance;
 		for (CrossPointLabel p : points) {

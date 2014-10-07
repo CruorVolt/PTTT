@@ -32,10 +32,12 @@ public class GameWindow {
 	}
 
 	public GameWindow() {
-		initialize();
+		Game game = new Game("Player1", "Player2");
+		initialize(game);
+		//game.begin();
 	}
 
-	private void initialize() {
+	private void initialize(Game game) {
 		frame = new JFrame("Polar Tic-Tac-Toe");
 		frame.setResizable(true);
 		frame.setMinimumSize(new Dimension(600,400));
@@ -48,14 +50,18 @@ public class GameWindow {
 		gridBagLayout.rowWeights = new double[]{1.0};
 		frame.getContentPane().setLayout(gridBagLayout);
 		
-		GridPanel game_panel = new GridPanel();
-		game_panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		GridBagConstraints gbc_game_panel = new GridBagConstraints();
-		gbc_game_panel.insets = new Insets(0, 0, 5, 0);
-		gbc_game_panel.fill = GridBagConstraints.BOTH;
-		gbc_game_panel.gridx = 0;
-		gbc_game_panel.gridy = 0;
-		frame.getContentPane().add(game_panel, gbc_game_panel);
+		try {
+			GridPanel game_panel = new GridPanel(game);
+			game_panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+			GridBagConstraints gbc_game_panel = new GridBagConstraints();
+			gbc_game_panel.insets = new Insets(0, 0, 5, 0);
+			gbc_game_panel.fill = GridBagConstraints.BOTH;
+			gbc_game_panel.gridx = 0;
+			gbc_game_panel.gridy = 0;
+			frame.getContentPane().add(game_panel, gbc_game_panel);
+		} catch (BadCoordinateException e) {
+			System.out.println("Could not construct PolarCoordinates correctly");
+		}
 		
 		JPanel player_one_panel = new JPanel();
 		player_one_panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));

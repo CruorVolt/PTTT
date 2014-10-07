@@ -1,12 +1,12 @@
 package polar;
 public class Player {
-	private char token;   // token used in the game, ie. X or O.
+	private Character token;   // token used in the game, ie. X or O.
 	private boolean turn; // true if taking even turns, false if taking odd turns.
 	private Game game;
 	private String name;
 	
 	
-	public Player(char token, boolean turn, String name, Game game) {
+	public Player(Character token, boolean turn, String name, Game game) {
 		this.token = token;
 		this.turn = turn;
 		this.game = game;
@@ -23,4 +23,9 @@ public class Player {
 			return null;
 		}
 	}
+	
+	public String toString() {
+		return token.toString();
+	}
+
 }
