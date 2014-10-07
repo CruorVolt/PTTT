@@ -1,4 +1,4 @@
-package polar;
+package polar.game;
 
 public class start {
 

@@ -1,4 +1,8 @@
-package polar;
+package polar.gui;
+
+import polar.game.Game;
+import polar.game.PolarCoordinate;
+import polar.game.UnTestedCoordinates;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,9 +15,9 @@ import javax.swing.JLabel;
 
 public class CrossPointLabel extends JLabel{
 	
+	private static final long serialVersionUID = 1L;
 	private boolean marked;
 	private Point location;
-	private double radian;
 	private PolarCoordinate gameCoordinate;
 	private Game game;
 
@@ -48,7 +52,6 @@ public class CrossPointLabel extends JLabel{
 	}
 	
 	public void setMouseAction() {
-		CrossPointLabel grid = this;
 		this.addMouseListener( new MouseAdapter() {
 			
 			@Override

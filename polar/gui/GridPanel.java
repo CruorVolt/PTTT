@@ -1,4 +1,4 @@
-package polar;
+package polar.gui;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -9,11 +9,18 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
+
 import javax.swing.JLayeredPane;
+
+import polar.game.Game;
+import polar.game.PolarCoordinate;
+import polar.game.BadCoordinateException;
+import polar.game.UnTestedCoordinates;
 
 public class GridPanel extends JLayeredPane implements ComponentListener{
 	
+	private static final long serialVersionUID = 1L;
+
 	private int center_x, center_y, slice, width, height, radius;
 
 	// X values for line segments
@@ -38,12 +45,6 @@ public class GridPanel extends JLayeredPane implements ComponentListener{
 	private final double RADIAN4 = 5.0 * Math.PI / 6.0;
 	private final double RADIAN4_X = Math.cos(RADIAN4);
 	private final double RADIAN4_Y = Math.sin(RADIAN4);
-	private final Point2D.Double[] RADIANS = {
-			new Point2D.Double(RADIAN1_X, RADIAN1_Y),
-			new Point2D.Double(RADIAN2_X, RADIAN2_Y),
-			new Point2D.Double(RADIAN3_X, RADIAN3_Y),
-			new Point2D.Double(RADIAN4_X, RADIAN4_Y)
-	};
 	
 	public GridPanel(Game game) throws BadCoordinateException {
 		int index = 0;
@@ -57,9 +58,6 @@ public class GridPanel extends JLayeredPane implements ComponentListener{
 			}
 		}
 		addComponentListener(this);
-		
-		//new stuff
-		Map map = game.getMap();
 	}
 	
 	public void componentResized(ComponentEvent e) { 

@@ -1,22 +1,23 @@
-package polar;
+package polar.gui;
+
+import polar.game.Game;
+import polar.game.BadCoordinateException;
 
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-
 import java.awt.GridBagLayout;
-
-import javax.swing.JPanel;
-
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
 public class GameWindow {
 
 	private JFrame frame;
+	private Game game;
+	private JPanel player_one_panel, player_two_panel;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -32,12 +33,13 @@ public class GameWindow {
 	}
 
 	public GameWindow() {
-		Game game = new Game("Player1", "Player2");
+		game = new Game("Player1", "Player2");
 		initialize(game);
-		//game.begin();
 	}
 
 	private void initialize(Game game) {
+		String[] players = choosePlayers();
+
 		frame = new JFrame("Polar Tic-Tac-Toe");
 		frame.setResizable(true);
 		frame.setMinimumSize(new Dimension(600,400));
@@ -63,7 +65,22 @@ public class GameWindow {
 			System.out.println("Could not construct PolarCoordinates correctly");
 		}
 		
-		JPanel player_one_panel = new JPanel();
+		switch (players[0]) {
+		case "Human":
+			player_one_panel = new HumanPlayerPanel(game);
+			break;
+		default:
+			System.out.println("No Player of that type found!");
+		}
+
+		switch (players[1]) {
+		case "Human":
+			player_two_panel = new HumanPlayerPanel(game);
+			break;
+		default:
+			System.out.println("No Player of that type found!");
+		}
+
 		player_one_panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		GridBagConstraints gbc_player_one_panel = new GridBagConstraints();
 		gbc_player_one_panel.insets = new Insets(0, 0, 5, 0);
@@ -72,7 +89,6 @@ public class GameWindow {
 		gbc_player_one_panel.gridy = 0;
 		frame.getContentPane().add(player_one_panel, gbc_player_one_panel);
 
-		JPanel player_two_panel = new JPanel();
 		player_two_panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		GridBagConstraints gbc_player_two_panel = new GridBagConstraints();
 		gbc_player_two_panel.insets = new Insets(0, 0, 5, 0);
@@ -80,6 +96,13 @@ public class GameWindow {
 		gbc_player_two_panel.gridx = 2;
 		gbc_player_two_panel.gridy = 0;
 		frame.getContentPane().add(player_two_panel, gbc_player_two_panel);
+	}
+	
+	private String[] choosePlayers() {
+		String[][] players = { {"Human"}, {"Human"}};
+		String[] defaults = {"Human", "Human"};
+		String[] choices = ListDialog.showDialog(null, null, "Who is Playing?", "Choose Players", players, defaults, null);
+		return choices;
 	}
 
 }

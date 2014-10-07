@@ -1,4 +1,4 @@
-package polar;
+package polar.game;
 public abstract class Play {
 	Player player;
 	public Play(Player player) {

@@ -1,4 +1,4 @@
-package polar;
+package polar.game;
 /*
  * defines a polar coordinate: x units from center and y units from right horizontal axis, clockwise
  * 

@@ -1,4 +1,4 @@
-package polar;
+package polar.game;
 public class Player {
 	private Character token;   // token used in the game, ie. X or O.
 	private boolean turn; // true if taking even turns, false if taking odd turns.

@@ -1,4 +1,4 @@
-package polar;
+package polar.game;
 public class Move {
 	Move[] adjMoves = new Move[8];
 	char player;

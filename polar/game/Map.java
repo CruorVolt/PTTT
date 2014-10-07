@@ -1,4 +1,4 @@
-package polar;
+package polar.game;
 import java.util.LinkedList;
 
 public class Map {
