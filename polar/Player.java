@@ -1,22 +1,19 @@
 package polar;
 public class Player {
-	private char token;   // token used in the game, ie. X or O.
-	private boolean turn; // true if taking even turns, false if taking odd turns.
-	private Game game;
 	private String name;
+	boolean turn;
 	
-	
-	public Player(char token, boolean turn, String name, Game game) {
-		this.token = token;
-		this.turn = turn;
-		this.game = game;
+	public Player(String name) {
 		this.name = name;
+	}
+	public void setTurn(boolean turn) {
+		this.turn = turn;
 	}
 	// return true if move succeeds, false if it fails
 	public Move move(UnTestedCoordinates uc) {
 		try {
 			PolarCoordinate c = new PolarCoordinate(uc);
-			Move newMove = new Move(token, c);
+			Move newMove = new Move(turn,c);
 			return newMove;
 			
 		} catch (BadCoordinateException e) {

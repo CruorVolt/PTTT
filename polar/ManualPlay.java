@@ -2,11 +2,8 @@ package polar;
 import java.util.Scanner;
 
 
-public class ManualPlay extends Play {
-	private Scanner in;
-	public ManualPlay(Player player) {
-		super(player);
-		in = new Scanner(System.in);
+public class ManualPlay implements Play {
+	public ManualPlay() {
 	}
 
 	@Override
@@ -14,6 +11,7 @@ public class ManualPlay extends Play {
 		// TODO get manual move
 		UnTestedCoordinates coords;
 		System.out.println("Enter an X (1-4) ");
+		Scanner in = new Scanner(System.in);
 		int x = in.nextInt();
 		System.out.println("Enter a Y (0-11) ");
 		int y = in.nextInt();

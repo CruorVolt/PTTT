@@ -1,25 +1,27 @@
 package polar;
 public class Game {
 	private Player playerX;
-	private Player playerY;
-	private Play play1;
-	private Play play2;
+	private Player playerO;
+	private Play playX;
+	private Play playO;
 	private Map map;
 	private boolean notWin;
-	private boolean turn2; // false when player1's turn, true when player2's turn
+	private boolean turn; // true when player X's turn, false when player O's turn.
 	
-	public Game(String player1, String player2) {
-		map = new Map();
-		playerX = new Player('X', false, player1, this);
-		playerY = new Player('Y', true, player2, this);
-		play1 = new ManualPlay(playerX);
-		play2 = new ManualPlay(playerY);
-		turn2 = false;
+	public Game(String player1, String player2, GameViewer viewer) {
+		map = new Map(viewer);
+		playerX = new Player(player1);
+		playerX.setTurn(true);
+		playerO = new Player(player2);
+		playerO.setTurn(false);
+		playX = new ManualPlay();
+		playO = new ManualPlay();
+		turn = true;
 		notWin = true;
 	}
-	public void setPlayStyle(Play style1, Play style2) {
-		play1 = style1;
-		play2 = style2;
+	public void setPlayStyle(Play styleX, Play styleO) {
+		playX = styleX;
+		playO = styleO;
 	}
 	// start the game.
 	public void begin() {
@@ -30,25 +32,25 @@ public class Game {
 	public Map getMap() {
 		return map;
 	}
-	public Player getP1() {
+	public Player getPlayerX() {
 		return playerX;
 	}
-	public Player getP2() {
-		return playerY;
+	public Player getPlayerO() {
+		return playerO;
 	}
 	public void nextTurn() {
 		UnTestedCoordinates loc;
 		boolean success = false;
 		Move move;
-		if(turn2) {
+		if(turn) {
 			while(!success) {
-				loc = play2.getNextMove();
+				loc = playX.getNextMove();
 				move = playerX.move(loc);
 				if(move!=null) {
 					try {
 						map.updateAll(move);
 						success = true;
-						turn2 = false;
+						turn = false;
 					} catch (MoveDuplicateException e) {
 						// try again
 					}
@@ -57,13 +59,13 @@ public class Game {
 		}
 		else {
 			while(!success) {
-				loc = play1.getNextMove();
-				move = playerY.move(loc);
+				loc = playO.getNextMove();
+				move = playerO.move(loc);
 				if(move!=null) {
 					try {
 						map.updateAll(move);
 						success = true;
-						turn2 = true;
+						turn = true;
 					} catch (MoveDuplicateException e) {
 						// try again
 					}

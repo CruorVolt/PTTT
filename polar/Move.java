@@ -1,10 +1,10 @@
 package polar;
 public class Move {
-	Move[] adjMoves;
-	char player;
-	PolarCoordinate loc;
-	public Move(char player, PolarCoordinate loc) {
-		this.player = player;
+	private Move[] adjMoves;
+	private boolean turn;
+	private PolarCoordinate loc;
+	public Move(boolean turn, PolarCoordinate loc) {
+		this.turn = turn;
 		this.loc = loc;
 	}
 	// add Move s to position i
@@ -19,6 +19,10 @@ public class Move {
 			}
 		}
 		return true;
+		
+	}
+	public boolean getTurn() {
+		return turn;
 	}
 	public PolarCoordinate getLoc() {
 		return loc;
