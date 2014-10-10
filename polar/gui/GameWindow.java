@@ -8,16 +8,17 @@ import java.awt.GridBagLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
-public class GameWindow {
+public class GameWindow implements Observer {
 
 	private JFrame frame;
 	private Game game;
-	private JPanel player_one_panel, player_two_panel;
+	private PlayerPanel player_one_panel, player_two_panel;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -33,7 +34,7 @@ public class GameWindow {
 	}
 
 	public GameWindow() {
-		game = new Game("Player1", "Player2");
+		game = new Game("Player1", "Player2", this);
 		initialize(game);
 	}
 
@@ -68,6 +69,7 @@ public class GameWindow {
 		switch (players[0]) {
 		case "Human":
 			player_one_panel = new HumanPlayerPanel(game);
+			System.out.println("Player 1: Human");
 			break;
 		default:
 			System.out.println("No Player of that type found!");
@@ -76,6 +78,7 @@ public class GameWindow {
 		switch (players[1]) {
 		case "Human":
 			player_two_panel = new HumanPlayerPanel(game);
+			System.out.println("Player 2: Human");
 			break;
 		default:
 			System.out.println("No Player of that type found!");
@@ -103,6 +106,12 @@ public class GameWindow {
 		String[] defaults = {"Human", "Human"};
 		String[] choices = ListDialog.showDialog(null, null, "Who is Playing?", "Choose Players", players, defaults, null);
 		return choices;
+	}
+	
+	@Override
+	public void update(Observable o, Object arg) {
+		player_one_panel.update();
+		player_two_panel.update();
 	}
 
 }

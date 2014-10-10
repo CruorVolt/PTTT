@@ -1,5 +1,10 @@
 package polar.game;
-public class Game {
+
+import java.util.Observable;
+
+import polar.gui.GameWindow;
+
+public class Game extends Observable {
 	private Player playerX;
 	private Player playerO;
 	private Play play1;
@@ -8,7 +13,8 @@ public class Game {
 	private boolean notWin;
 	private boolean turn2; // false when player1's turn, true when player2's turn
 	
-	public Game(String player1, String player2) {
+	public Game(String player1, String player2, GameWindow gui) {
+		addObserver(gui);
 		map = new Map();
 		playerX = new Player('X', false, player1, this);
 		playerO = new Player('O', true, player2, this);
@@ -80,6 +86,9 @@ public class Game {
 				}
 			}
 		}
+		setChanged();
+		notifyObservers();
+		clearChanged();
 		return true; //The turn was completed succesfully
 	}
 }

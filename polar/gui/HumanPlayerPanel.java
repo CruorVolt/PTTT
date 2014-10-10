@@ -5,6 +5,7 @@ import java.util.Random;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
 
 import polar.game.Game;
 
@@ -15,19 +16,12 @@ public class HumanPlayerPanel extends PlayerPanel{
 	JLabel random;
 	
 	public HumanPlayerPanel(Game game){
+		super(game);
+		setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		JLabel label = new JLabel("I'M A HUMAN!");
 		random = new JLabel("NUMBERS");
 		add(label);
 		add(random);
 	}
 	
-	@Override
-	public void paint(Graphics g) {
-		Random num = new Random();
-		int thing = num.nextInt();
-		//random.setText("NUMBER: " + thing);
-
-		
-	}
-
 }
