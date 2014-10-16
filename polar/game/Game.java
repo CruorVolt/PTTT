@@ -1,4 +1,5 @@
-package polar;
+package polar.game;
+
 public class Game {
 	private Player playerX;
 	private Player playerO;
@@ -10,10 +11,10 @@ public class Game {
 	
 	public Game(String player1, String player2, GameViewer viewer) {
 		map = new Map(viewer);
-		playerX = new Player(player1);
-		playerX.setTurn(true);
-		playerO = new Player(player2);
-		playerO.setTurn(false);
+		playerX = new Player('X', true, player1, this);
+		playerX.setTurn(false);
+		playerO = new Player('O', false, player2, this);
+		playerO.setTurn(true);
 		playX = new ManualPlay();
 		playO = new ManualPlay();
 		turn = true;
@@ -26,7 +27,7 @@ public class Game {
 	// start the game.
 	public void begin() {
 		while(notWin) {
-			nextTurn();
+			//nextTurn();
 		}
 	}
 	public Map getMap() {
@@ -38,40 +39,50 @@ public class Game {
 	public Player getPlayerO() {
 		return playerO;
 	}
-	public void nextTurn() {
-		UnTestedCoordinates loc;
+	public Player currentPlayer() {
+		Player current;
+		if (turn) {
+			current = this.playerX;
+		} else {
+			current = this.playerO;
+		}
+		return current;
+	}
+	public boolean nextTurn(UnTestedCoordinates loc) {
 		boolean success = false;
 		Move move;
 		if(turn) {
 			while(!success) {
-				loc = playX.getNextMove();
+				//loc = playX.getNextMove();
 				move = playerX.move(loc);
 				if(move!=null) {
 					try {
+						turn = false;
 						map.updateAll(move);
 						success = true;
-						turn = false;
 					} catch (MoveDuplicateException e) {
-						// try again
+						turn = true;
+						return false; //Illegal move
 					}
 				}
 			}
 		}
 		else {
 			while(!success) {
-				loc = playO.getNextMove();
+				//loc = playO.getNextMove();
 				move = playerO.move(loc);
 				if(move!=null) {
 					try {
+						turn = true;
 						map.updateAll(move);
 						success = true;
-						turn = true;
 					} catch (MoveDuplicateException e) {
-						// try again
+						turn = false;
+						return false; //Illegal move
 					}
 				}
 			}
 		}
-		
+		return true; //The turn was completed succesfully
 	}
 }

@@ -1,4 +1,4 @@
-package polar;
+package polar.game;
 public class BadCoordinateException extends Exception {
 	private static final long serialVersionUID = -2359621346623570314L;
 	int x;

@@ -1,4 +1,4 @@
-package polar;
+package polar.gui;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -9,11 +9,18 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
+
 import javax.swing.JLayeredPane;
+
+import polar.game.Game;
+import polar.game.PolarCoordinate;
+import polar.game.BadCoordinateException;
+import polar.game.UnTestedCoordinates;
 
 public class GridPanel extends JLayeredPane implements ComponentListener{
 	
+	private static final long serialVersionUID = 1L;
+
 	private int center_x, center_y, slice, width, height, radius;
 
 	// X values for line segments
@@ -38,17 +45,17 @@ public class GridPanel extends JLayeredPane implements ComponentListener{
 	private final double RADIAN4 = 5.0 * Math.PI / 6.0;
 	private final double RADIAN4_X = Math.cos(RADIAN4);
 	private final double RADIAN4_Y = Math.sin(RADIAN4);
-	private final Point2D.Double[] RADIANS = {
-			new Point2D.Double(RADIAN1_X, RADIAN1_Y),
-			new Point2D.Double(RADIAN2_X, RADIAN2_Y),
-			new Point2D.Double(RADIAN3_X, RADIAN3_Y),
-			new Point2D.Double(RADIAN4_X, RADIAN4_Y)
-	};
 	
-	public GridPanel() {
-		for (int index = 0; index < 48; index ++) {
-			points[index] = new CrossPointLabel();
-			add(points[index]);
+	public GridPanel(Game game) throws BadCoordinateException {
+		int index = 0;
+		// Which ring layer of the grid the point belongs to
+		for (int x = 1; x <= 4; x++) {
+			// Which radian of the grid the point belongs to
+			for (int y = 0; y <= 11; y++) {
+				points[index] = new CrossPointLabel(game, new PolarCoordinate(new UnTestedCoordinates(x,y)));
+				add(points[index]);
+				index++;
+			}
 		}
 		addComponentListener(this);
 	}
@@ -75,8 +82,9 @@ public class GridPanel extends JLayeredPane implements ComponentListener{
 
 	public void componentHidden(ComponentEvent e) { }
 
+	// Unused unless we go back to raw Swing coordinate for finding points
 	public CrossPointLabel nearestPoint(int x, int y) {
-		CrossPointLabel nearest = new CrossPointLabel();
+		CrossPointLabel nearest = new CrossPointLabel(null, null);
 		double min_distance = Double.MAX_VALUE;
 		double current_distance;
 		for (CrossPointLabel p : points) {

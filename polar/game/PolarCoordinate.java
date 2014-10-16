@@ -1,4 +1,4 @@
-package polar;
+package polar.game;
 /*
  * defines a polar coordinate: x units from center and y units from right horizontal axis, clockwise
  * 
@@ -115,5 +115,9 @@ public class PolarCoordinate {
 			}
 		}
 		return -1;
+	}
+	
+	public String toString() {
+		return "(" + this.x + ", " + this.y + ")";
 	}
 }

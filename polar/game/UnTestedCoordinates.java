@@ -1,4 +1,4 @@
-package polar;
+package polar.game;
 public class UnTestedCoordinates {
 	private int x;
 	private int y;
