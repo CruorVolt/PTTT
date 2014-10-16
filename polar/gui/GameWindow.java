@@ -51,7 +51,7 @@ public class GameWindow implements GameViewer {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0};
 		gridBagLayout.rowHeights = new int[] {0};
-		gridBagLayout.columnWeights = new double[]{1.0, 0.5, 0.5};
+		gridBagLayout.columnWeights = new double[]{1.0, 0.4, 0.4};
 		gridBagLayout.rowWeights = new double[]{1.0};
 		frame.getContentPane().setLayout(gridBagLayout);
 		
@@ -101,7 +101,6 @@ public class GameWindow implements GameViewer {
 		case "Human":
 		//case Player.PlayerTypes.HUMAN.string:
 			player_one_panel = new HumanPlayerPanel(game, 'X');
-			System.out.println("Player 1: Human");
 			break;
 		default:
 			System.out.println("No Player of that type found!");
@@ -111,7 +110,6 @@ public class GameWindow implements GameViewer {
 		case "Human":
 		//case Player.PlayerTypes.HUMAN.string:
 			player_two_panel = new HumanPlayerPanel(game, 'O');
-			System.out.println("Player 2: Human");
 			break;
 		default:
 			System.out.println("No Player of that type found!");
@@ -122,8 +120,8 @@ public class GameWindow implements GameViewer {
 
 	@Override
 	public void notifyMove(PolarCoordinate coord, boolean turn) {
-		player_one_panel.update();
-		player_two_panel.update();
+		player_one_panel.update(coord, turn);
+		player_two_panel.update(coord, turn);
 	}
 
 	@Override

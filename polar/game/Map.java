@@ -1,4 +1,6 @@
 package polar.game;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 public class Map {
@@ -17,20 +19,23 @@ public class Map {
 		if (root==null)
 			root = n;
 		viewer.notifyMove(n.getLoc(), n.getTurn());
-		
-		System.out.println("vvvvvvvv MOVES SO FAR: vvvvvvvv");
-		for (Move m : moves) {
-			System.out.println(m);
+		if (hasWon(n.getToken())) {
+			System.out.println("A PLAYER HAS WON");
 		}
-		System.out.println("^^^^^^^^ MOVES SO FAR: ^^^^^^^^");
 	}
 	
 	public boolean hasWon(Character token) {
-		System.out.println("Moves so far:");
-		for (Move move : moves) {
-			System.out.println(move);
+		Move[][] moveGrid = new Move[4][12];
+		PolarCoordinate currentLoc;
+		for (Move m : moves) {
+			currentLoc = m.getLoc();
+			if (m.getToken() == token) {
+				moveGrid[currentLoc.getX()-1][currentLoc.getY()] = m;
+				for (Move[] what : moveGrid) {
+					System.out.println(Arrays.deepToString(what));
+				}
+			}
 		}
-		System.out.println("");
 		return false;
 	}
 }

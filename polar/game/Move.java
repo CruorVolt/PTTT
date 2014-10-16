@@ -31,6 +31,9 @@ public class Move {
 	public PolarCoordinate getLoc() {
 		return loc;
 	}
+	public Character getToken() {
+		return this.token;
+	}
 	public String toString() {
 		return this.token + ": " + this.loc.toString();
 	}

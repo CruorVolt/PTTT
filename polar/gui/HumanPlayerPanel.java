@@ -18,8 +18,6 @@ public class HumanPlayerPanel extends PlayerPanel{
 	public HumanPlayerPanel(Game game, Character token){
 		super(game, token);
 		setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		JLabel label = new JLabel("I'M A HUMAN!");
-		add(label);
 	}
 	
 }
