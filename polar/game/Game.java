@@ -3,31 +3,37 @@ package polar.game;
 public class Game {
 	private Player playerX;
 	private Player playerO;
-	private Play playX;
-	private Play playO;
 	private Map map;
 	private boolean notWin;
 	private boolean turn; // true when player X's turn, false when player O's turn.
+	private Player currentPlayer;
 	
 	public Game(String player1, String player2, GameViewer viewer) {
 		map = new Map(viewer);
-		playerX = new Player('X', true, player1, this);
-		playerX.setTurn(false);
-		playerO = new Player('O', false, player2, this);
-		playerO.setTurn(true);
-		playX = new ManualPlay();
-		playO = new ManualPlay();
+		playerX = new Player(new ManualPlay(), 'X', true, player1, this);
+		playerO = new Player(new ManualPlay(), 'O', false, player2, this);
 		turn = true;
 		notWin = true;
 	}
-	public void setPlayStyle(Play styleX, Play styleO) {
-		playX = styleX;
-		playO = styleO;
+	public void setPlayStyles(PlayStyle styleX, PlayStyle styleO) {
+		playerX.setPlayStyle(styleX);
+		playerO.setPlayStyle(styleO);
 	}
+	public boolean getTurn() {
+		return turn;
+	}
+	
 	// start the game.
 	public void begin() {
+		currentPlayer = playerX;
+		boolean success;
 		while(notWin) {
-			//nextTurn();
+			success = nextTurn(currentPlayer.move());
+			if(success)
+				if(currentPlayer.equals(playerX))
+					currentPlayer = playerO;
+				else
+					currentPlayer = playerX;
 		}
 	}
 	public Map getMap() {
@@ -48,41 +54,15 @@ public class Game {
 		}
 		return current;
 	}
-	public boolean nextTurn(UnTestedCoordinates loc) {
-		boolean success = false;
-		Move move;
-		if(turn) {
-			while(!success) {
-				//loc = playX.getNextMove();
-				move = playerX.move(loc);
-				if(move!=null) {
-					try {
-						turn = false;
-						map.updateAll(move);
-						success = true;
-					} catch (MoveDuplicateException e) {
-						turn = true;
-						return false; //Illegal move
-					}
-				}
-			}
+	// this should not be accessed externally. will make private once GUI is restructured to work with PlayStyles.
+	private boolean nextTurn(Move move) {
+		boolean success;
+		if(move!=null) {
+			success = map.updateAll(move); // return true if valid move and update succeeds.
+			if(success)
+				turn = !turn;
+			return success;
 		}
-		else {
-			while(!success) {
-				//loc = playO.getNextMove();
-				move = playerO.move(loc);
-				if(move!=null) {
-					try {
-						turn = true;
-						map.updateAll(move);
-						success = true;
-					} catch (MoveDuplicateException e) {
-						turn = false;
-						return false; //Illegal move
-					}
-				}
-			}
-		}
-		return true; //The turn was completed succesfully
+		return false;
 	}
 }

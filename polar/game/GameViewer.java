@@ -1,5 +1,7 @@
 package polar.game;
 
+import java.util.ArrayList;
+
 
 public interface GameViewer {
 	// notifyMove is called whenever a move is successfully completed by any player. 
@@ -7,5 +9,5 @@ public interface GameViewer {
 	public void notifyMove(PolarCoordinate coord, boolean turn);
 	// notifyWin is called whenever a Win state is found. winState describes a sequence of moves that determine the win, and
 	// the turn of the player who has won. turn=true if player X, false if player O.
-	public void notifyWin(boolean turn, PolarCoordinate[] winState);
+	public void notifyWin(boolean turn, ArrayList<Move> winState);
 }

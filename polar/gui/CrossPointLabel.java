@@ -1,6 +1,7 @@
 package polar.gui;
 
 import polar.game.Game;
+import polar.game.PlayStyle;
 import polar.game.PolarCoordinate;
 import polar.game.UnTestedCoordinates;
 
@@ -20,6 +21,8 @@ public class CrossPointLabel extends JLabel{
 	private Point location;
 	private PolarCoordinate gameCoordinate;
 	private Game game;
+	boolean XisHuman;
+	boolean OisHuman;
 
 	public CrossPointLabel (Dimension size, double radian, int layer, double slice) {
 		marked = false;
@@ -31,7 +34,6 @@ public class CrossPointLabel extends JLabel{
 		setFont(new Font("Arial", Font.BOLD, 20));
 		setLocation( size, radian, layer, slice);
 		setMouseAction();
-
 	}
 	
 	//A dummy label initialized as far as possible from points on the grid
@@ -47,20 +49,19 @@ public class CrossPointLabel extends JLabel{
 		location = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
 		marked = false;
 		setMouseAction();
+		XisHuman = g.getPlayerX().isHuman();
+		OisHuman = g.getPlayerO().isHuman();
 	}
-	
 	public void setMouseAction() {
 		this.addMouseListener( new MouseAdapter() {
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				String token = game.currentPlayer().toString();
-				boolean turn = game.nextTurn(new UnTestedCoordinates(gameCoordinate.getX(), gameCoordinate.getY()));
-				if (turn) {
-					setText(token);
-				} else {
-					//Turn failed
-					System.out.println("Turn Failed");
+				// check if the current player is human.
+				if((game.getTurn()&&XisHuman)||!game.getTurn()&&OisHuman) {
+					
+					game.getPlayerX().Update(new UnTestedCoordinates(gameCoordinate.getX(), gameCoordinate.getY()));			
 				}
 			}
 			

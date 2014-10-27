@@ -96,11 +96,13 @@ public class GameWindow implements GameViewer {
 		}
 		String[] defaults = { players[0][0], players[1][0] };
 		String[] choices = ListDialog.showDialog(null, null, "Who is Playing?", "Choose Players", players, defaults, null);
-
+		PlayStyle style1 = null;
+		PlayStyle style2 = null;
 		switch (choices[0]) {
 		case "Human":
 		//case Player.PlayerTypes.HUMAN.string:
 			player_one_panel = new HumanPlayerPanel(game, 'X');
+			style1 = new HumanPlayStyle();
 			break;
 		default:
 			System.out.println("No Player of that type found!");
@@ -110,10 +112,12 @@ public class GameWindow implements GameViewer {
 		case "Human":
 		//case Player.PlayerTypes.HUMAN.string:
 			player_two_panel = new HumanPlayerPanel(game, 'O');
+			style2 = new HumanPlayStyle();
 			break;
 		default:
 			System.out.println("No Player of that type found!");
 		}
+		game.setPlayStyles(style1, style2);
 		PlayerPanel[] panels = {player_one_panel, player_two_panel};
 		return panels;
 	}
@@ -125,7 +129,7 @@ public class GameWindow implements GameViewer {
 	}
 
 	@Override
-	public void notifyWin(boolean turn, PolarCoordinate[] winState) {
+	public void notifyWin(boolean turn, ArrayList<Move> winState) {
 		// TODO Auto-generated method stub
 		
 	}

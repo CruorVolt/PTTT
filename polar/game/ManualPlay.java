@@ -2,12 +2,12 @@ package polar.game;
 import java.util.Scanner;
 
 
-public class ManualPlay implements Play {
+public class ManualPlay implements PlayStyle {
 	public ManualPlay() {
 	}
 
 	@Override
-	public UnTestedCoordinates getNextMove() {
+	public UnTestedCoordinates getMove() {
 		// TODO get manual move
 		UnTestedCoordinates coords;
 		System.out.println("Enter an X (1-4) ");
