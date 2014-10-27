@@ -51,12 +51,6 @@ public class Player {
 
 	public boolean isHuman() {
 		name = style.getClass().getName();
-		// test
-		System.out.print(name+" does ");
-		if(!name.equals("polar.game.HumanPlayStyle"))
-			System.out.print("not ");
-		System.out.println("equal HumanPlayStyle.");
-		// compare
 		return name.equals("polar.game.HumanPlayStyle");
 	}
 	public boolean Update(UnTestedCoordinates uc) {
