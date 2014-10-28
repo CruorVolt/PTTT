@@ -46,7 +46,6 @@ public class Game {
 					currentPlayer = playerX;
 				}
 			}
-			System.out.println("move concluded");
 		}
 	}
 	public void end() {
@@ -75,13 +74,10 @@ public class Game {
 		boolean success;
 		if(move!=null) {
 			try {
-				System.out.println("updating map");
 				success = map.updateAll(move, turn); // return true if valid move and update succeeds.
 				if(success)
 					turn = !turn;
-					System.out.println("CHANGING TURN TO " + turn);
 			} catch(MoveDuplicateException m) {
-				System.out.println("moveduplicate?");
 				success = false;
 			}
 			return success;

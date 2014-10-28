@@ -24,9 +24,7 @@ public class HumanPlayStyle implements PlayStyle {
 	public UnTestedCoordinates getMove() {
         synchronized(wait){
             try{
-            	System.out.println("getMove is going to wait now");
             	wait.wait();
-            	System.out.println("getMove is done waiting now");
                 return c;
             }catch(InterruptedException e){
                 e.printStackTrace();

@@ -118,7 +118,6 @@ public class GameWindow implements GameViewer {
 
 	@Override
 	public void notifyMove(PolarCoordinate coord, boolean turn) {
-		System.out.println("A MOVE HAS OCCURED");
 		player_one_panel.update(coord, turn);
 		player_two_panel.update(coord, turn);
 		game_panel.update(coord);

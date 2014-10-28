@@ -29,7 +29,6 @@ public class Player {
 			if(style.equals(HumanPlayStyle.getInstance())) {
 				HumanPlayStyle.unlock();
 			}
-			System.out.println("switched to a non-human style: only AIs should use this");
 			style = p;
 		} 
 	}
@@ -68,13 +67,10 @@ public class Player {
 
 	public boolean Update(UnTestedCoordinates uc) {
 		if(this.isHuman()) {
-			System.out.println("Human Player.Update");
 			HumanPlayStyle p = (HumanPlayStyle)style;
 			p.Update(uc);
-			System.out.println("Player.Update success");
 			return true;
 		}
-		System.out.println("Player.Update failed");
 		return false;
 	}
 }
