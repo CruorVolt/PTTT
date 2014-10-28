@@ -6,6 +6,11 @@ public class RandomPlayStyle implements PlayStyle {
 
 	@Override
 	public UnTestedCoordinates getMove() {
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		Random rand = new Random();
 		int x = rand.nextInt(4) + 1;
 		int y = rand.nextInt(12);
