@@ -2,7 +2,7 @@ package polar.game;
 public class Player {
 
 	public enum PlayerTypes {
-		HUMAN ("Human");
+		HUMAN ("Human"), RANDOM ("Random");
 		public String string;
 		private PlayerTypes(String s) {
 			this.string = s;
@@ -22,10 +22,18 @@ public class Player {
 		this.name = name;
 		this.style = style;
 	}
+
 	// sets the behavior for the player.
 	public void setPlayStyle(PlayStyle p) {
-		style = p;
+		if (!style.equals(p)) {
+			if(style.equals(HumanPlayStyle.getInstance())) {
+				HumanPlayStyle.unlock();
+			}
+			System.out.println("switched to a non-human style: only AIs should use this");
+			style = p;
+		} 
 	}
+
 	// return true if move succeeds, false if it fails
 	public Move move() {
 		try {
@@ -45,20 +53,28 @@ public class Player {
 	public Character getToken() {
 		return token;
 	}
+
 	public boolean getTurn() {
 		return turn;
 	}
+	
+	public PlayStyle getStyle() {
+		return style;
+	}
 
 	public boolean isHuman() {
-		name = style.getClass().getName();
-		return name.equals("polar.game.HumanPlayStyle");
+		return this.style.equals(HumanPlayStyle.getInstance());
 	}
+
 	public boolean Update(UnTestedCoordinates uc) {
 		if(this.isHuman()) {
+			System.out.println("Human Player.Update");
 			HumanPlayStyle p = (HumanPlayStyle)style;
 			p.Update(uc);
+			System.out.println("Player.Update success");
 			return true;
 		}
+		System.out.println("Player.Update failed");
 		return false;
 	}
 }

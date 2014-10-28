@@ -11,17 +11,21 @@ public class Map {
 		moves = new LinkedList<Move>();
 		this.viewer = viewer;
 	}
-	public void updateAll(Move n) throws MoveDuplicateException {
+	public void addViewer(GameViewer viewer) {
+		this.viewer = viewer;
+	}
+	public boolean updateAll(Move n, boolean turn) throws MoveDuplicateException {
 		for (Move move : moves) {
 			move.update(n);
 		}
 		moves.add(n);
 		if (root==null)
 			root = n;
-		viewer.notifyMove(n.getLoc(), n.getTurn());
-		if (hasWon(n.getToken())) {
-			System.out.println("A PLAYER HAS WON");
+		viewer.notifyMove(n.getLoc(), turn);
+		if (moves.size() >= 48) {
+			viewer.notifyWin(true, null);
 		}
+		return true;
 	}
 	
 	public boolean hasWon(Character token) {

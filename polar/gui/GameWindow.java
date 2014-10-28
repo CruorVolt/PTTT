@@ -2,14 +2,11 @@ package polar.gui;
 
 import polar.game.*;
 
-import java.awt.EventQueue;
 import java.awt.GridBagLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.JFrame;
 import javax.swing.border.BevelBorder;
@@ -18,26 +15,15 @@ public class GameWindow implements GameViewer {
 
 	private JFrame frame;
 	private Game game;
+	private GridPanel game_panel;
 	private PlayerPanel player_one_panel, player_two_panel;
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GameWindow window = new GameWindow();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	public GameWindow() {
-		game = new Game("Player1", "Player2", this);
+	public GameWindow(Game game) {
+		this.game = game;
 		initialize(game);
+		frame.setVisible(true);
 	}
-
+	
 	private void initialize(Game game) {
 		PlayerPanel[] players = choosePlayers();
 		player_one_panel = players[0];
@@ -56,7 +42,7 @@ public class GameWindow implements GameViewer {
 		frame.getContentPane().setLayout(gridBagLayout);
 		
 		try {
-			GridPanel game_panel = new GridPanel(game);
+			game_panel = new GridPanel(game);
 			game_panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 			GridBagConstraints gbc_game_panel = new GridBagConstraints();
 			gbc_game_panel.insets = new Insets(0, 0, 5, 0);
@@ -93,16 +79,21 @@ public class GameWindow implements GameViewer {
 		for (Player.PlayerTypes type : Player.PlayerTypes.values()) {
 			players[0][i] = type.string;
 			players[1][i] = type.string;
+			i++;
 		}
 		String[] defaults = { players[0][0], players[1][0] };
 		String[] choices = ListDialog.showDialog(null, null, "Who is Playing?", "Choose Players", players, defaults, null);
 		PlayStyle style1 = null;
 		PlayStyle style2 = null;
+		
 		switch (choices[0]) {
 		case "Human":
-		//case Player.PlayerTypes.HUMAN.string:
 			player_one_panel = new HumanPlayerPanel(game, 'X');
-			style1 = new HumanPlayStyle();
+			style1 = HumanPlayStyle.getInstance();
+			break;
+		case "Random":
+			player_one_panel = new AIPlayerPanel(game, 'X');
+			style1 = new RandomPlayStyle();
 			break;
 		default:
 			System.out.println("No Player of that type found!");
@@ -110,9 +101,12 @@ public class GameWindow implements GameViewer {
 
 		switch (choices[1]) {
 		case "Human":
-		//case Player.PlayerTypes.HUMAN.string:
 			player_two_panel = new HumanPlayerPanel(game, 'O');
-			style2 = new HumanPlayStyle();
+			style2 = HumanPlayStyle.getInstance();
+			break;
+		case "Random":
+			player_two_panel = new AIPlayerPanel(game, 'X');
+			style2 = new RandomPlayStyle();
 			break;
 		default:
 			System.out.println("No Player of that type found!");
@@ -124,14 +118,22 @@ public class GameWindow implements GameViewer {
 
 	@Override
 	public void notifyMove(PolarCoordinate coord, boolean turn) {
+		System.out.println("A MOVE HAS OCCURED");
 		player_one_panel.update(coord, turn);
 		player_two_panel.update(coord, turn);
+		game_panel.update(coord);
 	}
 
 	@Override
 	public void notifyWin(boolean turn, ArrayList<Move> winState) {
-		// TODO Auto-generated method stub
-		
+		if (winState == null) {
+			//Game over with no winner
+			System.out.println("DRAW");
+			game.end();
+		} else {
+			System.out.println("WINER");
+			game.end();
+		}
 	}
 
 }

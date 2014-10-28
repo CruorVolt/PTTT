@@ -30,7 +30,8 @@ public class GridPanel extends JLayeredPane implements ComponentListener{
 	private int r1y, r2y, r3y, r4y;
 
 	private Dimension size;
-	private CrossPointLabel[] points = new CrossPointLabel[48];
+	private CrossPointLabel[][] points = new CrossPointLabel[4][12];
+	private Game game;
 	
 	//Radian values for diagonals
 	private final double RADIAN1 = Math.PI / 6.0;
@@ -47,30 +48,32 @@ public class GridPanel extends JLayeredPane implements ComponentListener{
 	private final double RADIAN4_Y = Math.sin(RADIAN4);
 	
 	public GridPanel(Game game) throws BadCoordinateException {
-		int index = 0;
 		// Which ring layer of the grid the point belongs to
 		for (int x = 1; x <= 4; x++) {
 			// Which radian of the grid the point belongs to
 			for (int y = 0; y <= 11; y++) {
-				points[index] = new CrossPointLabel(game, new PolarCoordinate(new UnTestedCoordinates(x,y)));
-				add(points[index]);
-				index++;
+				points[x-1][y] = new CrossPointLabel(game, new PolarCoordinate(new UnTestedCoordinates(x,y)));
+				add(points[x-1][y]);
 			}
 		}
 		addComponentListener(this);
+		this.game = game;
+	}
+	
+	//Send the player's token to to the selected CrossPointLabel
+	public void update(PolarCoordinate coord) {
+		points[coord.getX() - 1][coord.getY()].setText(game.currentPlayer().getToken().toString());
 	}
 	
 	public void componentResized(ComponentEvent e) { 
 		double radian = Math.PI / 6.0;
 		double current_radian = 0;
-		int index = 0;
 		
 		// The cross-points need to be repositioned whenever the panel changes size
 		for (int i = 1; i <= 4; i++) {
 			for (int j = 1; j <= 12; j++) {
-				points[index].setLocation(getSize(), current_radian, i, 0.1);
+				points[i-1][j-1].setLocation(getSize(), current_radian, i, 0.1);
 				current_radian += radian;
-				index++;
 			}
 			current_radian = 0;
 		}
@@ -87,11 +90,13 @@ public class GridPanel extends JLayeredPane implements ComponentListener{
 		CrossPointLabel nearest = new CrossPointLabel(null, null);
 		double min_distance = Double.MAX_VALUE;
 		double current_distance;
-		for (CrossPointLabel p : points) {
-			current_distance = p.distance(x,y);
-			if ( current_distance < min_distance) {
-				min_distance = current_distance;
-				nearest = p;
+		for (CrossPointLabel[] inner : points) {
+			for (CrossPointLabel p : inner) {
+				current_distance = p.distance(x,y);
+				if ( current_distance < min_distance) {
+					min_distance = current_distance;
+					nearest = p;
+				}
 			}
 		}
 		return nearest;

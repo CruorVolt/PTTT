@@ -7,18 +7,28 @@ public class Game {
 	private boolean notWin;
 	private boolean turn; // true when player X's turn, false when player O's turn.
 	private Player currentPlayer;
+	private HumanPlayStyle humanStyle = HumanPlayStyle.getInstance();
 	
 	public Game(String player1, String player2, GameViewer viewer) {
 		map = new Map(viewer);
-		playerX = new Player(new ManualPlay(), 'X', true, player1, this);
-		playerO = new Player(new ManualPlay(), 'O', false, player2, this);
+		playerX = new Player(humanStyle, 'X', true, player1, this);
+		playerO = new Player(humanStyle, 'O', false, player2, this);
 		turn = true;
 		notWin = true;
 	}
+	
+	public void addViewer(GameViewer viewer) {
+		synchronized(this) {
+			map.addViewer(viewer);
+			this.notifyAll();
+		}
+	}
+	
 	public void setPlayStyles(PlayStyle styleX, PlayStyle styleO) {
 		playerX.setPlayStyle(styleX);
 		playerO.setPlayStyle(styleO);
 	}
+	
 	public boolean getTurn() {
 		return turn;
 	}
@@ -29,12 +39,18 @@ public class Game {
 		boolean success;
 		while(notWin) {
 			success = nextTurn(currentPlayer.move());
-			if(success)
-				if(currentPlayer.equals(playerX))
+			if(success) {
+				if(currentPlayer.equals(playerX)) {
 					currentPlayer = playerO;
-				else
+				} else {
 					currentPlayer = playerX;
+				}
+			}
+			System.out.println("move concluded");
 		}
+	}
+	public void end() {
+		notWin = false;
 	}
 	public Map getMap() {
 		return map;
@@ -58,9 +74,16 @@ public class Game {
 	private boolean nextTurn(Move move) {
 		boolean success;
 		if(move!=null) {
-			success = map.updateAll(move); // return true if valid move and update succeeds.
-			if(success)
-				turn = !turn;
+			try {
+				System.out.println("updating map");
+				success = map.updateAll(move, turn); // return true if valid move and update succeeds.
+				if(success)
+					turn = !turn;
+					System.out.println("CHANGING TURN TO " + turn);
+			} catch(MoveDuplicateException m) {
+				System.out.println("moveduplicate?");
+				success = false;
+			}
 			return success;
 		}
 		return false;
