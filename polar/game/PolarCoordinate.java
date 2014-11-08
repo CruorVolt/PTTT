@@ -6,6 +6,27 @@ package polar.game;
 public class PolarCoordinate {
 	private int x;
 	private int y;
+	
+	public static void main(String[] args) {
+		try {
+			PolarCoordinate a = new PolarCoordinate(new UnTestedCoordinates(3,11));
+			try {
+				System.out.println("4,11: " + a.compare(new PolarCoordinate(new UnTestedCoordinates(4,11))));
+				System.out.println("4,0: " + a.compare(new PolarCoordinate(new UnTestedCoordinates(4,0))));
+				System.out.println("3,0: " + a.compare(new PolarCoordinate(new UnTestedCoordinates(3,0))));
+				System.out.println("2,0: " + a.compare(new PolarCoordinate(new UnTestedCoordinates(2,0))));
+				System.out.println("2,11: " + a.compare(new PolarCoordinate(new UnTestedCoordinates(2,11))));
+				System.out.println("2,10: " + a.compare(new PolarCoordinate(new UnTestedCoordinates(2,10))));
+				System.out.println("3,10: " + a.compare(new PolarCoordinate(new UnTestedCoordinates(3,10))));
+				System.out.println("4,10: " + a.compare(new PolarCoordinate(new UnTestedCoordinates(4,10))));
+			} catch (MoveDuplicateException e) {
+				e.printStackTrace();
+			}
+		} catch (BadCoordinateException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public PolarCoordinate(UnTestedCoordinates uc) throws BadCoordinateException {
 		int ucx = uc.getX();
 		int ucy = uc.getY();
@@ -59,13 +80,13 @@ public class PolarCoordinate {
 		
 		if(compx==x) {		// horizontally adjacent
 			sameOrbital = true;
-		}
-		else if((Math.abs(compx-x))==1) {
+		} else if((Math.abs(compx-x))==1) {
 			nearOrbital = true;
 			if(compx>x) {
 				above = true;
 			}
 		}
+
 		if(compy==y) {		// vertically adjacent
 			if(sameOrbital) {
 				// error
@@ -77,20 +98,19 @@ public class PolarCoordinate {
 				else
 					return VAdjAndBelow;
 			}
-		}
-		else if((Math.abs(compy-y))==1) {
+		} else if((Math.abs(compy-y))==1) {
 			nextTo = true;
-		}
-		else if((compy==11)&&(y==0)) {
+		} else if((compy==11)&&(y==0)) {
 			nextTo = true;
-			
-		}
-		else if((compy==0)&&(y==11)) {
+		} else if((compy==0)&&(y==11)) {
 			nextTo = true;
 			ahead = true;
 		}
+
 		if(nextTo) {
-			if(compy>y) {
+			if ( (y == 0) && (compy == 11) ) {
+				ahead = false;
+			} else if(compy>y) {
 				ahead = true;
 			}
 			if(sameOrbital) {
@@ -117,7 +137,102 @@ public class PolarCoordinate {
 		return -1;
 	}
 	
+	/* Get the PolorCoordinate that corresponds to the adjacent node 
+	 * represented by the input direction code:
+	 */
+	public PolarCoordinate getAdjacent(int direction) {
+		int x = 0;
+		int y = 0;
+		switch (direction) {
+		case 0: //vertically adjacent and above
+			x = above(this.x);
+			y = this.y;
+			break;
+		case 1: //diagonally above and ahead
+			x = above(this.x);
+			y = ahead(this.y);
+			break;
+		case 2: //horizontally adjacent and ahead
+			x = this.x;
+			y = ahead(this.y);
+			break;
+		case 3: //diagonally below and ahead
+			x = below(this.x);
+			y = ahead(this.y);
+			break;
+		case 4: //vertically adjacent and below
+			x = below(this.x);
+			y = this.y;
+			break;
+		case 5: //diagonally below and behind
+			x = below(this.x);
+			y = behind(this.y);
+			break;
+		case 6: //horizontally adjacent and behind
+			x = this.x;
+			y = behind(this.y);
+			break;
+		case 7: //diagonally above and behind
+			x = above(this.x);
+			y = behind(this.y);
+			break;
+		}
+		try {
+			return new PolarCoordinate(new UnTestedCoordinates(x,y));
+		} catch (BadCoordinateException e) {
+			return null;
+		}
+	}
+	
+	public Integer above(int x) {
+		if (x == 4) {
+			return -1;
+		} else {
+			return x+1;
+		}
+	}
+	
+	public Integer below(int x) {
+		if (x == 1) {
+			return -1;
+		} else {
+			return x-1;
+		}
+	}
+	
+	public Integer ahead(int y) {
+		if (y == 11) {
+			return 0;
+		} else {
+			return y+1;
+		}
+	}
+	
+	public Integer behind(int y) {
+		if (y == 0) {
+			return 11;
+		} else {
+			return y-1;
+		}
+	}
+	
+	@Override
 	public String toString() {
 		return "(" + this.x + ", " + this.y + ")";
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		PolarCoordinate compare;
+		try {
+			compare = (PolarCoordinate) o;
+		} catch (ClassCastException e) {
+			compare = ((Move) o).getLoc();
+		}
+		if (this.x == compare.x && this.y == compare.y) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

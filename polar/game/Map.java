@@ -28,18 +28,22 @@ public class Map {
 		return true;
 	}
 	
-	public boolean hasWon(Character token) {
-		Move[][] moveGrid = new Move[4][12];
-		PolarCoordinate currentLoc;
-		for (Move m : moves) {
-			currentLoc = m.getLoc();
-			if (m.getToken() == token) {
-				moveGrid[currentLoc.getX()-1][currentLoc.getY()] = m;
-				for (Move[] what : moveGrid) {
-					System.out.println(Arrays.deepToString(what));
-				}
+	/*
+	 * Checks whether the supplied coordinates are set
+	 * and returns the associated player token, or null
+	 * if the node is unset.
+	 */
+	public Character isSet(PolarCoordinate coord) {
+		for (Move move : this.moves) {
+			if ( (move.getLoc().getX() == coord.getX()) && (move.getLoc().getY() == coord.getY()) ){
+				return move.getToken();
 			}
 		}
-		return false;
+		return null;
 	}
+	
+	public LinkedList<Move> getMoves() {
+		return moves;
+	}
+	
 }

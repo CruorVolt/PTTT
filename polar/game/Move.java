@@ -46,6 +46,9 @@ public class Move {
 		else
 			return null;
 	}
+	public Move[] adjacencyArray() {
+		return adjMoves;
+	}
 	public boolean getTurn() {
 		return turn;
 	}

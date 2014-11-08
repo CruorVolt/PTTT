@@ -8,13 +8,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JPanel;
 
+import logic.Heuristic;
 import polar.game.*;
 
 public class PlayerPanel extends JPanel{
 	
 	protected Game game;
 	protected Character token;
-	protected JLabel playerLabel;
+	protected JLabel playerLabel, scoreLabel;
 	protected JTextArea movesTextArea;
 	protected JScrollPane movesPane;
 	
@@ -24,11 +25,14 @@ public class PlayerPanel extends JPanel{
 		this.token = token;
 		setBackgroundColor(false);
 
-		GridLayout gridLayout = new GridLayout(2,0);
+		GridLayout gridLayout = new GridLayout(0,1);
 		setLayout(gridLayout);
 
 		playerLabel = new JLabel("Player " + this.token, JLabel.CENTER);
 		add(playerLabel);
+		
+		scoreLabel = new JLabel("NO SCORE YET");
+		add(scoreLabel);
 
 		movesTextArea = new JTextArea("");
 		movesTextArea.setEditable(false);
@@ -44,6 +48,7 @@ public class PlayerPanel extends JPanel{
 		if (!setBackgroundColor(turn)) { // update belongs to this panel
 			movesTextArea.setText(movesTextArea.getText() + coord.toString() + "\n");
 		}
+		scoreLabel.setText("Score: " + Heuristic.evaluate(game.getMap(), this.token));
 	}
 	
 	public boolean setBackgroundColor(boolean turn) {
