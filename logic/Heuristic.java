@@ -11,23 +11,27 @@ import polar.game.*;
 public class Heuristic {
 	
 	private static final int SCORE_MARKED= 1;
-	private static final int SCORE_ADJACENT= 5;
-	private static final int SCORE_THREE= 10;
+	private static final int SCORE_ADJACENT= 10;
+	private static final int SCORE_THREE= 30;
 	private static final int SCORE_WIN= 1000;
 	
 	/*
-	 * Search all legal next states for player and return the coordinates for the 
-	 * move that will create the highest scoring state.
+	 * Evaluates a game state and assigns it an 
+	 * overall score assuming the given player is 
+	 * the maximizing player and the other player is the minimizing
+	 * player.
 	 * 
-	 * @param player The token for the player calling the function
 	 * @param map    The current game map
+	 * @param maxPlayer The token for the positive player
 	 */
-	public static UnTestedCoordinates getBestCoords(Character player, Map map) {
-		return new UnTestedCoordinates(0,0);
+	public static int evaluateMinMax(Map map, Character maxPlayer) {
+		Character minPlayer = (maxPlayer == 'X') ? 'O' : 'X';
+		return evaluate(map, maxPlayer) - evaluate(map, minPlayer);
 	}
 	
 	/*
-	 * Evaluates a game state and assigns it a score
+	 * Evaluates a game state and assigns it a positive
+	 * score with respect to the given player.
 	 * 
 	 * @param map    The current game map
 	 * @param player The token for the positive player
@@ -63,7 +67,6 @@ public class Heuristic {
 						ArrayList<ArrayList<PolarCoordinate>> alreadyScored = new ArrayList<ArrayList<PolarCoordinate>>();
 						System.out.println("LOOK");
 						switch (line_length) {
-						//FLAW: WILL ONLY NOTE ONE INSTANCE OF EACH TYPE
 						case 4:
 							toRemove = isWin(current, map);
 							alreadyScored = scoredWins;
@@ -73,25 +76,28 @@ public class Heuristic {
 							alreadyScored = scoredThrees;
 							break;
 						case 2:
-							//toRemove = isPair(current, neighbors);
+							toRemove = isPair(current, neighbors);
 							alreadyScored = scoredPairs;
 							break;
 						case 1:
 							break;
 						}
 
-						//If this line exists and has not already been scored
-						//boolean duplicate = false;
-						//for (ArrayList<PolarCoordinate> scored : alreadyScored) {
-							//if (scored.equals(toRemove)) { //this line has already been scored
-								//duplicate = true;
-							//}
-						//}
 						if ((toRemove.size() > 0) && !(alreadyScored.contains(toRemove))) {
 							System.out.println("AlreadyScored is " + alreadyScored);
 							markScored(toRemove, scoredWins, scoredThrees, scoredPairs);
 							System.out.println("SCORING LINE" + toRemove);
-							score += SCORE_WIN;
+							switch (toRemove.size()) {
+							case 2:
+								score += SCORE_ADJACENT;
+								break;
+							case 3: 
+								score += SCORE_THREE;
+								break;
+							case 4:
+								score += SCORE_WIN;
+								break;
+							}
 							for (PolarCoordinate remove : toRemove) {
 								int index = moves.indexOf(remove);
 								if (index >= 0) {
@@ -129,7 +135,7 @@ public class Heuristic {
 					}
 				}
 				// Horizontal line is scored differently since it has more options
-				if ((valid == 4 && key !="hozironal") || (valid >= 5 && key == "horizontal")) {
+				if ((valid == 4 && (key !="hozironal" && key != "horizontal2") ) || (valid >= 5 && (key == "horizontal1" || key == "horizontal2"))) {
 					score += SCORE_MARKED;
 				}
 			}
@@ -174,26 +180,34 @@ public class Heuristic {
 	 * back or null.
 	 */
 	private static ArrayList<PolarCoordinate> isThree(Move move, Map map) {
+		ArrayList<PolarCoordinate> lineCopy;
 		try {
 			HashMap<String, ArrayList<PolarCoordinate>> lines = getLines(move);
 			for (String key : lines.keySet()) {
-				System.out.println("LINE:");
-				int invalid = 0; //number of nodes not marked by player
+				int invalid_count = 0; //number of nodes not marked by player
+				boolean valid = true;
+				lineCopy = (ArrayList<PolarCoordinate>) lines.get(key).clone();
 				for (PolarCoordinate c : lines.get(key)) {
-					if (move.getToken() != map.isSet(c)) { //Move not marked by this player - check if close: TODO HERE
+					if (move.getToken() != map.isSet(c)) { //Move not marked by this player - check if close
 						// Vert/Diagonal: highest or lowest is fine if it's the only onev
-						invalid++;
-						if (invalid > 1) {
-							break;
-						} else if( key != "horizontal") {
-							if (!( (c.x == 1) || (c.x == 4) )) { //Cannont be a valid line of three
-								break;
+						lineCopy.remove(c);
+						invalid_count++;
+						if (invalid_count > 1) {
+							valid = false;
+						} else if(key != "horizontal1" && key != "horizontal2") {
+							if (!( (c.getX() == 1) || (c.getX() == 4) )) { //Cannot be a valid line of three
+								valid = false;
 							}
 						} else {
-							int moveY = move.getY();
-							if () { //Cannont be a valid line of three
+							int moveY = move.getLoc().getY();
+							if (Math.abs(moveY - move.getLoc().getY()) < 3) { //Cannot be a valid line of three
+								valid = false;
+							}
 						}
 					}
+				}
+				if (valid) {
+					return lineCopy;
 				}
 			}
 		} catch (BadCoordinateException e) {
