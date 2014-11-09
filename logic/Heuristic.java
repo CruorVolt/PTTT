@@ -73,7 +73,7 @@ public class Heuristic {
 							alreadyScored = scoredThrees;
 							break;
 						case 2:
-							toRemove = isPair(current, map);
+							//toRemove = isPair(current, neighbors);
 							alreadyScored = scoredPairs;
 							break;
 						case 1:
@@ -178,10 +178,21 @@ public class Heuristic {
 			HashMap<String, ArrayList<PolarCoordinate>> lines = getLines(move);
 			for (String key : lines.keySet()) {
 				System.out.println("LINE:");
+				int invalid = 0; //number of nodes not marked by player
 				for (PolarCoordinate c : lines.get(key)) {
 					if (move.getToken() != map.isSet(c)) { //Move not marked by this player - check if close: TODO HERE
-						int diffX = Math.abs(c.getX() - move.getLoc().getX());
-						int diffY = Math.abs(c.getY() - move.getLoc().getY());
+						// Vert/Diagonal: highest or lowest is fine if it's the only onev
+						invalid++;
+						if (invalid > 1) {
+							break;
+						} else if( key != "horizontal") {
+							if (!( (c.x == 1) || (c.x == 4) )) { //Cannont be a valid line of three
+								break;
+							}
+						} else {
+							int moveY = move.getY();
+							if () { //Cannont be a valid line of three
+						}
 					}
 				}
 			}
@@ -196,8 +207,7 @@ public class Heuristic {
 	 * they exist. Get an array of the scoring moves
 	 * back or null.
 	 */
-	private static ArrayList<PolarCoordinate> isPair(Move move, Map map) {
-		ArrayList<Move> adjacents = adjacentMoves(move, true);
+	private static ArrayList<PolarCoordinate> isPair(Move move, ArrayList<Move> adjacents) {
 		ArrayList<PolarCoordinate> pair = new ArrayList<PolarCoordinate>();
 		//Select the first available pair to score,
 		//if other options are available other calls will take care of them
