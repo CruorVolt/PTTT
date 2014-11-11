@@ -65,7 +65,6 @@ public class Heuristic {
 
 						ArrayList<PolarCoordinate> toRemove = new ArrayList<PolarCoordinate>();
 						ArrayList<ArrayList<PolarCoordinate>> alreadyScored = new ArrayList<ArrayList<PolarCoordinate>>();
-						System.out.println("LOOK");
 						switch (line_length) {
 						case 4:
 							toRemove = isWin(current, map);
@@ -76,7 +75,7 @@ public class Heuristic {
 							alreadyScored = scoredThrees;
 							break;
 						case 2:
-							toRemove = isPair(current, neighbors);
+							toRemove = isPair(current, map);
 							alreadyScored = scoredPairs;
 							break;
 						case 1:
@@ -184,7 +183,6 @@ public class Heuristic {
 		try {
 			HashMap<String, ArrayList<PolarCoordinate>> lines = getLines(move);
 			for (String key : lines.keySet()) {
-				int invalid_count = 0; //number of nodes not marked by player
 				boolean valid = true;
 				lineCopy = (ArrayList<PolarCoordinate>) lines.get(key).clone();
 				for (PolarCoordinate c : lines.get(key)) {
@@ -220,15 +218,41 @@ public class Heuristic {
 	 * they exist. Get an array of the scoring moves
 	 * back or null.
 	 */
-	private static ArrayList<PolarCoordinate> isPair(Move move, ArrayList<Move> adjacents) {
-		ArrayList<PolarCoordinate> pair = new ArrayList<PolarCoordinate>();
-		//Select the first available pair to score,
-		//if other options are available other calls will take care of them
-		if (!adjacents.isEmpty()) {
-			pair.add(move.getLoc());
-			pair.add(adjacents.get(0).getLoc());
+	private static ArrayList<PolarCoordinate> isPair(Move move, Map map) {
+		ArrayList<PolarCoordinate> lineCopy;
+		try {
+			HashMap<String, ArrayList<PolarCoordinate>> lines = getLines(move);
+			for (String key : lines.keySet()) {
+				int invalid_count = 0; //number of nodes not marked by player
+				boolean valid = true;
+				boolean adjacent = false;
+				lineCopy = (ArrayList<PolarCoordinate>) lines.get(key).clone();
+				for (PolarCoordinate c : lines.get(key)) {
+					Character set = map.isSet(c);
+					if (move.getToken() != set) { //Move not marked by this player - check if empty
+						lineCopy.remove(c);
+						invalid_count++;
+						try {
+							if (invalid_count > 2) { //too many empty nodes in this line
+								valid = false;
+							} else if (set != null) { //opponent marked node
+								valid = false;
+							} else if (move.getLoc().compare(c) > 0) { //possible scoring pair
+								adjacent = true;
+							}
+						} catch (MoveDuplicateException m) {
+							//Nothing - move to next comparison
+						}
+					}
+				}
+				if (valid && adjacent) {
+					return lineCopy;
+				}
+			}
+		} catch (BadCoordinateException e) {
+			e.printStackTrace();
 		}
-		return pair;
+		return new ArrayList<PolarCoordinate>();
 	}
 	
 	/*
