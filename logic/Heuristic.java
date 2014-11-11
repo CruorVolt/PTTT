@@ -2,6 +2,7 @@ package logic;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -82,16 +83,21 @@ public class Heuristic {
 							break;
 						}
 
-						if ((toRemove.size() > 0) && !(alreadyScored.contains(toRemove))) {
-							System.out.println("AlreadyScored is " + alreadyScored);
+						if ((toRemove.size() > 0) && !(containsMatch(alreadyScored,toRemove))) {
+							System.out.println("AlreadyScored before: " + alreadyScored);
 							markScored(toRemove, scoredWins, scoredThrees, scoredPairs);
+							System.out.println("line_length is " + line_length);
 							System.out.println("SCORING LINE" + toRemove);
+							System.out.println("AlreadyScored after: " + alreadyScored);
+							System.out.println();
 							switch (toRemove.size()) {
 							case 2:
 								score += SCORE_ADJACENT;
+								System.out.println("Scoring 2");
 								break;
 							case 3: 
 								score += SCORE_THREE;
+								System.out.println("Scoring 3");
 								break;
 							case 4:
 								score += SCORE_WIN;
@@ -203,7 +209,8 @@ public class Heuristic {
 						}
 					}
 				}
-				if (valid) {
+				if ( (valid) && (lineCopy.size() == 3) ){
+					System.out.println("isThree returning line: " + lineCopy);
 					return lineCopy;
 				}
 			}
@@ -245,7 +252,7 @@ public class Heuristic {
 						}
 					}
 				}
-				if (valid && adjacent) {
+				if (valid && adjacent && lineCopy.size() == 2) {
 					return lineCopy;
 				}
 			}
@@ -277,7 +284,7 @@ public class Heuristic {
 		}
 		hash.put("vertical", line);
 
-		PolarCoordinate location;
+		PolarCoordinate location, tempLocation;
 
 		//horizontal line 1: move + three nodes behind
 		//horizontal line 2: move + three nodes ahead
@@ -302,31 +309,31 @@ public class Heuristic {
 
 		//diagonal1: above+ahead / below+behind
 		line = new ArrayList<PolarCoordinate>();
-		line.add(move.getLoc());
-		location = move.getLoc().getAdjacent(1); //above+ahead
+		location = move.getLoc();
+		do { //traverse to highest point
+			tempLocation = location.getAdjacent(1); //above+ahead
+			if (tempLocation != null) {
+				location = tempLocation;
+			}
+		} while (tempLocation != null);
 		while (location != null) {
 			line.add(location);
-			location = location.getAdjacent(1);
-		}
-		location = move.getLoc().getAdjacent(5); //below+behind
-		while (location != null) {
-			line.add(location);
-			location = location.getAdjacent(5);
+			location = location.getAdjacent(5); //below+behind
 		}
 		hash.put("diagonal1", line);
 		
 		//diagonal2: below+ahead / ahead+behind
 		line = new ArrayList<PolarCoordinate>();
-		line.add(move.getLoc());
-		location = move.getLoc().getAdjacent(3); //below+ahead
+		location = move.getLoc();
+		do { //traverse to highest point
+			tempLocation = location.getAdjacent(3); //below+ahead
+			if (tempLocation != null) {
+				location = tempLocation;
+			}
+		} while (tempLocation != null);
 		while (location != null) {
 			line.add(location);
-			location = location.getAdjacent(3);
-		}
-		location = move.getLoc().getAdjacent(7); //ahead+behind
-		while (location != null) {
-			line.add(location);
-			location = location.getAdjacent(7);
+			location = location.getAdjacent(7); //ahead+behind
 		}
 		hash.put("diagonal2", line);
 		
@@ -334,7 +341,7 @@ public class Heuristic {
 	}
 	
 	private static void permuteFours(ArrayList<PolarCoordinate> line, ArrayList<ArrayList<PolarCoordinate>> fours) {
-		//Add every ordering of the three-in-a-line to threes
+		//Add every ordering of the four-in-a-line to fours
 		ArrayList<PolarCoordinate> vector;
 		
 		if (line.size() == 4) {
@@ -352,6 +359,7 @@ public class Heuristic {
 			vector.add(line.get(0));
 			fours.add(vector);
 		}
+		System.out.println("After permuteFours, four list is: " + fours);
 	}
 
 	private static void permuteThrees(ArrayList<PolarCoordinate> line, ArrayList<ArrayList<PolarCoordinate>> threes) {
@@ -464,6 +472,18 @@ public class Heuristic {
 		}
 		return neighbors;
 		
+	}
+	/*
+	 * Compare the candidate list to each element of collection input,
+	 * return true if a match is found (matches ignore ordering)
+	 */
+	private static boolean containsMatch(ArrayList<ArrayList<PolarCoordinate>> collection, ArrayList<PolarCoordinate> candidate) {
+		for (Collection c : collection) {
+			if (c.containsAll(candidate) && candidate.containsAll(c)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
