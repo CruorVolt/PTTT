@@ -15,10 +15,6 @@ public class RandomPlayStyle implements PlayStyle {
 
 	@Override
 	public UnTestedCoordinates getMove() {
-		return Heuristic.getBestCoords(player, game.getMap());
-		
-	}
-	public UnTestedCoordinates getRandomMove() {
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {

@@ -188,13 +188,12 @@ public class Heuristic {
 				boolean valid = true;
 				lineCopy = (ArrayList<PolarCoordinate>) lines.get(key).clone();
 				for (PolarCoordinate c : lines.get(key)) {
-					if (move.getToken() != map.isSet(c)) { //Move not marked by this player - check if close
-						// Vert/Diagonal: highest or lowest is fine if it's the only onev
+					Character set = map.isSet(c);
+					if (move.getToken() != set) { //Move not marked by this player - check if empty
 						lineCopy.remove(c);
-						invalid_count++;
-						if (invalid_count > 1) {
+						if (set != null) {
 							valid = false;
-						} else if(key != "horizontal1" && key != "horizontal2") {
+						} else if (key != "horizontal1" && key != "horizontal2") {
 							if (!( (c.getX() == 1) || (c.getX() == 4) )) { //Cannot be a valid line of three
 								valid = false;
 							}
