@@ -84,20 +84,13 @@ public class Heuristic {
 						}
 
 						if ((toRemove.size() > 0) && !(containsMatch(alreadyScored,toRemove))) {
-							System.out.println("AlreadyScored before: " + alreadyScored);
 							markScored(toRemove, scoredWins, scoredThrees, scoredPairs);
-							System.out.println("line_length is " + line_length);
-							System.out.println("SCORING LINE" + toRemove);
-							System.out.println("AlreadyScored after: " + alreadyScored);
-							System.out.println();
 							switch (toRemove.size()) {
 							case 2:
 								score += SCORE_ADJACENT;
-								System.out.println("Scoring 2");
 								break;
 							case 3: 
 								score += SCORE_THREE;
-								System.out.println("Scoring 3");
 								break;
 							case 4:
 								score += SCORE_WIN;
@@ -116,7 +109,6 @@ public class Heuristic {
 				}
 			}
 		}
-		System.out.println("Total score is " + score);
 		return score;
 	}
 	
@@ -210,7 +202,6 @@ public class Heuristic {
 					}
 				}
 				if ( (valid) && (lineCopy.size() == 3) ){
-					System.out.println("isThree returning line: " + lineCopy);
 					return lineCopy;
 				}
 			}
@@ -359,7 +350,6 @@ public class Heuristic {
 			vector.add(line.get(0));
 			fours.add(vector);
 		}
-		System.out.println("After permuteFours, four list is: " + fours);
 	}
 
 	private static void permuteThrees(ArrayList<PolarCoordinate> line, ArrayList<ArrayList<PolarCoordinate>> threes) {
@@ -451,7 +441,6 @@ public class Heuristic {
 			permutePairs(line, pairs);
 			break;
 		default:
-			System.out.println("PROBLEM: A scoring line was reported, but it was " + line.size() + " nodes long");
 		}
 	}
 
