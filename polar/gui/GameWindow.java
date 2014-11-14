@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.JFrame;
 import javax.swing.border.BevelBorder;
@@ -105,8 +106,8 @@ public class GameWindow implements GameViewer {
 			style2 = HumanPlayStyle.getInstance();
 			break;
 		case "Random":
-			player_two_panel = new AIPlayerPanel(game, 'X');
-			style2 = new RandomPlayStyle('X', game);
+			player_two_panel = new AIPlayerPanel(game, 'O');
+			style2 = new RandomPlayStyle('O', game);
 			break;
 		default:
 			System.out.println("No Player of that type found!");
