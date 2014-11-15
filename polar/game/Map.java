@@ -21,8 +21,10 @@ public class Map {
 		moves.add(n);
 		if (root==null)
 			root = n;
-		viewer.notifyMove(n.getLoc(), turn);
-		if (moves.size() >= 48) {
+		if (viewer != null) {
+			viewer.notifyMove(n.getLoc(), turn);
+		}
+		if ( (moves.size() >= 48) && (viewer != null) ){
 			viewer.notifyWin(true, null);
 		}
 		return true;

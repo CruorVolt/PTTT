@@ -1,5 +1,7 @@
 package polar.game;
 
+import logic.Heuristic;
+
 public class Game {
 	private Player playerX;
 	private Player playerO;
@@ -46,6 +48,12 @@ public class Game {
 					currentPlayer = playerX;
 				}
 			}
+			//Training stuff------------------------------------------------------
+			int score = (Heuristic.evaluate(map, currentPlayer.getToken()));
+			if ( (score > 1000) || (map.getMoves().size() >= 48) ) { //someone won
+				notWin = false;
+			}
+			//Training stuff------------------------------------------------------
 		}
 	}
 	public void end() {
