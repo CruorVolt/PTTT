@@ -94,18 +94,19 @@ public class GameLogic {
 	 * Get a list of adjacent moves, use playerOnly = true to
 	 * restrict output to moves made by the same player as given move.
 	 */
-	protected static ArrayList<Move> adjacentMoves(Move move, boolean playerOnly) { 
+	protected static ArrayList<Move> adjacentMoves(Move move, boolean playerOnly, boolean markedOnly) { 
 		Move adj;
 		ArrayList<Move> neighbors = new ArrayList<Move>();
 		for (int i = 0; i < 8; i++) {
 			adj = move.getAdjMove(i);
-			if ((adj != null) && (adj.getToken() == move.getToken()) ) {
+			if (adj != null) {
 				if ( !playerOnly || (adj.getToken() == move.getToken()) ) {
 					neighbors.add(adj);
 				}
+			} else if (!markedOnly) {
+				neighbors.add(adj);
 			}
 		}
 		return neighbors;
-		
 	}
 }

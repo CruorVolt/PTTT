@@ -61,7 +61,7 @@ public class Heuristic extends GameLogic {
 				// not been included in any previous scorings
 				if ( (current.getToken() == player) && !(searched[i]) ){
 
-					neighbors = adjacentMoves(current, true);
+					neighbors = adjacentMoves(current, true, true);
 					if (neighbors.size() > 0) {
 
 						ArrayList<PolarCoordinate> toRemove = new ArrayList<PolarCoordinate>();
