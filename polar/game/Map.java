@@ -48,4 +48,25 @@ public class Map {
 		return moves;
 	}
 	
+	/*
+	 * Copy the map and all its moves. Use for evaluating
+	 * hypothetical game states in search trees without 
+	 * modifying the map.
+	 */
+	public Map deepCopy() throws MoveDuplicateException {
+		Map map = new Map(null); // null viewer should not send signals to the gui
+		Move moveCopy;
+		PolarCoordinate location;
+		Character player;
+		for (Move move : moves) {
+			location = move.getLoc();
+			player = move.getToken();
+			moveCopy = new Move(true, player, location);
+			map.updateAll(moveCopy, true);
+		}
+		return map;
+		
+	}
+
+	
 }
