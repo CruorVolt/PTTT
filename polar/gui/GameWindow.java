@@ -96,6 +96,10 @@ public class GameWindow implements GameViewer {
 			player_one_panel = new AIPlayerPanel(game, 'X');
 			style1 = new RandomPlayStyle('X', game);
 			break;
+		case "Greedy Search":
+			player_one_panel = new AIPlayerPanel(game, 'X');
+			style1 = new GreedyPlayStyle('X', game);
+			break;
 		default:
 			System.out.println("No Player of that type found!");
 		}
@@ -108,6 +112,10 @@ public class GameWindow implements GameViewer {
 		case "Random":
 			player_two_panel = new AIPlayerPanel(game, 'O');
 			style2 = new RandomPlayStyle('O', game);
+			break;
+		case "Greedy Search":
+			player_two_panel = new AIPlayerPanel(game, 'O');
+			style2 = new GreedyPlayStyle('O', game);
 			break;
 		default:
 			System.out.println("No Player of that type found!");
