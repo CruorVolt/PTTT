@@ -18,7 +18,7 @@ import polar.game.*;
 
 public class Classifier {
 	
-	private static final int TRAINING_SET_SIZE = 1000;
+	private static final int TRAINING_SET_SIZE = 100;
 
 	public static boolean classify(Map map, Character player) {
 		return false;
@@ -136,11 +136,8 @@ public class Classifier {
 				try {
 					Double positiveXI = (double) positiveExamples.get(x).get(i);
 					Double negativeXI = (double) negativeExamples.get(x).get(i);
-					System.out.println("This partition (" + i + ") has " + positiveXI + " positive examples and " + negativeXI + " negative ones");
-					entropyXI = ( (-1 * positiveXI) / positiveXI + negativeXI) 
-							* logBaseK( positiveXI / (positiveXI + negativeXI), 2 ) 
-							- (negativeXI / (positiveXI + negativeXI))
-							* logBaseK(negativeXI / (positiveXI + negativeXI ), 2 );
+					System.out.println("This partition (" + i + ") has " + positiveXI + "+," + negativeXI + "-");
+					entropyXI = -( positiveXI / (positiveXI+negativeXI) ) * logBaseK( positiveXI / (positiveXI+negativeXI), 2 ) - (negativeXI / (positiveXI+negativeXI) ) * logBaseK( negativeXI / (positiveXI+negativeXI), 2 );
 					entropy.get(x).set(i, entropyXI);
 				} catch (ArithmeticException a) {
 					a.printStackTrace();

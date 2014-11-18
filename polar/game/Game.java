@@ -42,18 +42,21 @@ public class Game {
 		while(notWin) {
 			success = nextTurn(currentPlayer.move());
 			if(success) {
+
+				//Training stuff------------------------------------------------------
+				int score = (Heuristic.evaluate(map, currentPlayer.getToken()));
+				if ( (score >= 1000) || (map.getMoves().size() >= 48) ) { //someone won
+					notWin = false;
+					break;
+				}
+				//Training stuff------------------------------------------------------
+
 				if(currentPlayer.equals(playerX)) {
 					currentPlayer = playerO;
 				} else {
 					currentPlayer = playerX;
 				}
 			}
-			//Training stuff------------------------------------------------------
-			int score = (Heuristic.evaluate(map, currentPlayer.getToken()));
-			if ( (score > 1000) || (map.getMoves().size() >= 48) ) { //someone won
-				notWin = false;
-			}
-			//Training stuff------------------------------------------------------
 		}
 	}
 	public void end() {
