@@ -9,7 +9,7 @@ import java.util.LinkedList;
 
 import polar.game.*;
 
-public class Heuristic extends GameLogic {
+public class Heuristic extends SupportFunctions {
 	
 	private static final int SCORE_MARKED= 1;
 	private static final int SCORE_ADJACENT= 10;
