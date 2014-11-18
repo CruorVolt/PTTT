@@ -18,8 +18,7 @@ import polar.game.*;
 
 public class Classifier {
 	
-	private static final int TRAINING_SET_SIZE = 100;
-
+	private static final int TRAINING_SET_SIZE = 1000;
 	public static boolean classify(Map map, Character player) {
 		return false;
 	}
@@ -35,8 +34,14 @@ public class Classifier {
 	 * 
 	 * trainingSet file format expects CSV with headers indicating feature name, 
 	 * and the label as the first feature.
+	 * 
+	 * @param traininSet The file name of the set of training data
+	 * @param regenerate Whether to use existing training data or create new test games
 	 */
-	public static ArrayList<Double> gain(String trainingSet) throws IOException {
+	public static Double[] gain(String trainingSet, boolean regenerate) throws IOException {
+		if (regenerate) {
+			SupportFunctions.generateWinStates(TRAINING_SET_SIZE);
+		}
 		HashMap<String, Double> entropyMap = new HashMap<String, Double>();
 
 		BufferedReader br = new BufferedReader(new FileReader(trainingSet));
@@ -134,10 +139,9 @@ public class Classifier {
 		
 		ArrayList<ArrayList<Double>> entropy = new ArrayList<ArrayList<Double>>();
 		ArrayList<Double> expectedEntropy = new ArrayList<Double>();
-		ArrayList<Double> gains = new ArrayList<Double>();
+		Double[] gains = new Double[headers.length];
 		double entropyXI;
 		entropy.add(null); //don't need entropy for first feature
-		gains.add(null);
 		expectedEntropy.add(null);
 		for (int x = 1; x < headers.length; x++) {
 			//calculate entropy of feature at x
@@ -195,17 +199,17 @@ public class Classifier {
 			
 			//gain calculation (entropy - expected_entopy)
 			double gainX = ipn - expectedSum;
-			gains.add(gainX);
+			gains[x] = gainX;
 		}
 		
 		int max_gain_index = 1;
-		for (int g = 1; g < gains.size(); g++) { 
-			if (gains.get(g) >= gains.get(max_gain_index)) {
+		for (int g = 1; g < gains.length; g++) { 
+			if (gains[g] >= gains[max_gain_index]) {
 				max_gain_index = g;
 			}
 		}
 		
-		return gains;
+		return Arrays.copyOfRange(gains, 1, gains.length);
 	}
 	
 	/*
@@ -259,16 +263,6 @@ public class Classifier {
 			return true;
 		} else {
 			return false;
-		}
-	}
-	
-	public static void main(String[] args) {
-		try {
-			SupportFunctions.generateFeatures(null, 'X', TRAINING_SET_SIZE);
-			ArrayList<Double> gains = (gain("./src/training_set.csv"));
-			System.out.println(gains);
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 }

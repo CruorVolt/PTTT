@@ -40,6 +40,7 @@ public class PlayerPanel extends JPanel{
 		movesTextArea.setWrapStyleWord(true);
 
 		movesPane = new JScrollPane(movesTextArea);
+		movesPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		movesPane.setBackground(new Color(0,0,0,0));
 		add(movesPane);
 	}

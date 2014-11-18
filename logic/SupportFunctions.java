@@ -1,14 +1,17 @@
 package logic;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import polar.game.BadCoordinateException;
@@ -440,6 +443,13 @@ public class SupportFunctions {
 			out.println(list.toString().substring(1,list.toString().length() - 1));
 		}catch (IOException e) {
 		}
+	}
+	
+	public static String[] getFeatures(String fileName) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader(fileName));
+		String line = br.readLine(); //header line is first
+		br.close();
+		return Arrays.copyOfRange(line.split(", "),1, line.length()); // strip first feature
 	}
 	
 	/*
