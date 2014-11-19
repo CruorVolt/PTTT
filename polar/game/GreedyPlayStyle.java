@@ -25,12 +25,11 @@ public class GreedyPlayStyle implements PlayStyle {
 	@Override
 	public UnTestedCoordinates getMove() {
 
-		Map map = game.getMap();
-		LinkedList<Move> moves = map.getMoves();
+		GameMap map = game.getMap();
 
 		int score;
 		int maxScore = Integer.MIN_VALUE;
-		Map tempMap = null;
+		GameMap tempMap = null;
 		PolarCoordinate maxCoords = null;
 
 		for (int layer = 1; layer <= 4; layer++) { //check all layers
@@ -52,7 +51,7 @@ public class GreedyPlayStyle implements PlayStyle {
 
 						if (valid) { // this move is valid, give it a score
 							try {
-								tempMap = (Map) map.deepCopy(); //resetting tempMap
+								tempMap = (GameMap) map.deepCopy(); //resetting tempMap
 								tempMap.addViewer(null); //make sure this map doesn't update the gui
 								tempMap.updateAll(new Move(valid, player, location), valid);
 								score = Heuristic.evaluateMinMax(tempMap, player);

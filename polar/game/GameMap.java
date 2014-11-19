@@ -3,13 +3,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-public class Map {
+public class GameMap {
 
 	Move root;
 	LinkedList<Move> moves;
 	GameViewer viewer;
 
-	public Map(GameViewer viewer) {
+	public GameMap(GameViewer viewer) {
 		moves = new LinkedList<Move>();
 		this.viewer = viewer;
 	}
@@ -62,8 +62,8 @@ public class Map {
 	 * hypothetical game states in search trees without 
 	 * modifying the map.
 	 */
-	public Map deepCopy() throws MoveDuplicateException {
-		Map map = new Map(null); // null viewer should not send signals to the gui
+	public GameMap deepCopy() throws MoveDuplicateException {
+		GameMap map = new GameMap(null); // null viewer should not send signals to the gui
 		Move moveCopy;
 		PolarCoordinate location;
 		Character player;

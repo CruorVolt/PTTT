@@ -25,7 +25,7 @@ public class Heuristic extends SupportFunctions {
 	 * @param map    The current game map
 	 * @param maxPlayer The token for the positive player
 	 */
-	public static int evaluateMinMax(Map map, Character maxPlayer) {
+	public static int evaluateMinMax(GameMap map, Character maxPlayer) {
 		Character minPlayer = (maxPlayer == 'X') ? 'O' : 'X';
 		return evaluate(map, maxPlayer) - evaluate(map, minPlayer);
 	}
@@ -37,7 +37,7 @@ public class Heuristic extends SupportFunctions {
 	 * @param map    The current game map
 	 * @param player The token for the positive player
 	 */
-	public static int evaluate(Map map, Character player) {
+	public static int evaluate(GameMap map, Character player) {
 		int score = 0;
 		ArrayList<Move> neighbors;
 		ArrayList<Move> moves = new ArrayList<Move>();
@@ -116,7 +116,7 @@ public class Heuristic extends SupportFunctions {
 	 * Score an occurance of MARKED (no other adjacent nodes by this player, 
 	 * score per open winning empty line) for this move if it exists.
 	 */
-	private static int scoreMarked(Move move, Map map) {
+	private static int scoreMarked(Move move, GameMap map) {
 		Character token;
 		int score = 0;
 		try {
@@ -147,7 +147,7 @@ public class Heuristic extends SupportFunctions {
 	 * for this move if one exists and get an array of 
 	 * the winning moves back, or null.
 	 */
-	private static ArrayList<PolarCoordinate> isWin(Move move, Map map) {
+	private static ArrayList<PolarCoordinate> isWin(Move move, GameMap map) {
 		boolean win;
 		Character token;
 		int score = 0;
@@ -176,7 +176,7 @@ public class Heuristic extends SupportFunctions {
 	 * they exist. Get an array of the scoring moves
 	 * back or null.
 	 */
-	private static ArrayList<PolarCoordinate> isThree(Move move, Map map) {
+	private static ArrayList<PolarCoordinate> isThree(Move move, GameMap map) {
 		ArrayList<PolarCoordinate> lineCopy;
 		try {
 			HashMap<String, ArrayList<PolarCoordinate>> lines = getLines(move);
@@ -216,7 +216,7 @@ public class Heuristic extends SupportFunctions {
 	 * they exist. Get an array of the scoring moves
 	 * back or null.
 	 */
-	private static ArrayList<PolarCoordinate> isPair(Move move, Map map) {
+	private static ArrayList<PolarCoordinate> isPair(Move move, GameMap map) {
 		ArrayList<PolarCoordinate> lineCopy;
 		try {
 			HashMap<String, ArrayList<PolarCoordinate>> lines = getLines(move);

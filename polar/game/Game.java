@@ -5,14 +5,14 @@ import logic.Heuristic;
 public class Game {
 	private Player playerX;
 	private Player playerO;
-	private Map map;
+	private GameMap map;
 	private boolean notWin;
 	private boolean turn; // true when player X's turn, false when player O's turn.
 	private Player currentPlayer;
 	private HumanPlayStyle humanStyle = HumanPlayStyle.getInstance();
 	
 	public Game(String player1, String player2, GameViewer viewer) {
-		map = new Map(viewer);
+		map = new GameMap(viewer);
 		playerX = new Player(humanStyle, 'X', true, player1, this);
 		playerO = new Player(humanStyle, 'O', false, player2, this);
 		turn = true;
@@ -62,7 +62,7 @@ public class Game {
 	public void end() {
 		notWin = false;
 	}
-	public Map getMap() {
+	public GameMap getMap() {
 		return map;
 	}
 	public Player getPlayerX() {

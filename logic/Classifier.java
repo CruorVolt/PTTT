@@ -1,15 +1,10 @@
 package logic;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,13 +14,10 @@ import polar.game.*;
 public class Classifier {
 	
 	private static final int TRAINING_SET_SIZE = 1000;
-	public static boolean classify(Map map, Character player) {
+	public static boolean decisionTreeClassify(GameMap map, Character player) {
+		Boolean[][] trace = new Boolean[18][3]; // a trace of the path through the 'tree'
+		DecisionTree tree = new DecisionTree();
 		return false;
-	}
-	
-	// Build a decision tree from the given training data
-	public static void train(File trainingSet, Character positivePlayer) {
-		
 	}
 	
 	/*
@@ -38,7 +30,7 @@ public class Classifier {
 	 * @param traininSet The file name of the set of training data
 	 * @param regenerate Whether to use existing training data or create new test games
 	 */
-	public static Double[] gain(String trainingSet, boolean regenerate) throws IOException {
+	public static ArrayList<Object> gain(String trainingSet, boolean regenerate) throws IOException {
 		if (regenerate) {
 			SupportFunctions.generateWinStates(TRAINING_SET_SIZE);
 		}
@@ -209,7 +201,10 @@ public class Classifier {
 			}
 		}
 		
-		return Arrays.copyOfRange(gains, 1, gains.length);
+		ArrayList<Object> output = new ArrayList<Object>();
+		output.add(Arrays.copyOfRange(gains, 1, gains.length));
+		output.add(partitions);
+		return output;
 	}
 	
 	/*

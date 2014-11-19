@@ -17,7 +17,7 @@ import java.util.HashMap;
 import polar.game.BadCoordinateException;
 import polar.game.Game;
 import polar.game.GreedyPlayStyle;
-import polar.game.Map;
+import polar.game.GameMap;
 import polar.game.Move;
 import polar.game.PlayStyle;
 import polar.game.PolarCoordinate;
@@ -38,9 +38,7 @@ public class SupportFunctions {
 	 */
 	protected static HashMap<String, ArrayList<PolarCoordinate>> getLines(Move move) throws BadCoordinateException {
 		ArrayList<PolarCoordinate> line;
-		boolean edge = false;
 		HashMap<String, ArrayList<PolarCoordinate>> hash = new HashMap<String, ArrayList<PolarCoordinate>>();
-		int verticalLayer = move.getLoc().getX();
 		int horizontalLayer = move.getLoc().getY();
 		
 		//vertical line
@@ -171,7 +169,7 @@ public class SupportFunctions {
 		for (ArrayList<Object> gameMap : games) {
 			
 			Character winner = (Character) gameMap.get(0);
-			Map map = (Map) gameMap.get(1);
+			GameMap map = (GameMap) gameMap.get(1);
 
 			ArrayList<Double> player_adjacent_player_array = new ArrayList<Double>();
 			ArrayList<Double> player_adjacent_opponent_array = new ArrayList<Double>();
