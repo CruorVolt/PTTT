@@ -8,6 +8,9 @@ After the first move, all moves must be placed adjacent to another.
 A win must have 4 consecutive marks from a single player, either adjacent along an axis, adjacent along a ring, or diagonally adjacent.
 
 Two player mode is implemented for a single computer.
+Players and AI may play as X or O.
+Players may play other Players or an AI.
+AI may play itself or other AI.
 
 Not Yet Implemented:
 
