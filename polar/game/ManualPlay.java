@@ -15,7 +15,7 @@ public class ManualPlay implements PlayStyle {
 		int x = in.nextInt();
 		System.out.println("Enter a Y (0-11) ");
 		int y = in.nextInt();
-		//in.close();
+		in.close();
 		coords = new UnTestedCoordinates(x,y);
 		return coords;
 	}

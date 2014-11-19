@@ -1,7 +1,6 @@
 package polar.gui;
 
 import polar.game.Game;
-import polar.game.PlayStyle;
 import polar.game.PolarCoordinate;
 import polar.game.UnTestedCoordinates;
 
@@ -57,7 +56,6 @@ public class CrossPointLabel extends JLabel{
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				String token = game.currentPlayer().toString();
 				UnTestedCoordinates updateCoords = new UnTestedCoordinates(gameCoordinate.getX(), gameCoordinate.getY());			
 				// check if the current player is human.
 				if((game.getTurn()&&XisHuman)) {

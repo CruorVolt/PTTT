@@ -18,11 +18,15 @@ public class PlayerPanel extends JPanel{
 	protected JLabel playerLabel, scoreLabel;
 	protected JTextArea movesTextArea;
 	protected JScrollPane movesPane;
+	protected boolean player;
 	
-	public PlayerPanel(Game game, Character token) {
+	public PlayerPanel(Game game, boolean player) {
 		super();
 		this.game = game;
-		this.token = token;
+		if(player==Player.PLAYER_X)
+			this.token = 'X';
+		else
+			this.token = 'O';
 		setBackgroundColor(false);
 
 		GridLayout gridLayout = new GridLayout(0,1);
@@ -49,7 +53,7 @@ public class PlayerPanel extends JPanel{
 		if (!setBackgroundColor(turn)) { // update belongs to this panel
 			movesTextArea.setText(movesTextArea.getText() + coord.toString() + "\n");
 		}
-		scoreLabel.setText("Score: " + Heuristic.evaluate(game.getMap(), this.token));
+		scoreLabel.setText("Score: " + Heuristic.evaluate(game.getMap(), player));
 	}
 	
 	public boolean setBackgroundColor(boolean turn) {

@@ -1,6 +1,5 @@
 package polar.game;
 
-import java.util.LinkedList;
 import java.util.Random;
 
 import logic.Heuristic;
@@ -15,9 +14,9 @@ import logic.Heuristic;
 public class GreedyPlayStyle implements PlayStyle {
 	
 	private Game game;
-	private Character player;
+	private boolean player;
 	
-	public GreedyPlayStyle(Character player, Game game) {
+	public GreedyPlayStyle(boolean player, Game game) {
 		this.player = player;
 		this.game = game;
 	}
@@ -52,8 +51,8 @@ public class GreedyPlayStyle implements PlayStyle {
 						if (valid) { // this move is valid, give it a score
 							try {
 								tempMap = (GameMap) map.deepCopy(); //resetting tempMap
-								tempMap.addViewer(null); //make sure this map doesn't update the gui
-								tempMap.updateAll(new Move(valid, player, location), valid);
+								tempMap.removeViewers(); //make sure this map doesn't update the gui
+								tempMap.updateAll(new Move(player, location), valid);
 								score = Heuristic.evaluateMinMax(tempMap, player);
 								if (score > maxScore) { //This is the best location seen so far
 									maxScore = score;

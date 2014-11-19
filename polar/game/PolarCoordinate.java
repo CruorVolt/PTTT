@@ -6,7 +6,7 @@ package polar.game;
 public class PolarCoordinate {
 	private int x;
 	private int y;
-	
+
 	public static void main(String[] args) {
 		try {
 			PolarCoordinate a = new PolarCoordinate(new UnTestedCoordinates(3,11));

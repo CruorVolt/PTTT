@@ -1,20 +1,17 @@
 package polar.game;
 
-import logic.Heuristic;
-
-public class Game {
+public class Game implements GameViewer {
 	private Player playerX;
 	private Player playerO;
 	private GameMap map;
 	private boolean notWin;
 	private boolean turn; // true when player X's turn, false when player O's turn.
 	private Player currentPlayer;
-	private HumanPlayStyle humanStyle = HumanPlayStyle.getInstance();
 	
-	public Game(String player1, String player2, GameViewer viewer) {
-		map = new GameMap(viewer);
-		playerX = new Player(humanStyle, 'X', true, player1, this);
-		playerO = new Player(humanStyle, 'O', false, player2, this);
+	public Game() {
+		map = new Map();
+		playerX = new Player(null, 'X', Player.PLAYER_X);
+		playerO = new Player(null, 'O', Player.PLAYER_O);
 		turn = true;
 		notWin = true;
 	}
@@ -37,20 +34,13 @@ public class Game {
 	
 	// start the game.
 	public void begin() {
+		// first hook into map updates so it knows when the game is over
+		addViewer(this);
 		currentPlayer = playerX;
 		boolean success;
 		while(notWin) {
 			success = nextTurn(currentPlayer.move());
 			if(success) {
-
-				//Training stuff------------------------------------------------------
-				int score = (Heuristic.evaluate(map, currentPlayer.getToken()));
-				if ( (score >= 1000) || (map.getMoves().size() >= 48) ) { //someone won
-					notWin = false;
-					break;
-				}
-				//Training stuff------------------------------------------------------
-
 				if(currentPlayer.equals(playerX)) {
 					currentPlayer = playerO;
 				} else {
@@ -60,6 +50,7 @@ public class Game {
 		}
 	}
 	public void end() {
+		System.out.println("Game ended early.");
 		notWin = false;
 	}
 	public GameMap getMap() {
@@ -80,7 +71,7 @@ public class Game {
 		}
 		return current;
 	}
-	// this should not be accessed externally. will make private once GUI is restructured to work with PlayStyles.
+	// performs a new turn.
 	private boolean nextTurn(Move move) {
 		boolean success;
 		if(move!=null) {
@@ -93,6 +84,21 @@ public class Game {
 			}
 			return success;
 		}
+		end();
 		return false;
+	}
+
+	@Override
+	public void notifyMove(PolarCoordinate coord, boolean turn) {
+		// Game doesn't need to know this.
+		
+	}
+
+	@Override
+	public void notifyWin(boolean turn, Move[] winState) {
+		notWin=false;
+		for(Move m : winState) {
+			System.out.println(m);
+		}
 	}
 }

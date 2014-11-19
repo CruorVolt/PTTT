@@ -11,20 +11,20 @@ public class Player {
 	
 	private Character token;   // token used in the game, ie. X or O.
 	private boolean turn; // true if taking even turns, false if taking odd turns.
-	private Game game;
-	private String name;
 	private PlayStyle style;
+	public static boolean PLAYER_X = true;
+	public static boolean PLAYER_O = false;
 	
-	public Player(PlayStyle style, Character token, boolean turn, String name, Game game) {
+	public Player(PlayStyle style, Character token, boolean turn) {
 		this.token = token;
 		this.turn = turn;
-		this.game = game;
-		this.name = name;
 		this.style = style;
 	}
 
 	// sets the behavior for the player.
 	public void setPlayStyle(PlayStyle p) {
+		if(style==null)
+			style = p;
 		if (!style.equals(p)) {
 			if(style.equals(HumanPlayStyle.getInstance())) {
 				HumanPlayStyle.unlock();
@@ -38,7 +38,7 @@ public class Player {
 		try {
 			UnTestedCoordinates uc = style.getMove();
 			PolarCoordinate c = new PolarCoordinate(uc);
-			Move newMove = new Move(true, token, c);
+			Move newMove = new Move(turn, c);
 			return newMove;
 			
 		} catch (BadCoordinateException e) {

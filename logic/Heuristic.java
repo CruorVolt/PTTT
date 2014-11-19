@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 
 import polar.game.*;
 
@@ -25,8 +23,8 @@ public class Heuristic extends SupportFunctions {
 	 * @param map    The current game map
 	 * @param maxPlayer The token for the positive player
 	 */
-	public static int evaluateMinMax(GameMap map, Character maxPlayer) {
-		Character minPlayer = (maxPlayer == 'X') ? 'O' : 'X';
+	public static int evaluateMinMax(Map map, boolean maxPlayer) {
+		boolean minPlayer = !maxPlayer;
 		return evaluate(map, maxPlayer) - evaluate(map, minPlayer);
 	}
 	
@@ -37,7 +35,7 @@ public class Heuristic extends SupportFunctions {
 	 * @param map    The current game map
 	 * @param player The token for the positive player
 	 */
-	public static int evaluate(GameMap map, Character player) {
+	public static int evaluate(Map map, boolean player) {
 		int score = 0;
 		ArrayList<Move> neighbors;
 		ArrayList<Move> moves = new ArrayList<Move>();
@@ -59,7 +57,7 @@ public class Heuristic extends SupportFunctions {
 
 				// Check for scores if this move belongs to this player and has
 				// not been included in any previous scorings
-				if ( (current.getToken() == player) && !(searched[i]) ){
+				if ( (current.getPlayer() == player) && !(searched[i]) ){
 
 					neighbors = adjacentMoves(current, true, true);
 					if (neighbors.size() > 0) {
@@ -149,7 +147,6 @@ public class Heuristic extends SupportFunctions {
 	 */
 	private static ArrayList<PolarCoordinate> isWin(Move move, GameMap map) {
 		boolean win;
-		Character token;
 		int score = 0;
 		try {
 			HashMap<String, ArrayList<PolarCoordinate>> lines = getLines(move);

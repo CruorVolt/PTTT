@@ -1,18 +1,17 @@
 package polar.game;
 
 import java.util.Random;
-import logic.Heuristic;
 
 public class RandomPlayStyle implements PlayStyle {
-	
+/*	
 	private Game game;
-	private Character player;
+	private boolean player;
 	
-	public RandomPlayStyle(Character player, Game game) {
+	public RandomPlayStyle(boolean player, Game game) {
 		this.player = player;
 		this.game = game;
 	}
-
+*/
 	@Override
 	public UnTestedCoordinates getMove() {
 		//try {
