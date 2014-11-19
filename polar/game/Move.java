@@ -1,14 +1,17 @@
 package polar.game;
 public class Move {
 	private Move[] adjMoves = new Move[8];
-	private boolean turn;
+	private boolean player;
 	private PolarCoordinate loc;
 	private Character token;
 
-	public Move(boolean turn, Character token, PolarCoordinate loc) {
-		this.turn = turn;
+	public Move(boolean player, PolarCoordinate loc) {
+		if(player==Player.PLAYER_X)
+			token='X';
+		else
+			token='O';
+		this.player = player;
 		this.loc = loc;
-		this.token = token;
 	}
 	protected void setAdjMove(int i, Move m) {
 		adjMoves[i] = m;
@@ -16,7 +19,7 @@ public class Move {
 	// add Move s to position i
 	public boolean update(Move s) throws MoveDuplicateException {
 		int i = loc.compare(s.getLoc());
-		if(i>0) {
+		if(i>=0) {
 			if (adjMoves[i] == null) {
 				adjMoves[i] = s;
 				int j = s.getLoc().compare(loc);
@@ -40,6 +43,17 @@ public class Move {
 						adjMoves[i] = null;
 		}
 	}
+	/* compare this move to another move and return a direction between 0-7 if they are
+		adjacent, or -1 if they are not.
+	*/
+	public int compare(Move m) {
+		for(int i=0;i<8;i++) {
+			if(m.equals(adjMoves[i])) {
+				return i;
+			}
+		}
+		return -1;
+	}
 	public Move getAdjMove(int i) {
 		if((i>-1)&&(i<8))
 		return adjMoves[i];
@@ -49,12 +63,20 @@ public class Move {
 	public Move[] adjacencyArray() {
 		return adjMoves;
 	}
-	public boolean getTurn() {
-		return turn;
+	/*  Returns the player turn this Move belongs to.
+	*   A true result means this belongs to player X. 
+		false result means this belongs to player O.
+		Not to be confused with the current turn: 
+		the player who has control of the map.
+	*/
+	public boolean getPlayer() {
+		return player;
 	}
 	public PolarCoordinate getLoc() {
 		return loc;
 	}
+	/* In most situations, ie. game logic, getPlayer is recommended over this method.
+	*/
 	public Character getToken() {
 		return this.token;
 	}

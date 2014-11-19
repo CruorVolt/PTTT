@@ -38,9 +38,9 @@ public class SupportFunctions {
 	 */
 	protected static HashMap<String, ArrayList<PolarCoordinate>> getLines(Move move) throws BadCoordinateException {
 		ArrayList<PolarCoordinate> line;
-		boolean edge = false;
+		//boolean edge = false;
 		HashMap<String, ArrayList<PolarCoordinate>> hash = new HashMap<String, ArrayList<PolarCoordinate>>();
-		int verticalLayer = move.getLoc().getX();
+		//int verticalLayer = move.getLoc().getX();
 		int horizontalLayer = move.getLoc().getY();
 		
 		//vertical line
@@ -115,7 +115,7 @@ public class SupportFunctions {
 		for (int i = 0; i < 8; i++) {
 			adj = move.getAdjMove(i);
 			if (adj != null) {
-				if ( !playerOnly || (adj.getToken() == move.getToken()) ) {
+				if ( !playerOnly || (adj.getPlayer() == move.getPlayer()) ) {
 					neighbors.add(adj);
 				}
 			} else if (!markedOnly) {
@@ -226,7 +226,7 @@ public class SupportFunctions {
 						for (Move m : adjacent) { // count for player-nodes
 							moves+=1;
 							if (m != null) {
-								if (move.getToken() == m.getToken()) {
+								if (move.getPlayer() == m.getPlayer()) {
 									player_adjacent_player+=1;
 								} else {
 									player_adjacent_opponent+=1;
@@ -243,7 +243,7 @@ public class SupportFunctions {
 						for (Move m : adjacent) {
 							moves+=1;
 							if (m != null) {
-								if (move.getToken() == m.getToken()) {
+								if (move.getPlayer() == m.getPlayer()) {
 									opponent_adjacent_player+=1;
 								} else {
 									opponent_adjacent_opponent+=1;
@@ -418,9 +418,9 @@ public class SupportFunctions {
 	public static ArrayList<ArrayList<Object>> generateWinStates(int setSize) {
 		ArrayList<ArrayList<Object>> trainingMaps = new ArrayList<ArrayList<Object>>();
 		for (int i = 0; i< setSize; i++) {
-			Game game = new Game("Player1", "Player2", null);
-			PlayStyle style1 = new GreedyPlayStyle('X', game);
-			PlayStyle style2 = new GreedyPlayStyle('O', game);
+			Game game = new Game();
+			PlayStyle style1 = new GreedyPlayStyle(true, game);
+			PlayStyle style2 = new GreedyPlayStyle(false, game);
 			game.setPlayStyles(style1, style2);
 			game.begin();
 

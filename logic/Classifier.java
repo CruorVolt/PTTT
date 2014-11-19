@@ -1,15 +1,10 @@
 package logic;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,12 +14,12 @@ import polar.game.*;
 public class Classifier {
 	
 	private static final int TRAINING_SET_SIZE = 1000;
-	public static boolean classify(Map map, Character player) {
+	public static boolean classify(Map map, boolean player) {
 		return false;
 	}
 	
 	// Build a decision tree from the given training data
-	public static void train(File trainingSet, Character positivePlayer) {
+	public static void train(File trainingSet, boolean positivePlayer) {
 		
 	}
 	

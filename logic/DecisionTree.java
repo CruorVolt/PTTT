@@ -2,8 +2,6 @@ package logic;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
 
 import polar.game.Map;
 
@@ -40,7 +38,7 @@ public class DecisionTree {
 	 * Classify game map as a win (true) or loss (false)
 	 * given a player token.
 	 */
-	public boolean classify(Character player, Map map) {
+	public boolean classify(boolean player, Map map) {
 		return false;
 	}
 	

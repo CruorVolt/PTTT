@@ -6,8 +6,6 @@ import java.awt.GridBagLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.swing.JFrame;
 import javax.swing.border.BevelBorder;
@@ -89,16 +87,16 @@ public class GameWindow implements GameViewer {
 		
 		switch (choices[0]) {
 		case "Human":
-			player_one_panel = new HumanPlayerPanel(game, 'X');
+			player_one_panel = new HumanPlayerPanel(game, Player.PLAYER_X);
 			style1 = HumanPlayStyle.getInstance();
 			break;
 		case "Random":
-			player_one_panel = new AIPlayerPanel(game, 'X');
-			style1 = new RandomPlayStyle('X', game);
+			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X);
+			style1 = new RandomPlayStyle();
 			break;
 		case "Greedy Search":
-			player_one_panel = new AIPlayerPanel(game, 'X');
-			style1 = new GreedyPlayStyle('X', game);
+			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X);
+			style1 = new GreedyPlayStyle(Player.PLAYER_X, game);
 			break;
 		default:
 			System.out.println("No Player of that type found!");
@@ -106,16 +104,16 @@ public class GameWindow implements GameViewer {
 
 		switch (choices[1]) {
 		case "Human":
-			player_two_panel = new HumanPlayerPanel(game, 'O');
+			player_two_panel = new HumanPlayerPanel(game, Player.PLAYER_O);
 			style2 = HumanPlayStyle.getInstance();
 			break;
 		case "Random":
-			player_two_panel = new AIPlayerPanel(game, 'O');
-			style2 = new RandomPlayStyle('O', game);
+			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O);
+			style2 = new RandomPlayStyle();
 			break;
 		case "Greedy Search":
-			player_two_panel = new AIPlayerPanel(game, 'O');
-			style2 = new GreedyPlayStyle('O', game);
+			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O);
+			style2 = new GreedyPlayStyle(Player.PLAYER_O, game);
 			break;
 		default:
 			System.out.println("No Player of that type found!");
@@ -133,14 +131,14 @@ public class GameWindow implements GameViewer {
 	}
 
 	@Override
-	public void notifyWin(boolean turn, ArrayList<Move> winState) {
+	public void notifyWin(boolean turn, Move[] winState) {
 		if (winState == null) {
 			//Game over with no winner
 			System.out.println("DRAW");
-			game.end();
+			//game.end();
 		} else {
-			System.out.println("WINER");
-			game.end();
+			System.out.println("WINNER");
+			//game.end();
 		}
 	}
 

@@ -8,7 +8,7 @@ public class start {
 
 	public static void main(String[] args) {
 		
-		Game game = new Game("Player1", "Player2", null);
+		Game game = new Game();
 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {

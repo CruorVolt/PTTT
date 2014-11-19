@@ -1,7 +1,5 @@
 package polar.game;
 
-import java.util.ArrayList;
-
 public class ManualViewer implements GameViewer {
 
 	@Override
@@ -11,9 +9,9 @@ public class ManualViewer implements GameViewer {
 	}
 
 	@Override
-	public void notifyWin(boolean turn, ArrayList<Move> winState) {
+	public void notifyWin(boolean turn, Move[] winState) {
 		// TODO Auto-generated method stub
-		
+		System.out.println("Game is finished.");
 	}
 
 }
