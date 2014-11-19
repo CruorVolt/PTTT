@@ -9,7 +9,7 @@ public class Game implements GameViewer {
 	private Player currentPlayer;
 	
 	public Game() {
-		map = new Map();
+		map = new GameMap();
 		playerX = new Player(null, 'X', Player.PLAYER_X);
 		playerO = new Player(null, 'O', Player.PLAYER_O);
 		turn = true;

@@ -96,7 +96,7 @@ public class GameMap {
 	 * modifying the map.
 	 */
 	public GameMap deepCopy() throws MoveDuplicateException {
-		GameMap map = new GameMap(null); // null viewer should not send signals to the gui
+		GameMap map = new GameMap(); // null viewer should not send signals to the gui
 		Move moveCopy;
 		PolarCoordinate location;
 		boolean player;

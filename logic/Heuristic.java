@@ -23,7 +23,7 @@ public class Heuristic extends SupportFunctions {
 	 * @param map    The current game map
 	 * @param maxPlayer The token for the positive player
 	 */
-	public static int evaluateMinMax(Map map, boolean maxPlayer) {
+	public static int evaluateMinMax(GameMap map, boolean maxPlayer) {
 		boolean minPlayer = !maxPlayer;
 		return evaluate(map, maxPlayer) - evaluate(map, minPlayer);
 	}
@@ -35,7 +35,7 @@ public class Heuristic extends SupportFunctions {
 	 * @param map    The current game map
 	 * @param player The token for the positive player
 	 */
-	public static int evaluate(Map map, boolean player) {
+	public static int evaluate(GameMap map, boolean player) {
 		int score = 0;
 		ArrayList<Move> neighbors;
 		ArrayList<Move> moves = new ArrayList<Move>();
