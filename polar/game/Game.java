@@ -49,19 +49,24 @@ public class Game implements GameViewer {
 			}
 		}
 	}
+
 	public void end() {
 		System.out.println("Game ended early.");
 		notWin = false;
 	}
+
 	public GameMap getMap() {
 		return map;
 	}
+
 	public Player getPlayerX() {
 		return playerX;
 	}
+
 	public Player getPlayerO() {
 		return playerO;
 	}
+
 	public Player currentPlayer() {
 		Player current;
 		if (turn) {
@@ -71,14 +76,16 @@ public class Game implements GameViewer {
 		}
 		return current;
 	}
+
 	// performs a new turn.
 	private boolean nextTurn(Move move) {
 		boolean success;
 		if(move!=null) {
 			try {
 				success = map.updateAll(move, turn); // return true if valid move and update succeeds.
-				if(success)
+				if(success) {
 					turn = !turn;
+				}
 			} catch(MoveDuplicateException m) {
 				success = false;
 			}

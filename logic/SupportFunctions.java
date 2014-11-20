@@ -132,7 +132,7 @@ public class SupportFunctions {
 		//Truncate old training data
 		FileChannel outChan;
 		try {
-			outChan = new FileOutputStream(new File("./src/training_set.csv"), true).getChannel();
+			outChan = new FileOutputStream(output, true).getChannel();
 			outChan.truncate(0);
 			outChan.close();
 			PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("./src/training_set.csv", true))); 
@@ -440,6 +440,7 @@ public class SupportFunctions {
 		try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(fileName, true)))) {
 			out.println(list.toString().substring(1,list.toString().length() - 1));
 		}catch (IOException e) {
+			System.out.println("Could not write to file");
 		}
 	}
 	

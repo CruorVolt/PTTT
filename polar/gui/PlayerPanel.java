@@ -22,6 +22,7 @@ public class PlayerPanel extends JPanel{
 	
 	public PlayerPanel(Game game, boolean player) {
 		super();
+		this.player = player;
 		this.game = game;
 		if(player==Player.PLAYER_X)
 			this.token = 'X';

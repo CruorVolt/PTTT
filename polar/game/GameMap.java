@@ -58,7 +58,7 @@ public class GameMap {
 				viewer.notifyWin(true, winSequence);
 			}
 		}
-		return true;
+		return validMove;
 	}
 	
 	/*

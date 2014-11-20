@@ -31,8 +31,9 @@ public class Classifier {
 	 * @param regenerate Whether to use existing training data or create new test games
 	 */
 	public static ArrayList<Object> gain(String trainingSet, boolean regenerate) throws IOException {
-		if (regenerate) {
-			SupportFunctions.generateWinStates(TRAINING_SET_SIZE);
+		File f = new File(trainingSet);
+		if ((regenerate) || (!f.exists())){ //make new features if none exist
+			SupportFunctions.generateFeatures(new File(DecisionTree.TRAINING_FILE), 'X', TRAINING_SET_SIZE);
 		}
 		HashMap<String, Double> entropyMap = new HashMap<String, Double>();
 
