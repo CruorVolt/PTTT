@@ -18,6 +18,7 @@ public class DecisionTree {
 	public static final int TREE_DEPTH = 7;
     public static final String TRAINING_FILE = "./src/training_set.csv";
     Node[] features;
+    ArrayList<Double> partitionVals;
 	Node root;
 	
 	public DecisionTree() {
@@ -46,6 +47,11 @@ public class DecisionTree {
 				}
 				Arrays.sort(sorted);
 				this.features = sorted;
+				
+				partitionVals = new ArrayList<Double>();
+				for (Node n : this.features) {
+					partitionVals.add(n.partition);
+				}
 				
 				Node node;
 				//trace the tree
@@ -92,7 +98,7 @@ public class DecisionTree {
 			}
 			
 			System.out.println("Done with setup, builidng tree");
-			buildTree(examples, target, attributes);
+			buildTree(0, examples, target, attributes, partitionVals);
 		} catch (IOException e) {
 			System.out.println("Reset or read issue?");
 			e.printStackTrace();
@@ -103,7 +109,7 @@ public class DecisionTree {
 	 * Build a classification tree 
 	 */
 //		ID3 (Examples, Target_Attribute, Attributes)
-	public Node buildTree(ArrayList<ArrayList<Double>> examples, ArrayList<Double> target, ArrayList<String> attributes) { 
+	public Node buildTree(int currentFeature, ArrayList<ArrayList<Double>> examples, ArrayList<Double> target, ArrayList<String> attributes, ArrayList<Double> partitions) { 
 //	    Create a root node for the tree
 		Node root = new Node(features[0]);
 
@@ -132,24 +138,40 @@ public class DecisionTree {
 
 //	    If number of predicting attributes is empty, then Return the single node tree Root,
 //	    with label = most common value of the target attribute in the examples.
+		boolean label = (weight >= 0) ? true : false;
 		if (attributes.size() == 0 || attributes == null) {
-			root.label( (weight >= 0) ? true : false);
+			root.label(label);
 			return root;
 		}
 		
-		
-		
 //	    Otherwise Begin
-//	        A ← The Attribute that best classifies examples.
+//	        A < The Attribute that best classifies examples.
+			String a = attributes.get(0);
+			double partition = partitions.get(0);
+
 //	        Decision Tree attribute for Root = A.
 //	        For each possible value, v_i, of A,
 //	            Add a new tree branch below Root, corresponding to the test A = v_i.
 //	            Let Examples(v_i) be the subset of examples that have the value v_i for A
+				ArrayList<ArrayList<Double>> smallChildExamples = new ArrayList<ArrayList<Double>>();
+				ArrayList<ArrayList<Double>> largeChildExamples = new ArrayList<ArrayList<Double>>();
+				for (ArrayList<Double> l : examples) {
+					if (l.get(currentFeature) <= partition) {
+						smallChildExamples.add(l);
+					} else {
+						largeChildExamples.add(l);
+					}
+				}	
 //	            If Examples(v_i) is empty
 //	                Then below this new branch add a leaf node with label = most common target value in the examples
+				if (smallChildExamples.size() == 0) {
+				}
+				if (largeChildExamples.size() == 0) {
+				}
 //	            Else below this new branch add the subtree ID3 (Examples(v_i), Target_Attribute, Attributes – {A})
 //	    End
 //	    Return Root	
+		return root;
 	}
 	
 	/*
@@ -161,7 +183,7 @@ public class DecisionTree {
 	}
 	
 	class Node implements Comparable {
-		public Double val;
+		public Double gainval;
 		public String tag;
 		public double partition;
 		public Node parent;
@@ -169,25 +191,33 @@ public class DecisionTree {
 		boolean label;
 		
 		public Node(Node original) {
-			this.val = original.val;
+			this.gainval = original.gainval;
 			this.tag = original.tag;
 			this.partition = original.partition;
 		}
 		
 		public Node(Double val, String tag, double partition) {
 			children = new ArrayList<Node>();
-			this.val = val;
+			this.gainval = val;
 			this.tag = tag;
 			this.partition = partition;
 		}
 
 		public Node(Double val, String tag, double partition, Node parent) {
 			children = new ArrayList<Node>();
-			this.val = val;
+			this.gainval = val;
 			this.tag = tag;
 			this.partition = partition;
 			this.parent = parent;
 			parent.addChild(this);
+		}
+		
+		public int test(double value) {
+			if (value <= partition) {
+				return -1;
+			} else {
+				return 1;
+			}
 		}
 		
 		public void addParent(Node parent) {
