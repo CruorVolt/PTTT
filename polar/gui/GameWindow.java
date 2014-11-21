@@ -138,6 +138,7 @@ public class GameWindow implements GameViewer {
 			//game.end();
 		} else {
 			System.out.println("WINNER");
+			game_panel.updateWin(winState);
 			//game.end();
 		}
 	}

@@ -13,6 +13,7 @@ import java.awt.geom.Line2D;
 import javax.swing.JLayeredPane;
 
 import polar.game.Game;
+import polar.game.Move;
 import polar.game.PolarCoordinate;
 import polar.game.BadCoordinateException;
 import polar.game.UnTestedCoordinates;
@@ -143,6 +144,17 @@ public class GridPanel extends JLayeredPane implements ComponentListener{
 		g2.draw(new Line2D.Double(r2x,r2y,center_x-(r2x-center_x),center_y-(r2y-center_y)));
 		g2.draw(new Line2D.Double(r3x,r3y,center_x-(r3x-center_x),center_y-(r3y-center_y)));
 		g2.draw(new Line2D.Double(r4x,r4y,center_x-(r4x-center_x),center_y-(r4y-center_y)));
+		
+	}
+	
+	public void updateWin(Move[] winState) {
+		PolarCoordinate coord;
+		for (Move move : winState) {
+			coord = move.getLoc();
+			System.out.println("MAKING IT " + coord);
+			CrossPointLabel point = points[coord.getX() - 1][coord.getY()];
+			point.setForeground(new Color(0, 170, 0)); //Dark green winning nodes
+		}
 		
 	}
 

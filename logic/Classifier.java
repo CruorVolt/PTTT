@@ -47,16 +47,11 @@ public class Classifier {
 		HashMap<String, double[]> minMax = featureMinMax(trainingSet);
 		double[] mins = minMax.get("minimums");
 		double[] maxs = minMax.get("maximums");
-		ArrayList<ArrayList<Double>> partitions = new ArrayList<ArrayList<Double>>();
-		partitions.add(null); //Don't need partitions for first feature
+		double[] partitions = new double[mins.length]; //halfway partition points
+		partitions[0] = 0; //Don't need partitions for first feature
 		for (int i = 1; i < numberOfFeatures; i++) {
-			ArrayList<Double> splits = new ArrayList<Double>();
-			double split = (maxs[i] - mins[i]) / 3;
-			splits.add(mins[i]);
-			splits.add(mins[i] + split);
-			splits.add(maxs[i] - split);
-			splits.add(maxs[i]);
-			partitions.add(splits);
+			double split = (maxs[i] + mins[i]) / 2.0;
+			partitions[i] = split;
 		}
 
 		//Arrays for positive and negative examples of each feature, initizlized to zeroes for each possible partition
@@ -69,7 +64,7 @@ public class Classifier {
 			//Initial partitions are all zeroes -- incremented by observation
 			ArrayList<Integer> zeroesP = new ArrayList<Integer>();
 			ArrayList<Integer> zeroesN = new ArrayList<Integer>();
-			for (int j = 0; j < 3; j++) {
+			for (int j = 0; j < 2; j++) {
                 	zeroesP.add(0);
                 	zeroesN.add(0);
 			}
@@ -95,30 +90,19 @@ public class Classifier {
 				
 				//Increment examples
 				Double featureVal = Double.valueOf(features[i]);
-				ArrayList<Double> partition = partitions.get(i);
 				if (win > 0) {
-					if (featureVal >= partition.get(0) && featureVal < partition.get(1)) { 
-						// This value belongs to the smallest partition
+					if (featureVal <= partitions[i]) { // This value belongs to the bottom partition
 						positiveExamples.get(i).set(0, positiveExamples.get(i).get(0) + 1);
-					} else if (featureVal >= partition.get(1) && featureVal < partition.get(2)) { 
-						// This value belongs to the middle partiton
+					} else if (featureVal > partitions[i]) { // This value belongs to the top partiton
 						positiveExamples.get(i).set(1, positiveExamples.get(i).get(1) + 1);
-					} else if (featureVal >= partition.get(2) && featureVal <= partition.get(3)) { 
-						// This value belongs to the largest partiton
-						positiveExamples.get(i).set(2, positiveExamples.get(i).get(2) + 1);
 					} else { //Something went wrong: unexpected feature value
 						System.out.println("Unexpected feature value while counting p and n for entropy");
 					}
 				} else {
-					if (featureVal >= partition.get(0) && featureVal < partition.get(1)) { 
-						// This value belongs to the smallest partition
+					if (featureVal <= partitions[i]) { // This value belongs to the bottom partition
 						negativeExamples.get(i).set(0, positiveExamples.get(i).get(0) + 1);
-					} else if (featureVal >= partition.get(1) && featureVal < partition.get(2)) { 
-						// This value belongs to the middle partiton
+					} else if (featureVal > partitions[i]) { // This value belongs to the top partiton
 						negativeExamples.get(i).set(1, positiveExamples.get(i).get(1) + 1);
-					} else if (featureVal >= partition.get(2) && featureVal <= partition.get(3)) { 
-						// This value belongs to the largest partiton
-						negativeExamples.get(i).set(2, positiveExamples.get(i).get(2) + 1);
 					} else { //Something went wrong: unexpected feature value
 						System.out.println("Unexpected feature value while counting p and n for entropy");
 					}
@@ -142,10 +126,9 @@ public class Classifier {
 			defaults.ensureCapacity(3);
 			defaults.add(0.0);
 			defaults.add(0.0);
-			defaults.add(0.0);
 			entropy.add(defaults); //initial zeroes for this index
 			double expectedSum = 0.0;
-			for (int i = 0; i < 3; i++) { //Per feature-partition
+			for (int i = 0; i < 2; i++) { //Per feature-partition
 				try {
 
 					Double positiveXI = (double) positiveExamples.get(x).get(i);
