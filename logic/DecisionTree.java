@@ -5,11 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.TreeMap;
 
 import polar.game.GameMap;
 
@@ -18,6 +15,9 @@ import polar.game.GameMap;
  * procedures in Classifier.java
  */
 public class DecisionTree {
+	
+	
+	public static int nodes = 0;
 	
 	public static final int TREE_DEPTH = 7;
     public static final String TRAINING_FILE = "./src/training_set.csv";
@@ -92,7 +92,8 @@ public class DecisionTree {
 				partitions.add(g.partition);
 			}
 			Node tree = buildTree(examples, targets, 0, attributes, partitions);
-			System.out.println(tree);
+			System.out.println("Tree has " + nodes + " nodes");
+			this.root = tree;
 		} catch (IOException e) {
 			System.out.println("Reset or read issue?");
 			e.printStackTrace();
@@ -111,6 +112,7 @@ public class DecisionTree {
 		} else {
 			root = new Node("", 0);
 		}
+		nodes++;
 
 //	    If all examples are positive, Return the single-node tree Root, with label = +.
 //	    If all examples are negative, Return the single-node tree Root, with label = -.
@@ -169,6 +171,7 @@ public class DecisionTree {
 //	            If Examples(v_i) is empty
 //	                Then below this new branch add a leaf node with label = most common target value in the examples
 				Node child = new Node("",0);
+				nodes++;
 				child.label( (weight >= 0) ? true : false );
 				if (smallChildExamples.size() == 0) {
 					root.setLeftChild(child);
@@ -188,10 +191,39 @@ public class DecisionTree {
 	}
 	
 	/*
-	 * Classify game map as a win (true) or loss (false)
-	 * given a player token.
+	 * Classify game map as a win for player X (true) or win 
+	 * for player O (false) 
 	 */
 	public boolean classify(Character player, GameMap map) {
+		ArrayList<String> featuresNames;
+		ArrayList<Double> featuresVals;
+		Node currentNode = root;
+		Double currentValue = null;
+		Boolean label = null;
+		if (this.root != null) {
+			featuresNames = SupportFunctions.featureNames();
+			featuresVals = SupportFunctions.mapFeatures(map, 'X');
+			while (currentNode != null) {
+				//get feature
+				for(int i = 1; i < featuresNames.size(); i++) {
+					if (featuresNames.get(i).compareTo(currentNode.featureName) == 0) {
+						currentValue = featuresVals.get(i);
+						break;
+					}
+				}
+				//test feature
+				if (currentValue == null) {
+					System.out.println("No features matched!");
+				} else {
+					label = currentNode.getLabel();
+					currentNode = currentNode.child(currentValue);
+				}
+			}
+			return label;
+		} else {
+			System.out.println("Can't clasify, no tree built yet!");
+		}
+		System.out.println("DON'T TRUST THIS ONE!");
 		return false;
 	}
 	
@@ -199,7 +231,7 @@ public class DecisionTree {
 		public String featureName;
 		public double partition;
 		private Node leftChild, rightChild;
-		Boolean label;
+		private Boolean label;
 		
 		public Node(String featureName, double partition) {
 			this.featureName = featureName;
@@ -218,6 +250,10 @@ public class DecisionTree {
 			} else {
 				return rightChild;
 			}
+		}
+		
+		public Boolean getLabel() {
+			return (label == null) ? null : label;
 		}
 		
 		public int test(double value) {
@@ -273,6 +309,14 @@ public class DecisionTree {
 		DecisionTree tree = new DecisionTree();
 		try {
 			tree.setupTree(TRAINING_FILE);
+			ArrayList<ArrayList<Object>> mapMap = SupportFunctions.generateWinStates(1);
+			Character actual = (Character) mapMap.get(0).get(0);
+			GameMap map = (GameMap) mapMap.get(0).get(1);
+			System.out.println("Actual winner is " + actual);
+			boolean c = tree.classify('X', map);
+			System.out.println("Predicted for X: " + c);
+			
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

@@ -122,55 +122,12 @@ public class SupportFunctions {
 		}
 		return neighbors;
 	}
-
+	
 	/*
-	 * Generate a set of game win-states and their associated features,
-	 * stored in output file csv.
+	 * Find the features for the given map - values only
 	 */
-	public static void generateFeatures(File output, Character positivePlayer, int training_set_size) {
+	public static ArrayList<Double> mapFeatures(GameMap map, Character positivePlayer) {
 		
-		//Truncate old training data
-		FileChannel outChan;
-		try {
-			outChan = new FileOutputStream(output, true).getChannel();
-			outChan.truncate(0);
-			outChan.close();
-			PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("./src/training_set.csv", true))); 
-		    out.println(
-		    		"win, " + 
-		    		"player_avg_adjacent_player, " + 
-			   		"player_avg_adjacent_opponent, " + 
-			   		"player_avg_adjacent_empty, " + 
-			   		"opponent_avg_adjacent_player, " + 
-			   		"opponent_avg_adjacent_opponent, " + 
-			   		"opponent_avg_adjacent_empty, " + 
-			   		"player_avg_vert_player_marked, " + 
-			   		"player_avg_vert_opponent_marked, " + 
-			   		"player_avg_horiz_player_marked, " + 
-			   		"player_avg_horiz_opponent_marked, " + 
-			   		"player_avg_diag_player_marked, " + 
-			   		"player_avg_diag_opponent_marked, " + 
-			   		"opponent_avg_vert_player_marked, " + 
-			   		"opponent_avg_vert_opponent_marked, " + 
-			   		"opponent_avg_horiz_player_marked, " + 
-			   		"opponent_avg_horiz_opponent_marked, " + 
-			   		"opponent_avg_diag_player_marked, " + 
-			   		"opponent_avg_diag_opponent_marked" 
-			   	);
-		    out.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		ArrayList<ArrayList<Object>> games = generateWinStates(training_set_size);
-
-		for (ArrayList<Object> gameMap : games) {
-			
-			Character winner = (Character) gameMap.get(0);
-			GameMap map = (GameMap) gameMap.get(1);
-
 			ArrayList<Double> player_adjacent_player_array = new ArrayList<Double>();
 			ArrayList<Double> player_adjacent_opponent_array = new ArrayList<Double>();
 			ArrayList<Double> player_adjacent_empty_array = new ArrayList<Double>();
@@ -379,11 +336,7 @@ public class SupportFunctions {
 			double opponent_avg_diag_opponent_marked = arrayAverage(opponent_diag_opponent_marked_array);
 			
 			ArrayList<Double> features = new ArrayList<Double>();
-			if (winner == positivePlayer) {
-				features.add(1.0);
-			} else {
-				features.add(-1.0);
-			}
+			features.add(0.0); // No known win state for this map
 			features.add(player_avg_adjacent_player);
 			features.add(player_avg_adjacent_opponent);
 			features.add(player_avg_adjacent_empty);
@@ -405,6 +358,58 @@ public class SupportFunctions {
 			features.add(opponent_avg_diag_player_marked);
 			features.add(opponent_avg_diag_opponent_marked);
 			
+			return features;
+	}
+	
+	public static ArrayList<String> featureNames() {
+		ArrayList<String> names = new ArrayList<String>();
+		names.add("win");
+		names.add("player_avg_adjacent_player" );
+		names.add("player_avg_adjacent_opponent" );
+		names.add("player_avg_adjacent_empty" );
+		names.add("opponent_avg_adjacent_player" );
+		names.add("opponent_avg_adjacent_opponent" );
+		names.add("opponent_avg_adjacent_empty" );
+		names.add("player_avg_vert_player_marked" );
+		names.add("player_avg_vert_opponent_marked" );
+		names.add("player_avg_horiz_player_marked" );
+		names.add("player_avg_horiz_opponent_marked" );
+		names.add("player_avg_diag_player_marked" );
+		names.add("player_avg_diag_opponent_marked" );
+		names.add("opponent_avg_vert_player_marked" );
+		names.add("opponent_avg_vert_opponent_marked" );
+		names.add("opponent_avg_horiz_player_marked" );
+		names.add("opponent_avg_horiz_opponent_marked" );
+		names.add("opponent_avg_diag_player_marked" );
+		names.add("opponent_avg_diag_opponent_marked");
+		return names;
+	}
+
+	/*
+	 * Generate a set of game win-states and their associated features,
+	 * stored in output file csv.
+	 */
+	public static void generateFeatures(File output, Character positivePlayer, int training_set_size) {
+		
+		//Truncate old training data
+		FileChannel outChan;
+		try {
+			outChan = new FileOutputStream(output, true).getChannel();
+			outChan.truncate(0);
+			outChan.close();
+			writeArray(featureNames(), DecisionTree.TRAINING_FILE);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		ArrayList<ArrayList<Object>> games = generateWinStates(training_set_size);
+
+		for (ArrayList<Object> gameMap : games) {
+			Character winner = (Character) gameMap.get(0);
+			GameMap map = (GameMap) gameMap.get(1);
+			ArrayList<Double> features = mapFeatures(map, positivePlayer);
 			writeArray(features, "./src/training_set.csv");
 		}
 	}
@@ -436,7 +441,7 @@ public class SupportFunctions {
 	/*
 	 * Output an array as a row in the specified csv file
 	 */
-	public static void writeArray(ArrayList<Double> list, String fileName) {
+	public static <T extends Object> void writeArray(ArrayList<T> list, String fileName) {
 		try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(fileName, true)))) {
 			out.println(list.toString().substring(1,list.toString().length() - 1));
 		}catch (IOException e) {
