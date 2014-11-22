@@ -14,11 +14,6 @@ import polar.game.*;
 public class Classifier {
 	
 	private static final int TRAINING_SET_SIZE = 1000;
-	public static boolean decisionTreeClassify(GameMap map, Character player) {
-		Boolean[][] trace = new Boolean[18][3]; // a trace of the path through the 'tree'
-		DecisionTree tree = new DecisionTree();
-		return false;
-	}
 	
 	/*
 	 * Calculate the gain of a set of features given the 
