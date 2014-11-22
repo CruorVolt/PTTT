@@ -4,6 +4,8 @@ public class Move {
 	private boolean player;
 	private PolarCoordinate loc;
 	private Character token;
+	public static Move block;
+	private boolean blocker;	// tells whether this is a special blocking move
 
 	public Move(boolean player, PolarCoordinate loc) {
 		if(player==Player.PLAYER_X)
@@ -12,6 +14,40 @@ public class Move {
 			token='O';
 		this.player = player;
 		this.loc = loc;
+		blocker = false;
+		checkBlockingStatus();
+	}
+	// tests whether any adjacent locations are invalid.
+	// adds blocking move to all invalid locations
+	private void checkBlockingStatus() {
+		getBlock();
+		int x = loc.getX();
+		// block all spaces which lead to the center of the circle!
+		if(x==1) {
+			adjMoves[PolarCoordinate.VAdjAndBelow] = block;
+			adjMoves[PolarCoordinate.DAdjBelowAndBehind] = block;
+			adjMoves[PolarCoordinate.DAdjBelowAndAhead] = block;
+		}
+		if(x==4) {
+			adjMoves[PolarCoordinate.VAdjAndAbove] = block;
+			adjMoves[PolarCoordinate.DAdjAboveAndBehind] = block;
+			adjMoves[PolarCoordinate.DAdjAboveAndAhead] = block;			
+		}
+			
+	}
+	// Create a border move.
+	private Move() {
+		loc = null;
+		token = null;
+		adjMoves = null;
+		blocker = true;
+	}
+	// returns the move blocking invalid locations
+	public Move getBlock() {
+		if(block==null) {
+			block = new Move();
+		}
+		return block;
 	}
 	protected void setAdjMove(int i, Move m) {
 		adjMoves[i] = m;
@@ -54,11 +90,22 @@ public class Move {
 		}
 		return -1;
 	}
+	// returns adjacent move in the given position if they are owned by a player
+	// returns null if no adjacent move is present or if a position is blocked.
 	public Move getAdjMove(int i) {
-		if((i>-1)&&(i<8))
-		return adjMoves[i];
-		else
-			return null;
+		Move t = getMoveOrBlock(i);
+		if(t==null) return null;
+		 if(!t.equals(block)) {
+			 return null;
+		 }
+		 else return t;
+	}
+	// returns the adjacent move, even if it is the block move
+	public Move getMoveOrBlock(int i) {
+		if((i>-1)&&(i<8)) {
+			return adjMoves[i];
+		}
+		else return null;
 	}
 	public Move[] adjacencyArray() {
 		return adjMoves;
@@ -69,7 +116,7 @@ public class Move {
 		Not to be confused with the current turn: 
 		the player who has control of the map.
 	*/
-	public boolean getPlayer() {
+	public Boolean getPlayer() {
 		return player;
 	}
 	public PolarCoordinate getLoc() {

@@ -1,14 +1,22 @@
 package polar.game;
 import java.util.ArrayList;
 
+import logic.GameState;
+
 public class GameMap {
 
 	private ArrayList<Move> moves;
 	private Move[] winSequence;
 	private ArrayList<GameViewer> viewers;
+	private Move currentMove;
+	private GameState state;	
+	
 	public GameMap() {
+		currentMove = null;
 		moves = new ArrayList<Move>();
 		viewers = new ArrayList<GameViewer>();
+		state = new GameState(this);
+		viewers.add(state);
 	}
 
 	public void addViewer(GameViewer viewer) {
@@ -22,7 +30,7 @@ public class GameMap {
 	 * updates the adjacency of all previous
 	 * moves to include n if necessary
 	 */
-	public boolean updateAll(Move n, boolean turn) throws MoveDuplicateException {
+	public boolean updateAll(Move n) throws MoveDuplicateException {
 		boolean validMove = false;
 		// allow move in any space, if no moves exist.
 		if(moves.isEmpty())
@@ -47,9 +55,10 @@ public class GameMap {
 		}
 		if(validMove)
 			moves.add(n);
+			currentMove = n;
 		if ((!viewers.isEmpty())&&validMove) {
 			for(GameViewer viewer : viewers) {
-				viewer.notifyMove(n.getLoc(), turn);
+				viewer.notifyMove(n.getLoc(), n.getPlayer());
 			}
 		}
 		// end the game if a win is found, or if the board is out of moves.
@@ -104,7 +113,7 @@ public class GameMap {
 			location = move.getLoc();
 			player = move.getPlayer();
 			moveCopy = new Move(player, location);
-			map.updateAll(moveCopy, true);
+			map.updateAll(moveCopy);
 		}
 		return map;
 		
@@ -162,6 +171,13 @@ public class GameMap {
 	// predicate to check direction validity.
 	private boolean valid(int i) {
 		return (i>-1)&&(i<8);
+	}
+
+	public Move getCurrentMove() {
+		return currentMove;
+	}
+	public GameState getState() {
+		return state;
 	}
 	
 }
