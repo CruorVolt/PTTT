@@ -6,6 +6,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.TreeMap;
 
 import polar.game.GameMap;
 
@@ -17,8 +21,8 @@ public class DecisionTree {
 	
 	public static final int TREE_DEPTH = 7;
     public static final String TRAINING_FILE = "./src/training_set.csv";
-    Node[] features;
     ArrayList<Double> partitionVals;
+    ArrayList<gainMap> gainMaps;
 	Node root;
 	
 	public DecisionTree() {
@@ -34,31 +38,15 @@ public class DecisionTree {
 			if (blocks.get(1) instanceof double[]) {
 				partitions = (double[]) blocks.get(1);
 			}
-			String[] features = SupportFunctions.getFeatures(TRAINING_FILE);
 			
+			ArrayList<gainMap> sorted = new ArrayList<gainMap>();
 			if (gains != null && partitions != null) {
-				//Sort gains and associated features
-				Node[] sorted = new Node[gains.length];
-				Node pair;
-				for (int j = 0; j < sorted.length; j++) {
-					pair = new Node(gains[j], features[j], partitions[j+1]);
-					sorted[j] = pair;
-					System.out.println(pair);
-				}
-				Arrays.sort(sorted);
-				this.features = sorted;
-				
-				partitionVals = new ArrayList<Double>();
-				for (Node n : this.features) {
-					partitionVals.add(n.partition);
-				}
-				
-				Node node;
-				//trace the tree
-				for (int i = sorted.length-1; i >= 0; i--) {
-
+				for (int i = 0; i < gains.length; i++) {
+					sorted.add(new gainMap(gains[i], partitions[i]));
 				}
 			}
+			Collections.sort(sorted);
+			this.gainMaps = sorted;
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -68,7 +56,7 @@ public class DecisionTree {
 	public void setupTree(String examplesFile) throws FileNotFoundException {
 
 		ArrayList<ArrayList<Double>> examples = new ArrayList<ArrayList<Double>>();
-		ArrayList<Double> target = new ArrayList<Double>(); 
+		ArrayList<Double> targets = new ArrayList<Double>(); 
 		ArrayList<String> attributes = new ArrayList<String>();
 
 		BufferedReader br = new BufferedReader(new FileReader(examplesFile));
@@ -80,14 +68,14 @@ public class DecisionTree {
 				attributes.add(headers[i]);
 			}
 
-			if (headers.length == features.length + 1) { //Make sure the featureset and file match
+			if (headers.length -1 == gainMaps.size()) { //Make sure the featureset and file match
 				String rawLine;
 				String[] line;
 				ArrayList<Double> values;
 				while ((rawLine = br.readLine()) != null) {
 					values = new ArrayList<Double>();
 					line = rawLine.split(", ");
-					target.add(Double.valueOf(line[0])); //class label
+					targets.add(Double.valueOf(line[0])); //class label
 					for (int i = 1; i < line.length; i++) {
 						values.add(Double.valueOf(line[i]));
 					}
@@ -98,7 +86,13 @@ public class DecisionTree {
 			}
 			
 			System.out.println("Done with setup, builidng tree");
-			buildTree(0, examples, target, attributes, partitionVals);
+			//attributes and partitions need to be sorted by gains here
+			List<Double> partitions = new ArrayList<Double>();
+			for (gainMap g : gainMaps) {
+				partitions.add(g.partition);
+			}
+			Node tree = buildTree(examples, targets, 0, attributes, partitions);
+			System.out.println(tree);
 		} catch (IOException e) {
 			System.out.println("Reset or read issue?");
 			e.printStackTrace();
@@ -109,16 +103,22 @@ public class DecisionTree {
 	 * Build a classification tree 
 	 */
 //		ID3 (Examples, Target_Attribute, Attributes)
-	public Node buildTree(int currentFeature, ArrayList<ArrayList<Double>> examples, ArrayList<Double> target, ArrayList<String> attributes, ArrayList<Double> partitions) { 
+	public Node buildTree(ArrayList<ArrayList<Double>> examples, ArrayList<Double> labels, int currentFeature, List<String> attributes, List<Double> partitions) { 
 //	    Create a root node for the tree
-		Node root = new Node(features[0]);
+		Node root;
+		if (attributes.size() > 0) {
+			root = new Node(attributes.get(0), partitions.get(0));
+		} else {
+			root = new Node("", 0);
+		}
 
 //	    If all examples are positive, Return the single-node tree Root, with label = +.
 //	    If all examples are negative, Return the single-node tree Root, with label = -.
 		boolean positiveExample = false;
 		boolean negativeExample = false;
 		int weight = 0;
-		for (Double d : target) {
+		for (int i = 0; i < examples.size(); i++) {
+			Double d = labels.get(i);
 			if (d > 0.0) {
 				weight++;
 				positiveExample = true;
@@ -146,7 +146,6 @@ public class DecisionTree {
 		
 //	    Otherwise Begin
 //	        A < The Attribute that best classifies examples.
-			String a = attributes.get(0);
 			double partition = partitions.get(0);
 
 //	        Decision Tree attribute for Root = A.
@@ -154,19 +153,33 @@ public class DecisionTree {
 //	            Add a new tree branch below Root, corresponding to the test A = v_i.
 //	            Let Examples(v_i) be the subset of examples that have the value v_i for A
 				ArrayList<ArrayList<Double>> smallChildExamples = new ArrayList<ArrayList<Double>>();
+				ArrayList<Double> smallLabels = new ArrayList<Double>();
 				ArrayList<ArrayList<Double>> largeChildExamples = new ArrayList<ArrayList<Double>>();
-				for (ArrayList<Double> l : examples) {
+				ArrayList<Double> largeLabels = new ArrayList<Double>();
+				for (int i = 0; i < examples.size(); i++) {
+					ArrayList<Double> l = examples.get(i);
 					if (l.get(currentFeature) <= partition) {
 						smallChildExamples.add(l);
+						smallLabels.add(labels.get(i));
 					} else {
 						largeChildExamples.add(l);
+						largeLabels.add(labels.get(i));
 					}
 				}	
 //	            If Examples(v_i) is empty
 //	                Then below this new branch add a leaf node with label = most common target value in the examples
+				Node child = new Node("",0);
+				child.label( (weight >= 0) ? true : false );
 				if (smallChildExamples.size() == 0) {
+					root.setLeftChild(child);
+				} else {
+					root.setLeftChild(buildTree(smallChildExamples, smallLabels, currentFeature + 1, attributes.subList(1, attributes.size()), partitions.subList(1, partitions.size())));
 				}
+
 				if (largeChildExamples.size() == 0) {
+					root.setRightChild(child);
+				} else {
+					root.setRightChild(buildTree(largeChildExamples, largeLabels, currentFeature + 1, attributes.subList(1, attributes.size()), partitions.subList(1, partitions.size())));
 				}
 //	            Else below this new branch add the subtree ID3 (Examples(v_i), Target_Attribute, Attributes – {A})
 //	    End
@@ -182,34 +195,29 @@ public class DecisionTree {
 		return false;
 	}
 	
-	class Node implements Comparable {
-		public Double gainval;
-		public String tag;
+	class Node {
+		public String featureName;
 		public double partition;
-		public Node parent;
-		public ArrayList<Node> children;
-		boolean label;
+		private Node leftChild, rightChild;
+		Boolean label;
 		
-		public Node(Node original) {
-			this.gainval = original.gainval;
-			this.tag = original.tag;
-			this.partition = original.partition;
+		public Node(String featureName, double partition) {
+			this.featureName = featureName;
+			this.partition = partition;
+			label = null;
+			leftChild = null;
+			rightChild = null;
 		}
 		
-		public Node(Double val, String tag, double partition) {
-			children = new ArrayList<Node>();
-			this.gainval = val;
-			this.tag = tag;
-			this.partition = partition;
-		}
-
-		public Node(Double val, String tag, double partition, Node parent) {
-			children = new ArrayList<Node>();
-			this.gainval = val;
-			this.tag = tag;
-			this.partition = partition;
-			this.parent = parent;
-			parent.addChild(this);
+		public Node child(double value) {
+			int direction = test(value);
+			if (leftChild == null && rightChild == null) {
+				return null;
+			} else if (direction < 0) {
+				return leftChild;
+			} else {
+				return rightChild;
+			}
 		}
 		
 		public int test(double value) {
@@ -220,19 +228,12 @@ public class DecisionTree {
 			}
 		}
 		
-		public void addParent(Node parent) {
-			this.parent = parent;
-			parent.addChild(this);
+		public void setLeftChild(Node newChild) {
+			leftChild = newChild;
 		}
-		
-		public void addChild(Node newChild) {
-			if (children != null) {
-				children.add(newChild);
-			}
-		}
-		
-		public void addChild(Double val, String tag, double partition) {
-			this.addChild(new Node(val, tag, partition));
+
+		public void setRightChild(Node newChild) {
+			rightChild = newChild;
 		}
 		
 		public void label(boolean win) {
@@ -240,21 +241,32 @@ public class DecisionTree {
 		}
 
 		@Override
-		public int compareTo(Object o) {
-			Node x = (Node) o;
-			if ( x.val < this.val) {
-				return 1;
-			} else if (x.val > this.val) {
+		public String toString() {
+			return this.featureName + "partitioned at " + this.partition;
+		}
+	}
+	
+	class gainMap implements Comparable<gainMap> {
+		public double gain;
+		public double partition;
+		
+		public gainMap(double gain, double partition) {
+			this.gain = gain;
+			this.partition = partition;
+		}
+
+		@Override
+		//gainMaps sort in descending order
+		public int compareTo(gainMap other) { 
+			if (this.gain > other.gain) {
 				return -1;
+			} else if (this.gain < other.gain) {
+				return 1;
 			} else {
 				return 0;
 			}
 		}
-		
-		@Override
-		public String toString() {
-			return this.tag + ": " + this.val;
-		}
+
 	}
 
 	public static void main(String[] args) {
