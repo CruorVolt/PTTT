@@ -131,10 +131,12 @@ public class DecisionTree {
 		}
 		
 		if (!negativeExample) {
-			root.label(true);
+			root.label(true); 
+			System.out.println("Labeling true");
 			return root;
 		} else if (!positiveExample) {
 			root.label(false);
+			System.out.println("Labeling false");
 			return root;
 		}
 
@@ -143,6 +145,7 @@ public class DecisionTree {
 		boolean label = (weight >= 0) ? true : false;
 		if (attributes.size() == 0 || attributes == null) {
 			root.label(label);
+			System.out.println("Weighted label " + label);
 			return root;
 		}
 		
@@ -208,6 +211,7 @@ public class DecisionTree {
 				for(int i = 1; i < featuresNames.size(); i++) {
 					if (featuresNames.get(i).compareTo(currentNode.featureName) == 0) {
 						currentValue = featuresVals.get(i);
+						//System.out.println("Testing " + featuresNames.get(i) + " partitioned at " + currentValue);
 						break;
 					}
 				}
@@ -216,6 +220,7 @@ public class DecisionTree {
 					System.out.println("No features matched!");
 				} else {
 					label = currentNode.getLabel();
+					//System.out.println("Labeled " + label);
 					currentNode = currentNode.child(currentValue);
 				}
 			}
@@ -223,7 +228,6 @@ public class DecisionTree {
 		} else {
 			System.out.println("Can't clasify, no tree built yet!");
 		}
-		System.out.println("DON'T TRUST THIS ONE!");
 		return false;
 	}
 	

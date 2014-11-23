@@ -156,7 +156,7 @@ public class PlayerState {
 			numClosedTriples++;
 		}
 		else {
-			System.out.println("Error adding to list, sequence is not a proper list item");
+			//System.out.println("Error adding to list, sequence is not a proper list item");
 		}
 	}
 	// add all sequences in new list to list without duplicates
@@ -199,6 +199,6 @@ public class PlayerState {
 					numOpenTriples+" open triples, and "+numClosedTriples+" closed triples.";
 	}
 	public void printOut() {
-		System.out.println(toString());
+		//System.out.println(toString());
 	}
 }

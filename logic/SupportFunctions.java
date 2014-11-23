@@ -111,7 +111,7 @@ public class SupportFunctions {
 		Move adj;
 		ArrayList<Move> neighbors = new ArrayList<Move>();
 		for (int i = 0; i < 8; i++) {
-			adj = move.getAdjMove(i);
+			adj = move.getMoveOrBlock(i);
 			if (adj != null) {
 				if ( !playerOnly || (adj.getPlayer() == move.getPlayer()) ) {
 					neighbors.add(adj);
@@ -410,6 +410,7 @@ public class SupportFunctions {
 			Character winner = (Character) gameMap.get(0);
 			GameMap map = (GameMap) gameMap.get(1);
 			ArrayList<Double> features = mapFeatures(map, positivePlayer);
+			features.set(0, (winner == 'X') ? 1.0 : -1.0);
 			writeArray(features, "./src/training_set.csv");
 		}
 	}
@@ -428,7 +429,7 @@ public class SupportFunctions {
 			game.begin();
 
 			ArrayList<Object> thisMap = new ArrayList<Object>();
-			thisMap.add(game.currentPlayer().getToken());
+			thisMap.add( (game.currentPlayer().getToken() == 'X' ? 'O' : 'X') ); //ending player is loser
 			thisMap.add(game.getMap());
 			
 			trainingMaps.add(thisMap);
