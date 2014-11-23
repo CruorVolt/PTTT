@@ -183,6 +183,7 @@ public class Classifier {
 		ArrayList<Object> output = new ArrayList<Object>();
 		output.add(Arrays.copyOfRange(gains, 1, gains.length));
 		output.add(partitions);
+		output.add(Arrays.copyOfRange(headers, 1, headers.length));
 		return output;
 	}
 	
