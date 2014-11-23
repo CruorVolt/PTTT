@@ -7,6 +7,15 @@ public class PolarCoordinate {
 	private int x;
 	private int y;
 
+	public final static int VAdjAndAbove = 0;
+	public final static int DAdjAboveAndAhead = 1;
+	public final static int HAdjAndAhead = 2;
+	public final static int DAdjBelowAndAhead = 3;
+	public final static int VAdjAndBelow = 4;
+	public final static int DAdjBelowAndBehind = 5;
+	public final static int HAdjAndBehind = 6;
+	public final static int DAdjAboveAndBehind = 7;
+
 	public static void main(String[] args) {
 		try {
 			PolarCoordinate a = new PolarCoordinate(new UnTestedCoordinates(3,11));

@@ -82,7 +82,7 @@ public class Game implements GameViewer {
 		boolean success;
 		if(move!=null) {
 			try {
-				success = map.updateAll(move, turn); // return true if valid move and update succeeds.
+				success = map.updateAll(move); // return true if valid move and update succeeds.
 				if(success) {
 					turn = !turn;
 				}
@@ -104,8 +104,12 @@ public class Game implements GameViewer {
 	@Override
 	public void notifyWin(boolean turn, Move[] winState) {
 		notWin=false;
-		for(Move m : winState) {
-			System.out.println(m);
+		if (winState != null) {
+			for(Move m : winState) {
+				System.out.println(m);
+			}
+		} else {
+			System.out.println("DRAW");
 		}
 	}
 }

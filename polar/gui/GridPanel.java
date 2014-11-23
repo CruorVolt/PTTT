@@ -151,7 +151,6 @@ public class GridPanel extends JLayeredPane implements ComponentListener{
 		PolarCoordinate coord;
 		for (Move move : winState) {
 			coord = move.getLoc();
-			System.out.println("MAKING IT " + coord);
 			CrossPointLabel point = points[coord.getX() - 1][coord.getY()];
 			point.setForeground(new Color(0, 170, 0)); //Dark green winning nodes
 		}

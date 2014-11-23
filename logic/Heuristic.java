@@ -59,7 +59,7 @@ public class Heuristic extends SupportFunctions {
 				// not been included in any previous scorings
 				if ( (current.getPlayer() == player) && !(searched[i]) ){
 
-					neighbors = adjacentMoves(current, true, true);
+					neighbors = SupportFunctions.adjacentMoves(current, true, true);
 					if (neighbors.size() > 0) {
 
 						ArrayList<PolarCoordinate> toRemove = new ArrayList<PolarCoordinate>();

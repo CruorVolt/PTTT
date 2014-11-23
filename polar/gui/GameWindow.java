@@ -134,10 +134,8 @@ public class GameWindow implements GameViewer {
 	public void notifyWin(boolean turn, Move[] winState) {
 		if (winState == null) {
 			//Game over with no winner
-			System.out.println("DRAW");
 			//game.end();
 		} else {
-			System.out.println("WINNER");
 			game_panel.updateWin(winState);
 			//game.end();
 		}

@@ -52,7 +52,7 @@ public class GreedyPlayStyle implements PlayStyle {
 							try {
 								tempMap = (GameMap) map.deepCopy(); //resetting tempMap
 								tempMap.removeViewers(); //make sure this map doesn't update the gui
-								tempMap.updateAll(new Move(player, location), valid);
+								tempMap.updateAll(new Move(player, location));
 								score = Heuristic.evaluateMinMax(tempMap, player);
 								if (score > maxScore) { //This is the best location seen so far
 									maxScore = score;
