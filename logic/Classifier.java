@@ -151,7 +151,7 @@ public class Classifier {
 					entropyXI = -(positiveTerm) - (negativeTerm);
 
 					if (Double.isNaN(entropyXI)) {
-						entropy.get(x).set(i, Double.MAX_VALUE); //?
+						entropy.get(x).set(i, Double.MAX_VALUE); 
 						System.out.println("max value here");
 						System.out.println("pos: " + positiveXI);
 						System.out.println("neg: " + negativeXI);
