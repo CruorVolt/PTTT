@@ -2,7 +2,7 @@ package polar.game;
 public class Player {
 
 	public enum PlayerTypes {
-		HUMAN ("Human"), RANDOM ("Random"), GREEDY ("Greedy Search");
+		HUMAN ("Human"), RANDOM ("Random"), GREEDY ("Greedy Heuristic"), MINIMAX ("Minimax Search");
 		public String string;
 		private PlayerTypes(String s) {
 			this.string = s;
