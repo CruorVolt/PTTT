@@ -115,6 +115,10 @@ public class GameWindow implements GameViewer, ActionListener {
 			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X);
 			style1 = new SearchPlayStyle(Player.PLAYER_X, game, false);
 			break;
+		case "Minimax w/Alpha-Beta Pruning":
+			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X);
+			style1 = new SearchPlayStyle(Player.PLAYER_X, game, true);
+			break;
 		default:
 			System.out.println("No Player of that type found!");
 		}
@@ -135,6 +139,10 @@ public class GameWindow implements GameViewer, ActionListener {
 		case "Minimax Search":
 			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O);
 			style2 = new SearchPlayStyle(Player.PLAYER_O, game, false);
+			break;
+		case "Minimax w/Alpha-Beta Pruning":
+			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O);
+			style2 = new SearchPlayStyle(Player.PLAYER_O, game, true);
 			break;
 		default:
 			System.out.println("No Player of that type found!");
