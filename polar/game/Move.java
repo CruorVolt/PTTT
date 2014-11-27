@@ -46,8 +46,12 @@ public class Move {
 	public Move getBlock() {
 		if(block==null) {
 			block = new Move();
+			block.blocker = true;
 		}
 		return block;
+	}
+	public boolean isBlock() {
+		return blocker;
 	}
 	protected void setAdjMove(int i, Move m) {
 		adjMoves[i] = m;
