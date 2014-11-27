@@ -13,6 +13,7 @@ public class SearchPlayStyle implements PlayStyle {
 	public SearchPlayStyle(boolean player, Game game, boolean pruning) {
 		this.player = player;
 		this.game = game;
+		this.pruning = pruning; //Should this player us alpha-beta pruning in their search?
 	}
 
 	@Override

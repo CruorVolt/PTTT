@@ -6,16 +6,20 @@ import java.awt.GridBagLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.border.BevelBorder;
 
-public class GameWindow implements GameViewer {
+public class GameWindow implements GameViewer, ActionListener {
 
 	private JFrame frame;
 	private Game game;
 	private GridPanel game_panel;
 	private PlayerPanel player_one_panel, player_two_panel;
+	private JButton resetButton;
 
 	public GameWindow(Game game) {
 		this.game = game;
@@ -35,9 +39,9 @@ public class GameWindow implements GameViewer {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0};
-		gridBagLayout.rowHeights = new int[] {0};
+		gridBagLayout.rowHeights = new int[] {1, 0};
 		gridBagLayout.columnWeights = new double[]{1.0, 0.4, 0.4};
-		gridBagLayout.rowWeights = new double[]{1.0};
+		gridBagLayout.rowWeights = new double[]{2.0, 0.1};
 		frame.getContentPane().setLayout(gridBagLayout);
 		
 		try {
@@ -53,13 +57,13 @@ public class GameWindow implements GameViewer {
 			System.out.println("Could not construct PolarCoordinates correctly");
 		}
 		
-
 		player_one_panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		GridBagConstraints gbc_player_one_panel = new GridBagConstraints();
 		gbc_player_one_panel.insets = new Insets(0, 0, 5, 0);
 		gbc_player_one_panel.fill = GridBagConstraints.BOTH;
 		gbc_player_one_panel.gridx = 1;
 		gbc_player_one_panel.gridy = 0;
+		gbc_player_one_panel.gridheight = 2;
 		frame.getContentPane().add(player_one_panel, gbc_player_one_panel);
 
 		player_two_panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -68,7 +72,16 @@ public class GameWindow implements GameViewer {
 		gbc_player_two_panel.fill = GridBagConstraints.BOTH;
 		gbc_player_two_panel.gridx = 2;
 		gbc_player_two_panel.gridy = 0;
+		gbc_player_two_panel.gridheight = 2;
 		frame.getContentPane().add(player_two_panel, gbc_player_two_panel);
+		
+		resetButton = new JButton("Reset Game");
+		resetButton.addActionListener(this);
+		GridBagConstraints gbc_reset = new GridBagConstraints();
+		gbc_reset.insets = new Insets(0, 0, 5, 0);
+		gbc_reset.gridx = 0;
+		gbc_reset.gridy = 1;
+		frame.getContentPane().add(resetButton, gbc_reset);
 	}
 	
 	private PlayerPanel[] choosePlayers() {
@@ -130,7 +143,7 @@ public class GameWindow implements GameViewer {
 		PlayerPanel[] panels = {player_one_panel, player_two_panel};
 		return panels;
 	}
-
+	
 	@Override
 	public void notifyMove(PolarCoordinate coord, boolean turn) {
 		player_one_panel.update(coord, turn);
@@ -147,6 +160,11 @@ public class GameWindow implements GameViewer {
 			game_panel.updateWin(winState);
 			//game.end();
 		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		//game.reset();
 	}
 
 }

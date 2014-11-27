@@ -10,7 +10,7 @@ public class SearchNode {
 	int alpha;   //The current estimated alpha value
 	int beta;	 //The current estimated beta value
 	boolean max; //Max player (X) or min player (O)
-	ArrayList<SearchNode> children;
+	ArrayList<SearchNode> children; //All possible child states
 	
 	public SearchNode(GameMap map, boolean player) {
 		this.map = map;
@@ -31,6 +31,11 @@ public class SearchNode {
 		return this.children;
 	}
 	
+	/*
+	 * Build new child nodes for every possible valid move 
+	 * that could be made from this gamestate
+	 * TODO: This logic is similar to how GreedySearch checks for validity, roll that up into a function in GameMap
+	 */
 	public void createChildren() {
 
 		if (this.children == null) {
