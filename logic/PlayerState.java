@@ -41,7 +41,6 @@ public class PlayerState {
 	public void update(Move newMove) {
 		if(newMove.getPlayer()==player) {
 			updateLists(newMove);
-			printOut();
 		}
 		else {
 			updateEnds(newMove);

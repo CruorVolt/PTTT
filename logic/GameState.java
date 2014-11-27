@@ -78,4 +78,11 @@ public class GameState implements GameViewer {
 		else
 			return stateX.hasWon();
 	}
+	// print out all state information for this player.
+	public void printOut(boolean player) {
+		if(player==Player.PLAYER_X)
+			stateX.printOut();
+		else
+			stateO.printOut();
+	}
 }
