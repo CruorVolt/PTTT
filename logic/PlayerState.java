@@ -160,7 +160,7 @@ public class PlayerState {
 			numClosedTriples++;
 		}
 		else {
-			System.out.println("Error adding to list, sequence is not a proper list item");
+			//System.out.println("Error adding to list, sequence is not a proper list item");
 		}
 	}
 	// add all sequences in new list to list without duplicates
@@ -226,7 +226,7 @@ public class PlayerState {
 					"Player "+p+" has a total of "+pairs.size()+" pairs, and "+triples.size()+" triples.";
 	}
 	public void printOut() {
-		System.out.println(toString());
+		//System.out.println(toString());
 	}
 	public void notifyWin() {
 		winState = true;

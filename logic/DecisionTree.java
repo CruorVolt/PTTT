@@ -25,24 +25,32 @@ public class DecisionTree {
     ArrayList<gainMap> gainMaps;
 	Node root;
 	
+	
+	/*
+	 * New DecisionTrees have sorted gains and associated partition values
+	 */
 	public DecisionTree() {
 		
 		//get features and gains
 		try {
 			ArrayList<Object> blocks = (Classifier.gain(TRAINING_FILE, false));
 			Double[] gains = null;
+			String[] names = null;
 			if (blocks.get(0) instanceof Double[]) {
-				gains = (Double[]) blocks.get(0);
+				gains = (Double[]) blocks.get(0); //gains in file-order
 			}
 			double[] partitions = null;
 			if (blocks.get(1) instanceof double[]) {
-				partitions = (double[]) blocks.get(1);
+				partitions = (double[]) blocks.get(1); //partitions in file-order
+			}
+			if (blocks.get(2) instanceof String[]) {
+				names = (String[]) blocks.get(2); //Feature names in file-order
 			}
 			
 			ArrayList<gainMap> sorted = new ArrayList<gainMap>();
 			if (gains != null && partitions != null) {
 				for (int i = 0; i < gains.length; i++) {
-					sorted.add(new gainMap(gains[i], partitions[i]));
+					sorted.add(new gainMap(gains[i], partitions[i], names[i]));
 				}
 			}
 			Collections.sort(sorted);
@@ -53,19 +61,23 @@ public class DecisionTree {
 		}
 	}
 	
+	/*
+	 * Get everything the object needs to start building the actual decision tree
+	 * 
+	 * @param examplesFile The filename of the labeled training examples, expects CSV with headers and the label as the first feature
+	 */
 	public void setupTree(String examplesFile) throws FileNotFoundException {
 
 		ArrayList<ArrayList<Double>> examples = new ArrayList<ArrayList<Double>>();
 		ArrayList<Double> targets = new ArrayList<Double>(); 
-		ArrayList<String> attributes = new ArrayList<String>();
 
 		BufferedReader br = new BufferedReader(new FileReader(examplesFile));
 		try {
 
 			String[] headers = br.readLine().split(", ");
-
+			ArrayList<String> headersList = new ArrayList<String>();
 			for (int i = 1; i < headers.length; i++) {
-				attributes.add(headers[i]);
+				headersList.add(headers[i]);
 			}
 
 			if (headers.length -1 == gainMaps.size()) { //Make sure the featureset and file match
@@ -86,12 +98,15 @@ public class DecisionTree {
 			}
 			
 			System.out.println("Done with setup, builidng tree");
+
 			//attributes and partitions need to be sorted by gains here
 			List<Double> partitions = new ArrayList<Double>();
+			List<String> attributes = new ArrayList<String>();
 			for (gainMap g : gainMaps) {
 				partitions.add(g.partition);
+				attributes.add(g.name);
 			}
-			Node tree = buildTree(examples, targets, 0, attributes, partitions);
+			Node tree = buildTree(examples, targets, attributes, partitions, headersList);
 			System.out.println("Tree has " + nodes + " nodes");
 			this.root = tree;
 		} catch (IOException e) {
@@ -102,10 +117,17 @@ public class DecisionTree {
 	
 	/*
 	 * Build a classification tree 
+	 * Basic implementation of the ID3 Decision Tree algorithm
+	 * 
+	 * @param examples   A two dimensional array of double values in the same order as the training-set file
+	 * @param labels     A set of labels in {-1.0, 1.0} indicating a win or loss for player X with same indexes as examples
+	 * @param partitions A list of binary partition values in descending order by gain
+	 * @param attributes A list of attribute names in descending order by gain
+	 * @param headers    A list of attribute names in same order as training-set file, used to find current feature
 	 */
-//		ID3 (Examples, Target_Attribute, Attributes)
-	public Node buildTree(ArrayList<ArrayList<Double>> examples, ArrayList<Double> labels, int currentFeature, List<String> attributes, List<Double> partitions) { 
-//	    Create a root node for the tree
+	public Node buildTree(ArrayList<ArrayList<Double>> examples, ArrayList<Double> labels, List<String> attributes, List<Double> partitions, List<String> headers) { 
+		
+		//Root node has current attribute and associated partition value
 		Node root;
 		if (attributes.size() > 0) {
 			root = new Node(attributes.get(0), partitions.get(0));
@@ -113,9 +135,26 @@ public class DecisionTree {
 			root = new Node("", 0);
 		}
 		nodes++;
+		
+		//Find the current feature index in examples by matching the file headers with the next attribute
+		String s;
+		int currentFeature = -1;
+		if (attributes.size() != 0) {
+			for (int i = 0; i < headers.size(); i++) {
+				s = headers.get(i);
+				if (s.equals(attributes.get(0))) {
+					currentFeature = i;
+				}
+			}
+			if (currentFeature < 0 ) {
+				System.out.println("Problem: no feature found");
+				System.exit(1);
+			}
+		} else {
+			System.out.println("Attributes is empty, we better be returning momentarily");
+		}
 
-//	    If all examples are positive, Return the single-node tree Root, with label = +.
-//	    If all examples are negative, Return the single-node tree Root, with label = -.
+		// If all examples are of one type we'll return a node with that type's label
 		boolean positiveExample = false;
 		boolean negativeExample = false;
 		int weight = 0;
@@ -131,62 +170,65 @@ public class DecisionTree {
 		}
 		
 		if (!negativeExample) {
-			root.label(true);
+			root.label(true); 
+			System.out.println("Labeling true");
 			return root;
 		} else if (!positiveExample) {
 			root.label(false);
+			System.out.println("Labeling false");
 			return root;
+		} else {
+			root.label((weight >= 0) ? true : false);
 		}
 
-//	    If number of predicting attributes is empty, then Return the single node tree Root,
-//	    with label = most common value of the target attribute in the examples.
+		//If we're out of attributes to predict then we'll return a node with the most common label
 		boolean label = (weight >= 0) ? true : false;
 		if (attributes.size() == 0 || attributes == null) {
 			root.label(label);
+			System.out.println("Weighted label " + label);
 			return root;
 		}
 		
-//	    Otherwise Begin
-//	        A < The Attribute that best classifies examples.
-			double partition = partitions.get(0);
+		//This is the partition for the attribute with the highest gain
+		double partition = partitions.get(0);
 
-//	        Decision Tree attribute for Root = A.
-//	        For each possible value, v_i, of A,
-//	            Add a new tree branch below Root, corresponding to the test A = v_i.
-//	            Let Examples(v_i) be the subset of examples that have the value v_i for A
-				ArrayList<ArrayList<Double>> smallChildExamples = new ArrayList<ArrayList<Double>>();
-				ArrayList<Double> smallLabels = new ArrayList<Double>();
-				ArrayList<ArrayList<Double>> largeChildExamples = new ArrayList<ArrayList<Double>>();
-				ArrayList<Double> largeLabels = new ArrayList<Double>();
-				for (int i = 0; i < examples.size(); i++) {
-					ArrayList<Double> l = examples.get(i);
-					if (l.get(currentFeature) <= partition) {
-						smallChildExamples.add(l);
-						smallLabels.add(labels.get(i));
-					} else {
-						largeChildExamples.add(l);
-						largeLabels.add(labels.get(i));
-					}
-				}	
-//	            If Examples(v_i) is empty
-//	                Then below this new branch add a leaf node with label = most common target value in the examples
-				Node child = new Node("",0);
-				nodes++;
-				child.label( (weight >= 0) ? true : false );
-				if (smallChildExamples.size() == 0) {
-					root.setLeftChild(child);
-				} else {
-					root.setLeftChild(buildTree(smallChildExamples, smallLabels, currentFeature + 1, attributes.subList(1, attributes.size()), partitions.subList(1, partitions.size())));
-				}
+		//Make subsets of the examples corresponding to the left and right children
+		ArrayList<ArrayList<Double>> smallChildExamples = new ArrayList<ArrayList<Double>>();
+		ArrayList<Double> smallLabels = new ArrayList<Double>();
+		ArrayList<ArrayList<Double>> largeChildExamples = new ArrayList<ArrayList<Double>>();
+		ArrayList<Double> largeLabels = new ArrayList<Double>();
 
-				if (largeChildExamples.size() == 0) {
-					root.setRightChild(child);
-				} else {
-					root.setRightChild(buildTree(largeChildExamples, largeLabels, currentFeature + 1, attributes.subList(1, attributes.size()), partitions.subList(1, partitions.size())));
-				}
-//	            Else below this new branch add the subtree ID3 (Examples(v_i), Target_Attribute, Attributes – {A})
-//	    End
-//	    Return Root	
+		//Add each example to the correct subset
+		for (int i = 0; i < examples.size(); i++) {
+			ArrayList<Double> example = examples.get(i);
+			if (example.get(currentFeature) <= partition) {
+				smallChildExamples.add(example);
+				smallLabels.add(labels.get(i));
+			} else {
+				largeChildExamples.add(example);
+				largeLabels.add(labels.get(i));
+			}
+		}	
+
+		Node child = new Node("",0);
+		nodes++;
+		child.label( (weight >= 0) ? true : false );
+
+		//If there are no examples for the left branch label that node with the most common label
+		if (smallChildExamples.size() == 0) {
+			root.setLeftChild(child);
+		} else {
+			//Recurse with the remining attributes
+			root.setLeftChild(buildTree(smallChildExamples, smallLabels, attributes.subList(1, attributes.size()), partitions.subList(1, partitions.size()), headers));
+		}
+
+		//If there are no examples for the right branch label that node with the most common label
+		if (largeChildExamples.size() == 0) {
+			root.setRightChild(child);
+		} else {
+			//Recurse with the remining attributes
+			root.setRightChild(buildTree(largeChildExamples, largeLabels, attributes.subList(1, attributes.size()), partitions.subList(1, partitions.size()), headers));
+		}
 		return root;
 	}
 	
@@ -208,6 +250,7 @@ public class DecisionTree {
 				for(int i = 1; i < featuresNames.size(); i++) {
 					if (featuresNames.get(i).compareTo(currentNode.featureName) == 0) {
 						currentValue = featuresVals.get(i);
+						//System.out.println("Testing " + featuresNames.get(i) + " partitioned at " + currentValue);
 						break;
 					}
 				}
@@ -216,6 +259,7 @@ public class DecisionTree {
 					System.out.println("No features matched!");
 				} else {
 					label = currentNode.getLabel();
+					//System.out.println("Labeled " + label);
 					currentNode = currentNode.child(currentValue);
 				}
 			}
@@ -223,7 +267,6 @@ public class DecisionTree {
 		} else {
 			System.out.println("Can't clasify, no tree built yet!");
 		}
-		System.out.println("DON'T TRUST THIS ONE!");
 		return false;
 	}
 	
@@ -285,10 +328,12 @@ public class DecisionTree {
 	class gainMap implements Comparable<gainMap> {
 		public double gain;
 		public double partition;
+		public String name;
 		
-		public gainMap(double gain, double partition) {
+		public gainMap(double gain, double partition, String name) {
 			this.gain = gain;
 			this.partition = partition;
+			this.name = name;
 		}
 
 		@Override
@@ -305,16 +350,32 @@ public class DecisionTree {
 
 	}
 
+	/*
+	 * Test the decision tree here by testing it against
+	 * a single new win state
+	 */
 	public static void main(String[] args) {
 		DecisionTree tree = new DecisionTree();
 		try {
 			tree.setupTree(TRAINING_FILE);
-			ArrayList<ArrayList<Object>> mapMap = SupportFunctions.generateWinStates(1);
-			Character actual = (Character) mapMap.get(0).get(0);
-			GameMap map = (GameMap) mapMap.get(0).get(1);
-			System.out.println("Actual winner is " + actual);
-			boolean c = tree.classify('X', map);
-			System.out.println("Predicted for X: " + c);
+			int correct = 0;
+			int incorrect = 0;
+			for (int i = 0; i < 200; i++) {
+				ArrayList<ArrayList<Object>> mapMap = SupportFunctions.generateWinStates(1);
+				Character actual = (Character) mapMap.get(0).get(0);
+				GameMap map = (GameMap) mapMap.get(0).get(1);
+				System.out.println("Actual winner is " + actual);
+				boolean c = tree.classify('X', map);
+				System.out.println("Predicted for X: " + c);
+				if (actual == 'X' && c == true) {
+					correct++;
+				} else if (actual == 'O' && c == false) {
+					correct++;
+				} else {
+					incorrect++;
+				}
+			}
+			System.out.println("Correct: " + correct + " / " + (correct + incorrect));
 			
 
 		} catch (FileNotFoundException e) {

@@ -32,6 +32,7 @@ public class GridPanel extends JLayeredPane implements ComponentListener{
 
 	private Dimension size;
 	private CrossPointLabel[][] points = new CrossPointLabel[4][12];
+	private Integer newestX, newestY;
 	private Game game;
 	
 	//Radian values for diagonals
@@ -61,9 +62,17 @@ public class GridPanel extends JLayeredPane implements ComponentListener{
 		this.game = game;
 	}
 	
-	//Send the player's token to to the selected CrossPointLabel
+	//Update the indicated label with the new move
 	public void update(PolarCoordinate coord) {
-		points[coord.getX() - 1][coord.getY()].setText(game.currentPlayer().getToken().toString());
+		if (newestX != null) {
+			points[newestX - 1][newestY].setForeground(Color.RED);
+		}
+		newestX = coord.getX();
+		newestY = coord.getY();
+		points[newestX - 1][newestY].setText(game.currentPlayer().getToken().toString());
+		points[newestX - 1][newestY].setForeground(Color.BLUE);
+
+		//points[coord.getX() - 1][coord.getY()].setText(game.currentPlayer().getToken().toString());
 	}
 	
 	public void componentResized(ComponentEvent e) { 

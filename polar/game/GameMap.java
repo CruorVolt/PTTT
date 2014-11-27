@@ -11,8 +11,10 @@ public class GameMap {
 	private ArrayList<GameViewer> viewers;
 	private Move currentMove;
 	private GameState state;	
+	private boolean hasWin;
 	
 	public GameMap() {
+		hasWin = false;
 		currentMove = null;
 		moves = new ArrayList<Move>();
 		viewers = new ArrayList<GameViewer>();
@@ -152,6 +154,7 @@ public class GameMap {
 						if(refuted) {
 							Move[] temp = {u,v,x,y};
 							winSequence = temp;
+							hasWin = true;
 							return true;
 						}
 					}
@@ -163,4 +166,9 @@ public class GameMap {
 	public GameState getState() {
 		return state;
 	}
+	
+	public boolean containsWin() {
+		return hasWin;
+	}
+	
 }
