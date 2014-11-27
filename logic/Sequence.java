@@ -12,27 +12,28 @@ public class Sequence {
 	private Move vEnd;
 	private boolean player;
 	
-	// singleton sequence
-	public Sequence(Move x) {
+	// pair sequence
+	private Sequence(Move u, Move v) {
 		sequence = new ArrayList<Move>();
-		sequence.add(x);
-		direction = -1;
-		opposingDirection = -1;
-		player = x.getPlayer();
-	}
-	// Pair sequence
-	private Sequence(Sequence u, Sequence v) {
-		sequence = u.sequence;
-		for(Move m : v.getMoves()) {
-			sequence.add(m);
-		}
-		direction = u.getDir();
-		opposingDirection = u.getOpposingDir();
+		sequence.add(u);
+		sequence.add(v);
+		direction = u.compare(v);
+		opposingDirection = v.compare(u);
 		player = u.getPlayer();
-		uEnd = u.getMoves().get(0).getMoveOrBlock(opposingDirection);
-		vEnd = v.getMoves().get(v.size()-1).getMoveOrBlock(direction);
+		uEnd = u.getMoveOrBlock(opposingDirection);
+		vEnd = v.getMoveOrBlock(direction);
 	}
-
+	private Sequence(Move u, Move v, Move x) {
+		sequence = new ArrayList<Move>();
+		sequence.add(u);
+		sequence.add(v);
+		sequence.add(x);
+		direction = u.compare(v);
+		opposingDirection = v.compare(u);
+		player = u.getPlayer();
+		uEnd = u.getMoveOrBlock(opposingDirection);
+		vEnd = x.getMoveOrBlock(direction);
+	}
 	// get the directionality of u->v
 	public int getDir() {
 		return direction;
@@ -41,21 +42,26 @@ public class Sequence {
 	public int getOpposingDir() {
 		return opposingDirection;
 	}
-	// returns true if an end is updated by m
+	// checks if m is at the end of this sequence, updates the end and returns true if so.
 	public boolean updateEnd(Move m) {
+		// an end cannot be owned by this player
+		if(player==m.getPlayer())
+				return false;
 		Move firstMove = sequence.get(0);
 		Move lastMove = sequence.get(size()-1);
+		Move firstEnd = firstMove.getAdjMove(opposingDirection);
+		Move lastEnd = lastMove.getAdjMove(direction);
 		if(direction==-1) {
 			return false;
 		}
-		if(firstMove.getAdjMove(opposingDirection)!=null) {
-			if(m.equals(firstMove.getAdjMove(opposingDirection))) {
+		if(firstEnd!=null) {
+			if(m.equals(firstEnd)) {
 				uEnd = m;				// uEnd updated with move m
 				return true;
 			}
 		}
-		if(lastMove.getAdjMove(direction)!=null) {
-			if(m.equals(lastMove.getAdjMove(direction))) {
+		if(lastEnd!=null) {
+			if(m.equals(lastEnd)) {
 				vEnd = m;				// vEnd updated with move m
 				return true;
 			}
@@ -63,15 +69,19 @@ public class Sequence {
 		
 		return false;
 	}
+	// endpoint connected to the last node in the sequence
 	public Move vEnd() {
 		return vEnd;
 	}
+	// endpoint connected to the first node in the sequence
 	public Move uEnd() {
 		return uEnd;
 	}
+	// player who owns the sequence
 	public boolean getPlayer() {
 		return player;
 	}
+	// list of nodes in the sequence
 	public ArrayList<Move> getMoves() {
 		return sequence;
 	}
@@ -110,98 +120,81 @@ public class Sequence {
 	// returns true if both ends of this pair are blocked by another player.
 	public boolean isBlocked() {
 		// false is either end is open
-		if(vEnd==null) return false;
-		if(uEnd==null) return false;
-		// false if pair is actually a triple
-		if(vEnd.getPlayer()==player) return false;
-		if(uEnd.getPlayer()==player) return false;
+		if((vEnd==null)||(uEnd==null)) return false;
+
 		return true;
 	}
-	public boolean isWin() {
-		return sequence.size()==4;						// win if this sequence has 4 moves
-	}
+	// returns the size of this sequence
 	public int size() {
 		return sequence.size();
 	}
-	public Sequence merge(Sequence q) {
-		if(!this.player==q.getPlayer())					// sequences must be owned by the same player
+	// build a pair from 2 moves.
+	public static Sequence makePair(Move move1, Move move2) {
+		// Invalid parameters: identical moves, moves not owned by the same person, blocking move
+		if((move1.getPlayer()!=move2.getPlayer())||(move1.equals(move2))||move1.isBlock()||move2.isBlock())
 			return null;
-		// if both are single, compare moves and return sequence if they are adjacent
-		if(size()==1) {
-			 if(q.size()>1) {
-				 q.merge(this);
-			 }
-			 Move myMove = sequence.get(0);
-			 Move qMove = q.sequence.get(0);
-			 int dir = myMove.compare(qMove);
-			 if((dir>-1)) {
-				 direction = dir;
-				 return new Sequence(this, q);
-			 }
+		int dir = move1.compare(move2);
+		if(Status.valid(dir)) {
+			return new Sequence(move1,move2);
 		}
-		if(q.size()==1) {
-			updateEnd(q.getMoves().get(0));
-		}
-
-		Move QfirstMove = q.sequence.get(0);
-		Move QlastMove = q.sequence.get(q.size()-1);
-		Move first = sequence.get(0);
-		Move last = sequence.get(size()-1);
-		int dir = -1;
-		
-		dir = last.compare(QfirstMove);
-		if(dir>-1) {
-			direction = dir;
-			opposingDirection = QfirstMove.compare(last);
-			return new Sequence(this,q);
-		}
-		dir = first.compare(QfirstMove);
-		
-		if(dir>-1) {
-			direction = dir;
-			opposingDirection = QfirstMove.compare(first);
-			reverse();
-			return new Sequence(this,q);
-		}
-		dir = last.compare(QlastMove);
-
-		if(dir>-1) {
-			q.reverse();
-			direction = dir;
-			opposingDirection = QfirstMove.compare(first);
-			return new Sequence(this,q);
-		}
-
-		dir = first.compare(QlastMove);
-		if(dir>-1) {
-			direction = dir;
-			opposingDirection = QlastMove.compare(first);
-			reverse();
-			q.reverse();
-			return new Sequence(this,q);
-		}
-		
 		return null;
 	}
-	private void reverse() {
-		ArrayList<Move> seq = new ArrayList<Move>();
+	public static Sequence makeTriple(Sequence pair1, Sequence pair2) {
+		ArrayList<Move> moves = pair1.getMoves();
+		ArrayList<Move> othermoves = pair2.getMoves();
+		ArrayList<Move> newlist = new ArrayList<Move>();
 		
-		for(int i=size()-1;i>=0;i--) {
-			seq.add(sequence.get(i));
+		Move midMove = null;
+		
+		for(Move move : moves) {
+			if(othermoves.contains(move)) {
+				midMove = move;
+			}
+			else {
+				newlist.add(move);							// add first move at beginning
+			}
 		}
-		sequence = seq;
-		Move tEnd = uEnd;
-		uEnd= vEnd;
-		vEnd = tEnd;
-		int tDir = direction;
-		direction = opposingDirection;
-		opposingDirection = tDir;
+		if(midMove==null) 
+			return null;
+		else
+			newlist.add(midMove);							// add shared move in the middle
+		for(Move move : othermoves) {
+			if(!move.equals(midMove)) {
+				newlist.add(move);							// add last move at the end
+			}
+		}
+		
+		if(newlist.size()!=3) 
+			return null;									// do not make triple if not a 3-move sequence
+		Move u = newlist.get(0);
+		Move v = newlist.get(1);
+		Move x = newlist.get(2);
+		int dir = u.compare(v);
+		// create the sequence only if u,v and v,x share a direction and the direction is valid.
+		if(Status.valid(dir)&&Status.direction(v, x, dir)) {	
+			return new Sequence(u,v,x);
+		}	
+		return null;
 	}
+	// returns first element in the list
+	private Move getFirstMove() {
+		return sequence.get(0);
+	}
+	// returns last element in the list
+	private Move getLastMove() {
+		return sequence.get(size()-1);
+	}
+	// returns true if these sequences have the same elements, in whatever order.
 	public boolean equals(Sequence other) {
 		// if these have the same moves and the same # of moves, they are the same
 		if((size()==other.size())&&(sequence.containsAll(other.getMoves()))){
 			return true;
 		}
+		return false;
+	}
+	public boolean contains(Sequence other) {
+		if(sequence.containsAll(other.getMoves()))
+			return true;
 		return false;
 	}
 }

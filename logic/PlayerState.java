@@ -1,7 +1,9 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.ListIterator;
 
 import polar.game.Move;
 
@@ -11,7 +13,7 @@ import polar.game.Move;
 */
  
 public class PlayerState {
-	private ArrayList<Sequence> nodes;		// all sequences of size 1
+	private ArrayList<Move> nodes;		// all sequences of size 1
 	private ArrayList<Sequence> pairs; 		// all sequences of size 2
 	private ArrayList<Sequence> triples;	// all sequences of size 3
 	
@@ -25,7 +27,7 @@ public class PlayerState {
 	
 	public PlayerState(boolean player) {
 		this.player = player;
-		nodes = new ArrayList<Sequence>();
+		nodes = new ArrayList<Move>();
 		pairs = new ArrayList<Sequence>();
 		triples = new ArrayList<Sequence>();
 		winState = false;
@@ -61,6 +63,7 @@ public class PlayerState {
 					}
 					if(seq.isClosed()) {
 						numOpenPairs--;
+						numClosedPairs++;
 					}
 				case 3:
 					if(seq.isBlocked()) {
@@ -68,50 +71,44 @@ public class PlayerState {
 					}
 					if(seq.isClosed())
 						numOpenTriples--;
+						numClosedTriples++;
 				}
 			}
 		}
 	}
 	// update all sequences with new move
 	private void updateLists(Move newMove) {
-		Sequence newNode = new Sequence(newMove);
-		ArrayList<Sequence> newPairs = updateList(nodes, newNode);
-		addAll(pairs, newPairs);
-		ArrayList<Sequence> newTriples = updateList(pairs, newNode);
-		addAll(triples, newTriples);
-		ArrayList<Sequence> wins = updateList(triples, newNode);
-		ArrayList<Sequence> rarewins = updateList(pairs, newPairs);
-		ArrayList<Sequence> reallyrarewins = updateList(triples, newPairs);
-		ArrayList<Sequence> reallystupidwins = updateList(triples, newTriples);
-		// if no merge produced a win, there is no win. ;;
-		if(!(wins.isEmpty())||rarewins.isEmpty()||reallyrarewins.isEmpty()||reallystupidwins.isEmpty()) {
-			winState = true;
-		}
-		add(nodes,newNode);
+		ArrayList<Sequence> newPairs = getPairs(newMove);					// calculate new pairs created with new node
+		ArrayList<Sequence> newTriples = getTriples(newPairs);				// calculate new triples from pairs list
+		addAll(pairs, newPairs);											// update list and count
+		addAll(triples, newTriples);										// update list and count
+		removeAll(pairs,newTriples);										// remove merged pairs from pairs list
+		addNode(newMove);
 	}
-	// update the list with list of new sequences.
-	private ArrayList<Sequence> updateList(ArrayList<Sequence> list, ArrayList<Sequence> newList) {
-		ArrayList<Sequence> newlist = new ArrayList<Sequence>();
-		for(Sequence newSeq : newList) {
-			ArrayList<Sequence> mergeList = updateList(list, newSeq);
-			newlist.addAll(mergeList);
-		}
-		return newlist;
-	}
-	// returns a list of new sequences created with newSeq
-	private ArrayList<Sequence> updateList(ArrayList<Sequence> list, Sequence newSeq) {
-		ArrayList<Sequence> newlist = new ArrayList<Sequence>();
-		for(Sequence seq : list) {
-			Sequence merged = seq.merge(newSeq);
-			if(merged!=null) {
-				newlist.add(merged);
-				removeSeq(seq);			// this sequence is being merged, remove and update
+	private ArrayList<Sequence> getTriples(ArrayList<Sequence> newPairs) {	
+		ArrayList<Sequence> newtriples = new ArrayList<Sequence>();
+		// try to create triple out of all possible pair combinations
+		for(Sequence pair : pairs) {										
+			for(Sequence newpair : newPairs) {
+				Sequence newtriple = Sequence.makeTriple(pair, newpair);
+				if(newtriple!=null)
+					newtriples.add(newtriple);								// add only valid triples
 			}
 		}
-		return newlist;
+		return newtriples;
+	}
+	private ArrayList<Sequence> getPairs(Move newMove) {
+		ArrayList<Sequence> newpairs = new ArrayList<Sequence>();
+		for(Move node : nodes) {
+			// attempt to create new pairs with the new move and existing moves
+			Sequence newpair = Sequence.makePair(node, newMove);
+			if(newpair!=null)
+				newpairs.add(newpair);
+		}
+		return newpairs;
 	}
 	// removes a sequence from pairs or triples lists, and adjusts counters as needed
-	private void removeSeq(Sequence old) {
+	private void remove(Sequence old) {
 		switch(old.size()) {
 		case 2:
 			pairs.remove(old);
@@ -129,21 +126,29 @@ public class PlayerState {
 			}
 			else if(old.isOpenTriple()) {
 				numOpenTriples--;
-			}	
+			}
+		default:
+			System.out.println("Error removing, invalid sequence");
 		}
+	}
+	// add move to node list
+	private void addNode(Move newMove) {
+		if(nodes.contains(newMove)) {										// ignore duplicates
+			return;
+		}	
+		nodes.add(newMove);
+		numNodes++;		
 	}
 	// add new sequence to list without duplicates
 	private void add(ArrayList<Sequence> list, Sequence newSeq) {
-		for(Sequence seq : list) {
-			if(seq.equals(newSeq)) {
-				return;						// do not add duplicates
-			}
+		if(list.contains(newSeq)) {										// ignore duplicates
+			return;
 		}
+		if(newSeq.isBlocked())
+			return;														// do not count blocked sequences
+		
 		list.add(newSeq);
-		if(newSeq.isSingle()) {
-			numNodes++;
-		}
-		else if(newSeq.isClosedPair()) {
+		if(newSeq.isClosedPair()) {
 			numClosedPairs++;
 		}
 		else if(newSeq.isOpenPair()) {
@@ -163,6 +168,28 @@ public class PlayerState {
 	private void addAll(ArrayList<Sequence> list, ArrayList<Sequence> newlist) {
 		for(Sequence seq : newlist) {
 			add(list, seq);
+		}
+	}
+	// cleanup list items that are sub-sequences of remove sequence
+	private void remove(ArrayList<Sequence> list, Sequence removeseq) {
+		ArrayList<Sequence> removals = new ArrayList<Sequence>();
+		if(list.isEmpty()||removeseq==null)													// do not attempt pointless update
+			return;
+		for(Sequence seq : list) {
+			if(removeseq.contains(seq)) {							// if the remove sequence contains all moves in the list sequence, it is redundant
+				removals.add(seq);
+			}
+		}
+		for(Sequence seq : removals) {
+			remove(seq);
+		}
+	}
+	// cleanup list items that are sub-sequences of all sequences in removal list
+	private void removeAll(ArrayList<Sequence> list, ArrayList<Sequence> removalList) {
+		if(list.isEmpty()||removalList.isEmpty())											// do not attempt pointless updates
+			return;
+		for(Sequence seq : removalList) {
+			remove(list, seq);
 		}
 	}
 	
@@ -196,9 +223,16 @@ public class PlayerState {
 			p="O";
 		return "Player "+p+" has "+numNodes+" nodes, "
 					+numOpenPairs+" open pairs, "+numClosedPairs+" closed pairs, "+
-					numOpenTriples+" open triples, and "+numClosedTriples+" closed triples.";
+					numOpenTriples+" open triples, and "+numClosedTriples+" closed triples.\n"+
+					"Player "+p+" has a total of "+pairs.size()+" pairs, and "+triples.size()+" triples.";
 	}
 	public void printOut() {
 		System.out.println(toString());
+	}
+	public void notifyWin() {
+		winState = true;
+	}
+	public boolean hasWon() {
+		return winState;
 	}
 }

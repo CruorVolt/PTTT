@@ -28,8 +28,11 @@ public class GameState implements GameViewer {
 		
 	}
 	@Override
-	public void notifyWin(boolean turn, Move[] winState) {
-		// not needed by this class.
+	public void notifyWin(boolean player, Move[] winState) {
+		if(player==Player.PLAYER_X)
+			stateX.notifyWin();
+		else
+			stateO.notifyWin();
 	}
 	public int getNumNodes(boolean player) {
 		if(player==Player.PLAYER_X)
@@ -60,5 +63,19 @@ public class GameState implements GameViewer {
 			return stateX.numClosedTriples();
 		else
 			return stateO.numClosedTriples();
+	}
+	// returns whether the given player has won
+	public boolean hasWon(boolean player) {
+		if(player==Player.PLAYER_X)
+			return stateX.hasWon();
+		else
+			return stateO.hasWon();
+	}
+	// returns whether the given player has been beated by the opponent. 
+	public boolean hasLost(boolean player) {
+		if(player==Player.PLAYER_X)
+			return stateO.hasWon();
+		else
+			return stateX.hasWon();
 	}
 }
