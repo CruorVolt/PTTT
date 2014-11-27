@@ -2,6 +2,7 @@ package polar.game;
 import java.util.ArrayList;
 
 import logic.GameState;
+import logic.Status;
 
 public class GameMap {
 
@@ -146,7 +147,7 @@ public class GameMap {
 						Move y = moves.get(l);
 						int d = u.compare(v);
 						// refute !win on current unification string if resolution rejects all predicates
-						boolean refuted = !(resolve(u,v,x,y,d,p));
+						boolean refuted = !(Status.resolve(u,v,x,y,d,p));
 						// if a win state is found, save the state and 
 						if(refuted) {
 							Move[] temp = {u,v,x,y};
@@ -156,28 +157,10 @@ public class GameMap {
 					}
 		return false;
 	}
-	// test all predicates in our ruleset
-	private boolean resolve(Move u, Move v, Move x, Move y, int d, boolean p) {
-	return	(!valid(d)||!owns(u,p)||!owns(v,p)||!owns(x,p)||!owns(y,p)||!direction(u,v,d)||!direction(v,x,d)||!direction(x,y,d));
-	}
-	// predicate to check directionality
-	private boolean direction(Move a, Move b, int i) {
-		return a.compare(b)==i;
-	}
-	// predicate to check ownership
-	private boolean owns(Move m, boolean player) {
-		return m.getPlayer()==player;
-	}
-	// predicate to check direction validity.
-	private boolean valid(int i) {
-		return (i>-1)&&(i<8);
-	}
-
 	public Move getCurrentMove() {
 		return currentMove;
 	}
 	public GameState getState() {
 		return state;
 	}
-	
 }
