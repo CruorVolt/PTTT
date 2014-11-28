@@ -1,8 +1,8 @@
 package polar.game;
 import java.util.ArrayList;
 
-import logic.GameState;
 import logic.Status;
+import logic.state.GameState;
 
 public class GameMap {
 
