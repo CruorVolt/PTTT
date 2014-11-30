@@ -58,9 +58,9 @@ public class CrossPointLabel extends JLabel{
 			public void mouseClicked(MouseEvent e) {
 				UnTestedCoordinates updateCoords = new UnTestedCoordinates(gameCoordinate.getX(), gameCoordinate.getY());			
 				// check if the current player is human.
-				if((game.getTurn()&&XisHuman)) {
+				if((game.getCurrentPlayer()&&XisHuman)) {
 					game.getPlayerX().Update(updateCoords);
-				} else if ((!game.getTurn()&&OisHuman)) {
+				} else if ((!game.getCurrentPlayer()&&OisHuman)) {
 					game.getPlayerO().Update(updateCoords);
 				}
 			}

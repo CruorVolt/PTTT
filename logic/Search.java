@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import polar.game.*;
+import polar.game.exceptions.BadCoordinateException;
 
 public class Search {
 	

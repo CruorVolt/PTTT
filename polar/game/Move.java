@@ -1,4 +1,7 @@
 package polar.game;
+
+import polar.game.exceptions.MoveDuplicateException;
+
 public class Move {
 	private Move[] adjMoves = new Move[8];
 	private boolean player;

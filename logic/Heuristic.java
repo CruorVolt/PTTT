@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import polar.game.*;
+import polar.game.exceptions.BadCoordinateException;
+import polar.game.exceptions.MoveDuplicateException;
 
 public class Heuristic extends SupportFunctions {
 	

@@ -1,6 +1,12 @@
 package polar.gui;
 
 import polar.game.*;
+import polar.game.exceptions.BadCoordinateException;
+import polar.game.styles.GreedyPlayStyle;
+import polar.game.styles.HumanPlayStyle;
+import polar.game.styles.PlayStyle;
+import polar.game.styles.RandomPlayStyle;
+import polar.game.styles.SearchPlayStyle;
 
 import java.awt.GridBagLayout;
 import java.awt.Dimension;

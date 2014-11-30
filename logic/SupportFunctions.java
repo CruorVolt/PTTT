@@ -14,14 +14,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import polar.game.BadCoordinateException;
 import polar.game.Game;
-import polar.game.GreedyPlayStyle;
 import polar.game.GameMap;
 import polar.game.Move;
-import polar.game.PlayStyle;
 import polar.game.PolarCoordinate;
 import polar.game.UnTestedCoordinates;
+import polar.game.exceptions.BadCoordinateException;
+import polar.game.styles.GreedyPlayStyle;
+import polar.game.styles.PlayStyle;
 
 /*
  * Shared functions for logic package classes

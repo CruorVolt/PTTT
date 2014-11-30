@@ -1,6 +1,7 @@
-package polar.game;
+ package polar.game;
 import java.util.ArrayList;
 
+import polar.game.exceptions.MoveDuplicateException;
 import logic.Status;
 import logic.state.GameState;
 
@@ -97,10 +98,12 @@ public class GameMap {
 	*  Feel free to use this to revert changes of
 	*  Hypothetical maps for AI search
 	*/
-	public void removeAll(Move m) {
+	protected void removeAll(Move m) {
 		for( Move move : moves) {
 			move.remove(m);
 		}
+		if(m.equals(currentMove))
+			currentMove = lastMove();
 	}
 	/*
 	 * Copy the map and all its moves. Use for evaluating
@@ -159,6 +162,9 @@ public class GameMap {
 						}
 					}
 		return false;
+	}
+	public Move lastMove() {
+		return moves.get(moves.size());
 	}
 	public Move getCurrentMove() {
 		return currentMove;

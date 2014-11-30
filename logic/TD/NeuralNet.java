@@ -46,7 +46,7 @@ public class NeuralNet {
 	}
 	private void backPropagation(TimeSlice slice) {
 		// target features to train
-		Double[] features = slice.evalFeatures(maxplayer);
+		Double[] features = slice.evalAllFeatures(maxplayer);
 		Double[] outputDeltas = new Double[features.length];
 		Double[] backDeltas = new Double[features.length];
 		Double[] frontDeltas = new Double[features.length];
@@ -56,8 +56,10 @@ public class NeuralNet {
 		backDeltas = calcInnerDeltas(backHiddenLayer, outputDeltas);
 		frontDeltas = calcInnerDeltas(frontHiddenLayer, backDeltas);
 		
-		//			outputs.get(i).updateBias(delta[i]*gradient);
-		
+		//			outputs.get(i).updateBias(delta[i]*gradient);	
+	}
+	private double calcDecay(int currentFrame, int numFrames) {
+		return 0;
 	}
 	private Double[] calcOuterDeltas(Double[] features) {
 		Double[] delta = new Double[features.length];
@@ -91,4 +93,5 @@ public class NeuralNet {
 	public void train() {
 		
 	}
+	
 }

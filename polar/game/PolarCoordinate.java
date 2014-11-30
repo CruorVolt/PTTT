@@ -1,4 +1,8 @@
 package polar.game;
+
+import polar.game.exceptions.BadCoordinateException;
+import polar.game.exceptions.MoveDuplicateException;
+
 /*
  * defines a polar coordinate: x units from center and y units from right horizontal axis, clockwise
  * 

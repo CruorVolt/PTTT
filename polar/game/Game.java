@@ -1,18 +1,21 @@
 package polar.game;
 
+import polar.game.exceptions.MoveDuplicateException;
+import polar.game.styles.PlayStyle;
+
 public class Game implements GameViewer {
 	private Player playerX;
 	private Player playerO;
-	private GameMap map;
+	protected GameMap map;
 	private boolean notWin;
-	private boolean turn; // true when player X's turn, false when player O's turn.
-	private Player currentPlayer;
+	private boolean player; // true when player X's turn, false when player O's turn.
+	//private Player currentPlayer;
 	
 	public Game() {
 		map = new GameMap();
 		playerX = new Player(null, 'X', Player.PLAYER_X);
 		playerO = new Player(null, 'O', Player.PLAYER_O);
-		turn = true;
+		player = Player.PLAYER_X;
 		notWin = true;
 	}
 	
@@ -28,12 +31,13 @@ public class Game implements GameViewer {
 		playerO.setPlayStyle(styleO);
 	}
 	
-	public boolean getTurn() {
-		return turn;
+	public boolean getCurrentPlayer() {
+		return player;
 	}
 	
 	// start the game.
 	public void begin() {
+		Player currentPlayer;
 		// first hook into map updates so it knows when the game is over
 		addViewer(this);
 		currentPlayer = playerX;
@@ -41,10 +45,10 @@ public class Game implements GameViewer {
 		while(notWin) {
 			success = nextTurn(currentPlayer.move());
 			if(success) {
-				if(currentPlayer.equals(playerX)) {
-					currentPlayer = playerO;
-				} else {
+				if(player==Player.PLAYER_X) {
 					currentPlayer = playerX;
+				} else {
+					currentPlayer = playerO;
 				}
 			}
 		}
@@ -66,17 +70,15 @@ public class Game implements GameViewer {
 	public Player getPlayerO() {
 		return playerO;
 	}
-
 	public Player currentPlayer() {
 		Player current;
-		if (turn) {
+		if (player==Player.PLAYER_X) {
 			current = this.playerX;
 		} else {
 			current = this.playerO;
 		}
 		return current;
 	}
-
 	// performs a new turn.
 	private boolean nextTurn(Move move) {
 		boolean success;
@@ -84,7 +86,7 @@ public class Game implements GameViewer {
 			try {
 				success = map.updateAll(move); // return true if valid move and update succeeds.
 				if(success) {
-					turn = !turn;
+					passPlay();
 				}
 			} catch(MoveDuplicateException m) {
 				success = false;
@@ -94,7 +96,10 @@ public class Game implements GameViewer {
 		end();
 		return false;
 	}
-
+	// pass play to the next player.
+	protected void passPlay() {
+		player = !player;
+	}
 	@Override
 	public void notifyMove(PolarCoordinate coord, boolean turn) {
 		// Game doesn't need to know this.

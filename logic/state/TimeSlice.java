@@ -29,11 +29,25 @@ public class TimeSlice {
 		return tostring;
 		
 	}
-	public Double[] evalFeatures(boolean maxplayer) {
+	// provides features in numeric representation
+	public Double[] evalAllFeatures(boolean maxplayer) {
 		ArrayList<Double> list = new ArrayList<Double>();
-		list.addAll(features(X));
-		list.addAll(features(O));
-		
+		list.addAll(baseFeatures(X));
+		list.addAll(baseFeatures(O));
+		return list.toArray(new Double[list.size()]);
+	}
+	public ArrayList<Double> evalMapFeatures(boolean maxplayer) {
+		return null;
+	}
+	public ArrayList<Double> evalbaseFeatures(boolean maxplayer) {
+		if(maxplayer==Player.PLAYER_X) 
+			return baseFeatures(X);
+		else
+			return baseFeatures(O);
+	}
+
+	private ArrayList<Double> mapFeatures(PlayerSlice slice, boolean maxplayer) {
+		ArrayList<Double> list = new ArrayList<Double>();
 		Double[][] mapfeatures = new Double[4][12];
 		for(Move move : map.getMoves()) {
 			PolarCoordinate loc = move.getLoc();
@@ -51,10 +65,10 @@ public class TimeSlice {
 				else
 					list.add(mapfeatures[x][y]);
 			}
-		}
-		return list.toArray(new Double[list.size()]);
+		}	
+		return list;
 	}
-	private ArrayList<Double> features(PlayerSlice slice) {
+	private ArrayList<Double> baseFeatures(PlayerSlice slice) {
 		ArrayList<Double> list = new ArrayList<Double>();
 		list.add(new Double(evalState(slice.state)));
 		list.add(new Double((double)slice.nodes));
