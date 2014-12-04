@@ -3,6 +3,8 @@ package logic;
 import java.util.ArrayList;
 
 import polar.game.*;
+import polar.game.exceptions.BadCoordinateException;
+import polar.game.exceptions.MoveDuplicateException;
 
 public class SearchNode {
 		

@@ -1,6 +1,8 @@
-package polar.game;
+package polar.game.styles;
 
 import java.util.Random;
+
+import polar.game.UnTestedCoordinates;
 
 public class RandomPlayStyle implements PlayStyle {
 /*	

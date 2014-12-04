@@ -1,7 +1,14 @@
-package polar.game;
+package polar.game.styles;
 
 import java.util.Random;
 
+import polar.game.Game;
+import polar.game.GameMap;
+import polar.game.Move;
+import polar.game.PolarCoordinate;
+import polar.game.UnTestedCoordinates;
+import polar.game.exceptions.BadCoordinateException;
+import polar.game.exceptions.MoveDuplicateException;
 import logic.Heuristic;
 
 /*

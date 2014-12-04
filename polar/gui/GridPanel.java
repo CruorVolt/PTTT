@@ -15,8 +15,8 @@ import javax.swing.JLayeredPane;
 import polar.game.Game;
 import polar.game.Move;
 import polar.game.PolarCoordinate;
-import polar.game.BadCoordinateException;
 import polar.game.UnTestedCoordinates;
+import polar.game.exceptions.BadCoordinateException;
 
 public class GridPanel extends JLayeredPane implements ComponentListener{
 	

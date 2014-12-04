@@ -85,11 +85,19 @@ class PlayerState {
 		removeAll(pairs,newTriples);										// remove merged pairs from pairs list
 		addNode(newMove);
 	}
-	private ArrayList<Sequence> getTriples(ArrayList<Sequence> newPairs) {	
+	private ArrayList<Sequence> getTriples(ArrayList<Sequence> newPairs) {
 		ArrayList<Sequence> newtriples = new ArrayList<Sequence>();
+		Sequence lastpair = null;
+		Sequence ntriple = null;
 		// try to create triple out of all possible pair combinations
-		for(Sequence pair : pairs) {										
-			for(Sequence newpair : newPairs) {
+		for(Sequence newpair : newPairs) {
+			if(lastpair!=null) {
+				ntriple = Sequence.makeTriple(lastpair, newpair);
+				if(ntriple!=null)
+					newtriples.add(ntriple);
+			}
+			lastpair = newpair;
+			for(Sequence pair : pairs) {
 				Sequence newtriple = Sequence.makeTriple(pair, newpair);
 				if(newtriple!=null)
 					newtriples.add(newtriple);								// add only valid triples
@@ -127,9 +135,9 @@ class PlayerState {
 			else if(old.isOpenTriple()) {
 				numOpenTriples--;
 			}
-		default:
-			System.out.println("Error removing, invalid sequence");
 		}
+		if(old.size()>3)
+			System.out.println("Error removing, invalid sequence. Sequence is size "+old.size());
 	}
 	// add move to node list
 	private void addNode(Move newMove) {
@@ -163,7 +171,7 @@ class PlayerState {
 			numClosedTriples++;
 		}
 		else {
-			//System.out.println("Error adding to list, sequence is not a proper list item");
+			System.out.println("Error adding to list, sequence is not a proper list item");
 		}
 	}
 	// add all sequences in new list to list without duplicates

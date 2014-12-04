@@ -1,4 +1,7 @@
-package polar.game;
+package polar.game.styles;
+
+import polar.game.UnTestedCoordinates;
+
 // Define the human behavior interaction for Game.
 public class HumanPlayStyle implements PlayStyle {
 

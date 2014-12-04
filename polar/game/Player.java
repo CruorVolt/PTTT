@@ -1,4 +1,9 @@
 package polar.game;
+
+import polar.game.exceptions.BadCoordinateException;
+import polar.game.styles.HumanPlayStyle;
+import polar.game.styles.PlayStyle;
+
 public class Player {
 
 	public enum PlayerTypes {

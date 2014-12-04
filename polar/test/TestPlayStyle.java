@@ -1,4 +1,7 @@
-package polar.game;
+package polar.test;
+
+import polar.game.UnTestedCoordinates;
+import polar.game.styles.PlayStyle;
 
 public class TestPlayStyle implements PlayStyle {
 	private UnTestedCoordinates[] moves;

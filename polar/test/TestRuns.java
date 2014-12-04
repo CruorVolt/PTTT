@@ -1,4 +1,6 @@
-package polar.game;
+package polar.test;
+
+import polar.game.UnTestedCoordinates;
 
 public class TestRuns {
 

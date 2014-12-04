@@ -1,4 +1,7 @@
-package polar.game;
+package polar.game.exceptions;
+
+import polar.game.PolarCoordinate;
+
 public class MoveDuplicateException extends Exception {
 	private PolarCoordinate coord;
 	private static final long serialVersionUID = -7630678621833038351L;

@@ -1,7 +1,11 @@
-package polar.game;
+package polar.game.styles;
 
 import java.util.HashMap;
 
+import polar.game.Game;
+import polar.game.PolarCoordinate;
+import polar.game.UnTestedCoordinates;
+import polar.game.exceptions.BadCoordinateException;
 import logic.Search;
 import logic.SearchNode;
 
