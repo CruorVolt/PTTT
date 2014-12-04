@@ -17,13 +17,13 @@ public class SearchPlayStyle implements PlayStyle {
 	}
 
 	@Override
-	public UnTestedCoordinates getMove() {
+	public MoveReport getMove() {
 		HashMap<Integer, PolarCoordinate> minimax;
 		int maxDepth = (this.pruning) ? 4 : 3;
 		try {
 			minimax = Search.minimax(new SearchNode(this.game.getMap(), this.player), maxDepth, this.player, this.pruning, Integer.MIN_VALUE, Integer.MAX_VALUE);
 			PolarCoordinate location = (PolarCoordinate) minimax.values().toArray()[0];
-			return new UnTestedCoordinates(location.getX(), location.getY());
+			return new MoveReport(location.getX(), location.getY());
 		} catch (BadCoordinateException e) {
 			e.printStackTrace();
 		}

@@ -22,7 +22,7 @@ public class GreedyPlayStyle implements PlayStyle {
 	}
 
 	@Override
-	public UnTestedCoordinates getMove() {
+	public MoveReport getMove() {
 
 		GameMap map = game.getMap();
 
@@ -71,12 +71,12 @@ public class GreedyPlayStyle implements PlayStyle {
 		}
 
 		if (maxCoords != null) {
-			return new UnTestedCoordinates(maxCoords.getX(), maxCoords.getY());
+			return new MoveReport(maxCoords.getX(), maxCoords.getY());
 		} else { //First move, play randomly
 			Random rand = new Random();
 			int x = rand.nextInt(4) + 1;
 			int y = rand.nextInt(12);
-			return new UnTestedCoordinates(x,y);
+			return new MoveReport(x,y);
 		}
 	}
 

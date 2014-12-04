@@ -8,13 +8,13 @@ public class TestPlayStyle implements PlayStyle {
 		iterator = 0;
 	}
 	@Override
-	public UnTestedCoordinates getMove() {
+	public MoveReport getMove() {
 		if(iterator<moves.length) {
 			UnTestedCoordinates m = moves[iterator];
 			iterator++;
 			System.out.print(m.toString()+" ");
 			if(iterator==moves.length) { System.out.println();}	// formatting
-			return m;
+			return new MoveReport(m.getX(), m.getY());
 		}
 		else {
 			

@@ -2,7 +2,7 @@ package polar.game;
 // Define the human behavior interaction for Game.
 public class HumanPlayStyle implements PlayStyle {
 
-	private static UnTestedCoordinates c;	// most recent coordinates attempted
+	private static MoveReport report;	// most recent coordinates attempted
 	private static Object wait = new Object();
 	private static HumanPlayStyle instance;
 
@@ -21,11 +21,11 @@ public class HumanPlayStyle implements PlayStyle {
 	}
 
 	@Override
-	public UnTestedCoordinates getMove() {
+	public MoveReport getMove() {
         synchronized(wait){
             try{
             	wait.wait();
-                return c;
+                return report;
             }catch(InterruptedException e){
                 e.printStackTrace();
             }
@@ -35,7 +35,7 @@ public class HumanPlayStyle implements PlayStyle {
 
 	public static void Update(UnTestedCoordinates newCoords) {
 		synchronized(wait) {
-			c = newCoords;
+			report = new MoveReport(newCoords.getX(), newCoords.getY());
 			wait.notifyAll();
 		}
 	}
