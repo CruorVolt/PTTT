@@ -19,9 +19,9 @@ public class AIPlayerPanel extends PlayerPanel{
 		setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		playerLabel.setText("AI " + playerLabel.getText());
 
-		searchDepthLabel = new JLabel("Search Depth");
-		nodesLabel = new JLabel("Nodes Examined");
-		timeLabel = new JLabel("Time Elapsed");
+		searchDepthLabel = new JLabel("Search Depth:", JLabel.CENTER);
+		nodesLabel = new JLabel("Nodes Examined:", JLabel.CENTER);
+		timeLabel = new JLabel("Time Elapsed:", JLabel.CENTER);
 
 		add(searchDepthLabel);
 		add(nodesLabel);
@@ -29,8 +29,14 @@ public class AIPlayerPanel extends PlayerPanel{
 	}
 
 	@Override
-	public void update(PolarCoordinate coord, boolean turn) {
-		super.update(coord, turn);
+	public void update(MoveReport report) {
+		super.update(report);
+		boolean turn = report.getMove().getPlayer();
+		if (turn == this.player) {
+			searchDepthLabel.setText("Search Depth: " + report.getDepth() + " plys");
+			//nodesLabel = new JLabel("Nodes Examined: " + report.getNodes());
+			timeLabel.setText("Time Elapsed: " + (report.getTime() / 1000.0) + " s");
+		}
 	}
 	
 }

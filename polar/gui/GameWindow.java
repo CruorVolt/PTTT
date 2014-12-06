@@ -159,10 +159,10 @@ public class GameWindow implements GameViewer, ActionListener {
 	}
 	
 	@Override
-	public void notifyMove(PolarCoordinate coord, boolean turn) {
-		player_one_panel.update(coord, turn);
-		player_two_panel.update(coord, turn);
-		game_panel.update(coord);
+	public void notifyMove(MoveReport report) {
+		player_one_panel.update(report);
+		player_two_panel.update(report);
+		game_panel.update(report);
 	}
 
 	@Override

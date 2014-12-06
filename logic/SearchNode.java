@@ -67,7 +67,7 @@ public class SearchNode {
 							try {
 								tempMap = (GameMap) map.deepCopy(); //resetting tempMap
 								tempMap.removeViewers(); //make sure this map doesn't update the gui
-								tempMap.updateAll(new Move(this.max, location));
+								tempMap.updateAll(new MoveReport(new Move(this.max, location)));
 								child = new SearchNode(tempMap, !this.max);
 								this.children.add(child);
 							} catch (MoveDuplicateException e) {

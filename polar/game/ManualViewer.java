@@ -3,8 +3,8 @@ package polar.game;
 public class ManualViewer implements GameViewer {
 
 	@Override
-	public void notifyMove(PolarCoordinate coord, boolean turn) {
-		System.out.println(coord.toString()); 
+	public void notifyMove(MoveReport report) {
+		System.out.println(report.getMove().toString()); 
 		
 	}
 

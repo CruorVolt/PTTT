@@ -42,8 +42,10 @@ public class Game implements GameViewer {
 		addViewer(this);
 		currentPlayer = playerX;
 		boolean success;
+		MoveReport report;
 		while(notWin) {
-			success = nextTurn(currentPlayer.move());
+			report = currentPlayer.move();
+			success = nextTurn(report);
 			if(success) {
 				if(player==Player.PLAYER_X) {
 					currentPlayer = playerX;
@@ -54,6 +56,7 @@ public class Game implements GameViewer {
 		}
 	}
 
+	//Force the game to end
 	public void end() {
 		System.out.println("Game ended early.");
 		notWin = false;
@@ -79,12 +82,14 @@ public class Game implements GameViewer {
 		}
 		return current;
 	}
+
 	// performs a new turn.
-	private boolean nextTurn(Move move) {
+	private boolean nextTurn(MoveReport report) {
 		boolean success;
+		Move move = report.reportMove(player);
 		if(move!=null) {
 			try {
-				success = map.updateAll(move); // return true if valid move and update succeeds.
+				success = map.updateAll(report); // return true if valid move and update succeeds.
 				if(success) {
 					passPlay();
 				}
@@ -96,14 +101,15 @@ public class Game implements GameViewer {
 		end();
 		return false;
 	}
+
 	// pass play to the next player.
 	protected void passPlay() {
 		player = !player;
 	}
+
 	@Override
-	public void notifyMove(PolarCoordinate coord, boolean turn) {
+	public void notifyMove(MoveReport report) {
 		// Game doesn't need to know this.
-		
 	}
 
 	@Override

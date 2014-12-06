@@ -34,7 +34,7 @@ public class GameMap {
 	 * updates the adjacency of all previous
 	 * moves to include n if necessary
 	 */
-	public boolean updateAll(Move n) throws MoveDuplicateException {
+	public boolean updateAll(MoveReport n) throws MoveDuplicateException {
 		boolean validMove = false;
 		// allow move in any space, if no moves exist.
 		if(moves.isEmpty())
@@ -42,8 +42,8 @@ public class GameMap {
 		
 		for (Move move : moves) {
 			try {
-				if(move.update(n)) {
-					n.update(move);
+				if(move.update(n.getMove())) {
+					n.getMove().update(move);
 					// allow move only in adjacent spaces, if moves exist.
 					validMove = true;
 				}
@@ -52,21 +52,21 @@ public class GameMap {
 			catch(MoveDuplicateException e) {
 				validMove = false;
 				// undo any partial updates
-				removeAll(n);
+				removeAll(n.getMove());
 				// escalate exception and back out of update.
 				throw(e);
 			}
 		}
 		if(validMove)
-			moves.add(n);
-			currentMove = n;
+			moves.add(n.getMove());
+			currentMove = n.getMove();
 		if ((!viewers.isEmpty())&&validMove) {
 			for(GameViewer viewer : viewers) {
-				viewer.notifyMove(n.getLoc(), n.getPlayer());
+				viewer.notifyMove(n);
 			}
 		}
 		// end the game if a win is found, or if the board is out of moves.
-		if ( (win(n.getPlayer())||(moves.size() >= 48)) && (!viewers.isEmpty()) ){
+		if ( (win(n.getMove().getPlayer())||(moves.size() >= 48)) && (!viewers.isEmpty()) ){
 			for(GameViewer viewer : viewers) {
 				viewer.notifyWin(true, winSequence);
 			}
@@ -119,7 +119,7 @@ public class GameMap {
 			location = move.getLoc();
 			player = move.getPlayer();
 			moveCopy = new Move(player, location);
-			map.updateAll(moveCopy);
+			map.updateAll(new MoveReport(moveCopy));
 		}
 		return map;
 		

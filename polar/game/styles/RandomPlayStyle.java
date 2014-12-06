@@ -2,9 +2,9 @@ package polar.game.styles;
 
 import java.util.Random;
 
-import polar.game.UnTestedCoordinates;
+import polar.game.MoveReport;
 
-public class RandomPlayStyle implements PlayStyle {
+public class RandomPlayStyle extends PlayStyle {
 /*	
 	private Game game;
 	private boolean player;
