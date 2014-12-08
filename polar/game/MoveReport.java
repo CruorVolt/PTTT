@@ -13,15 +13,20 @@ public class MoveReport {
 	public MoveReport(int x, int y) {
 		this.coordinates = new UnTestedCoordinates(x, y);
 		this.move = null;
-		this.searchDepth = 0;
-		this.nodesSearched = 0;
-		this.seconds = 0.0;
+		initialize();
 	}
 	
 	public MoveReport(Move move) {
 		this.move = move;
 		PolarCoordinate c = move.getLoc();
 		this.coordinates = new UnTestedCoordinates(c.getX(), c.getY());
+		initialize();
+	}
+	
+	public void initialize() {
+		this.searchDepth = 0;
+		this.nodesSearched = 0;
+		this.seconds = 0.0;
 	}
 	
 	public PolarCoordinate getCoordinates() {
