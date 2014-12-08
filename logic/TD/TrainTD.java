@@ -80,7 +80,7 @@ public class TrainTD implements GameViewer{
 			reward = 1;
 		}
 		while(!states.empty()) {
-			td.feedback(states.pop(), Math.pow(2, exp));
+			td.feedback(states.pop(), reward*Math.pow(2, exp));
 			exp--;				// discount reward to incentive shorter games
 		}
 	}

@@ -1,5 +1,6 @@
 package polar.game.styles;
 
+import polar.game.Player;
 import polar.game.UnTestedCoordinates;
 
 // Define the human behavior interaction for Game.
@@ -41,5 +42,10 @@ public class HumanPlayStyle implements PlayStyle {
 			c = newCoords;
 			wait.notifyAll();
 		}
+	}
+
+	@Override
+	public String toString() {
+		return Player.PlayerTypes.HUMAN.toString();
 	}
 }

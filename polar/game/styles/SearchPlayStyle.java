@@ -3,6 +3,7 @@ package polar.game.styles;
 import java.util.HashMap;
 
 import polar.game.Game;
+import polar.game.Player;
 import polar.game.PolarCoordinate;
 import polar.game.UnTestedCoordinates;
 import polar.game.exceptions.BadCoordinateException;
@@ -32,6 +33,14 @@ public class SearchPlayStyle implements PlayStyle {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	@Override
+	public String toString() {
+		if(pruning)
+		return Player.PlayerTypes.ALPHABETA.toString();
+		else
+			return Player.PlayerTypes.MINIMAX.toString();
 	}
 
 }

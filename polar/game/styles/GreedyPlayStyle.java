@@ -5,6 +5,7 @@ import java.util.Random;
 import polar.game.Game;
 import polar.game.GameMap;
 import polar.game.Move;
+import polar.game.Player;
 import polar.game.PolarCoordinate;
 import polar.game.UnTestedCoordinates;
 import polar.game.exceptions.BadCoordinateException;
@@ -85,6 +86,11 @@ public class GreedyPlayStyle implements PlayStyle {
 			int y = rand.nextInt(12);
 			return new UnTestedCoordinates(x,y);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return Player.PlayerTypes.GREEDY.toString();
 	}
 
 }

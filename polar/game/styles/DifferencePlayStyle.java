@@ -8,6 +8,7 @@ import logic.TD.TD;
 import logic.TD.playTD;
 import polar.game.Game;
 import polar.game.GameMap;
+import polar.game.Player;
 import polar.game.UnTestedCoordinates;
 
 public class DifferencePlayStyle implements PlayStyle {
@@ -43,5 +44,10 @@ public class DifferencePlayStyle implements PlayStyle {
 			return new UnTestedCoordinates(x,y);
 		}
 			
+	}
+
+	@Override
+	public String toString() {
+		return Player.PlayerTypes.TEMPORALDIFF.toString();
 	}
 }
