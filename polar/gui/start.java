@@ -1,9 +1,9 @@
+package polar.gui;
 
 
 import java.awt.EventQueue;
 
 import polar.game.Game;
-import polar.gui.GameWindow;
 
 public class start {
 

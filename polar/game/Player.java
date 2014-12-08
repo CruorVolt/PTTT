@@ -11,7 +11,8 @@ public class Player {
 			RANDOM ("Random"), 
 			GREEDY ("Greedy Heuristic"), 
 			MINIMAX ("Minimax Search"),
-			ALPHABETA ("Minimax w/Alpha-Beta Pruning");
+			ALPHABETA ("Minimax w/Alpha-Beta Pruning"),
+			TEMPORALDIFF ("Temporal Difference");
 		public String string;
 		private PlayerTypes(String s) {
 			this.string = s;

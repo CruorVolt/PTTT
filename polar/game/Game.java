@@ -1,5 +1,6 @@
 package polar.game;
 
+import logic.state.GameState;
 import polar.game.exceptions.MoveDuplicateException;
 import polar.game.styles.PlayStyle;
 
@@ -33,6 +34,9 @@ public class Game implements GameViewer {
 	
 	public boolean getCurrentPlayer() {
 		return player;
+	}
+	public GameState getState() {
+		return map.getState();
 	}
 	
 	// start the game.
@@ -102,13 +106,17 @@ public class Game implements GameViewer {
 	}
 	@Override
 	public void notifyMove(PolarCoordinate coord, boolean turn) {
-		// Game doesn't need to know this.
-		
+		// Game doesn't use this.
 	}
 
 	@Override
 	public void notifyWin(boolean turn, Move[] winState) {
 		notWin=false;
+		printWin(winState);
+	}
+	// override to skip printing.
+	public void printWin(Move[] winState) {
+		System.out.println("Game Over");
 		if (winState != null) {
 			for(Move m : winState) {
 				System.out.println(m);
