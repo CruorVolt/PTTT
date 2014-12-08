@@ -7,6 +7,7 @@ import polar.game.GameViewer;
 import polar.game.Move;
 import polar.game.Player;
 import polar.game.PolarCoordinate;
+import polar.game.UnTestedCoordinates;
 
 /* Represents the current state of the map, based on relative advantages.
  * Infers the various advantages of the Map by tracking and reporting Sequences owned by each player.

@@ -2,11 +2,13 @@ package polar.gui;
 
 import polar.game.*;
 import polar.game.exceptions.BadCoordinateException;
+import polar.game.styles.DifferencePlayStyle;
 import polar.game.styles.GreedyPlayStyle;
 import polar.game.styles.HumanPlayStyle;
 import polar.game.styles.PlayStyle;
 import polar.game.styles.RandomPlayStyle;
 import polar.game.styles.SearchPlayStyle;
+import polar.game.styles.TDMinPlayStyle;
 
 import java.awt.GridBagLayout;
 import java.awt.Dimension;
@@ -18,6 +20,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.border.BevelBorder;
+
+import logic.TD.TD;
 
 public class GameWindow implements GameViewer, ActionListener {
 
@@ -103,6 +107,7 @@ public class GameWindow implements GameViewer, ActionListener {
 		String[] choices = ListDialog.showDialog(null, null, "Who is Playing?", "Choose Players", players, defaults, null);
 		PlayStyle style1 = null;
 		PlayStyle style2 = null;
+		TD td = null;
 		
 		switch (choices[0]) {
 		case "Human":
@@ -125,8 +130,14 @@ public class GameWindow implements GameViewer, ActionListener {
 			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X);
 			style1 = new SearchPlayStyle(Player.PLAYER_X, game, true);
 			break;
+		case "Temporal Difference":
+			td = new TD(Player.PLAYER_X, "TDweights.txt");
+			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X);
+			style1 = new DifferencePlayStyle(game, td, Player.PLAYER_X);
+			break;
 		default:
-			System.out.println("No Player of that type found!");
+			System.out.println("No Player of type "+choices[0]+ " found!");
+			break;
 		}
 
 		switch (choices[1]) {
@@ -150,8 +161,21 @@ public class GameWindow implements GameViewer, ActionListener {
 			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O);
 			style2 = new SearchPlayStyle(Player.PLAYER_O, game, true);
 			break;
+		case "Temporal Difference":
+			if(td==null) {
+				td = new TD(Player.PLAYER_X, "TDweights.txt");
+				player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O);
+				style2 = new DifferencePlayStyle(game, td, Player.PLAYER_O);
+			}
+			// to use a single TD net for both players -- must use min playstyle 
+			else {
+				player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O);
+				style2 = new TDMinPlayStyle(game, td, Player.PLAYER_O);
+			}
+			break;
 		default:
-			System.out.println("No Player of that type found!");
+			System.out.println("No Player of type "+choices[1]+ " found!");
+			break;
 		}
 		game.setPlayStyles(style1, style2);
 		PlayerPanel[] panels = {player_one_panel, player_two_panel};

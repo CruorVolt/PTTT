@@ -1,6 +1,9 @@
 package logic;
 
+import java.util.ArrayList;
+
 import polar.game.Move;
+import polar.game.UnTestedCoordinates;
 
 public final class Status {
 
@@ -19,6 +22,76 @@ public final class Status {
 	// predicate to check direction validity.
 	public static boolean valid(int i) {
 		return (i>-1)&&(i<8);
+	}
+	// verify coordinates used / wrap around as needed
+	public static UnTestedCoordinates getCoord(int x,int y) {
+		if(y==12)
+			y = 0;
+		if(y==-1)
+			y = 11;
+		if((x<1)||(x>4))
+			return null;
+		return new UnTestedCoordinates(x,y);
+	}
+	// returns all valid coordinates available for play.
+	public static ArrayList<UnTestedCoordinates> getValidPositions(ArrayList<Move> moves) {
+		ArrayList<UnTestedCoordinates> valid = new ArrayList<UnTestedCoordinates>();
+		for(Move move : moves) {
+			int x = move.getLoc().getX();
+			int y = move.getLoc().getY();
+			for(int i=0;i<8;i++) {
+				Move connected = move.getMoveOrBlock(i);
+				if(connected==null) {
+					UnTestedCoordinates coord;
+					switch(i) {
+					case 0: 
+						coord = getCoord(x+1,y);
+						if(!valid.contains(coord))
+							valid.add(coord);
+						break;
+					
+					case 1: 
+						coord = getCoord(x+1,y+1);
+						if(!valid.contains(coord))
+							valid.add(coord);
+						break;
+					
+					case 2: 
+						coord = getCoord(x,y+1);
+						if(!valid.contains(coord))
+							valid.add(coord);
+						break;
+					
+					case 3: 
+						coord = getCoord(x-1,y+1);
+						if(!valid.contains(coord))
+							valid.add(coord);
+						break;
+					case 4: 
+						coord = getCoord(x-1,y);
+						if(!valid.contains(coord))
+							valid.add(coord);
+						break;
+					case 5: 
+						coord = getCoord(x-1,y-1);
+						if(!valid.contains(coord))
+							valid.add(coord);
+						break;
+					case 6: 
+						coord = getCoord(x,y-1);
+						if(!valid.contains(coord))
+							valid.add(coord);
+						break;
+					case 7: 
+						coord = getCoord(x+1,y-1);
+						if(!valid.contains(coord))
+							valid.add(coord);
+						break;
+					}
+				}
+			}
+		}
+		return valid;
 	}
 }
 

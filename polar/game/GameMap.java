@@ -102,6 +102,7 @@ public class GameMap {
 		for( Move move : moves) {
 			move.remove(m);
 		}
+		moves.remove(m);
 		if(m.equals(currentMove))
 			currentMove = lastMove();
 	}
@@ -164,7 +165,7 @@ public class GameMap {
 		return false;
 	}
 	public Move lastMove() {
-		return moves.get(moves.size());
+		return moves.get(moves.size()-1);
 	}
 	public Move getCurrentMove() {
 		return currentMove;
@@ -176,5 +177,4 @@ public class GameMap {
 	public boolean containsWin() {
 		return hasWin;
 	}
-	
 }
