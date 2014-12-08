@@ -11,6 +11,7 @@ import logic.state.TimeSlice;
 import polar.game.GameMap;
 import polar.game.GameViewer;
 import polar.game.Move;
+import polar.game.MoveReport;
 import polar.game.Player;
 import polar.game.PolarCoordinate;
 import polar.game.styles.DifferencePlayStyle;
@@ -68,7 +69,7 @@ public class TrainTD implements GameViewer{
 		}
 	}
 	@Override
-	public void notifyMove(PolarCoordinate coord, boolean turn) {
+	public void notifyMove(MoveReport report) {
 		TimeSlice slice = new TimeSlice(map.getState());
 		states.push(slice);
 	}

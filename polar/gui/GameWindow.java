@@ -1,6 +1,5 @@
 package polar.gui;
 
-import run.start;
 import polar.game.*;
 import polar.game.exceptions.BadCoordinateException;
 import polar.game.styles.*;
