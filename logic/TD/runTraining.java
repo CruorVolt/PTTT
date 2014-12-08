@@ -4,6 +4,7 @@ public class runTraining {
 
 	public static void main(String[] args) {
 		TrainTD td = new TrainTD();
-		td.train(1000000);
+		for(int i=0;i<10000;i++)
+		td.train(100);
 	}
 }
