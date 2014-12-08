@@ -1,11 +1,8 @@
 package polar.game.styles;
 
 import polar.game.Game;
-<<<<<<< HEAD
 import polar.game.Player;
-=======
 import polar.game.MoveReport;
->>>>>>> 31e3b45f1fdad80845e864f12c688523497163ee
 import polar.game.PolarCoordinate;
 import polar.game.exceptions.BadCoordinateException;
 import logic.Search;

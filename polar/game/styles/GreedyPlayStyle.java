@@ -5,11 +5,8 @@ import java.util.Random;
 import polar.game.Game;
 import polar.game.GameMap;
 import polar.game.Move;
-<<<<<<< HEAD
 import polar.game.Player;
-=======
 import polar.game.MoveReport;
->>>>>>> 31e3b45f1fdad80845e864f12c688523497163ee
 import polar.game.PolarCoordinate;
 import polar.game.UnTestedCoordinates;
 import polar.game.exceptions.BadCoordinateException;

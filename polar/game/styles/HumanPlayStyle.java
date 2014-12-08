@@ -1,10 +1,9 @@
 package polar.game.styles;
 
-<<<<<<< HEAD
+
 import polar.game.Player;
-=======
+
 import polar.game.MoveReport;
->>>>>>> 31e3b45f1fdad80845e864f12c688523497163ee
 import polar.game.UnTestedCoordinates;
 
 // Define the human behavior interaction for Game.

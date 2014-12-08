@@ -8,13 +8,10 @@ import logic.TD.TD;
 import logic.TD.playTD;
 import polar.game.Game;
 import polar.game.GameMap;
-<<<<<<< HEAD
 import polar.game.Player;
-=======
 import polar.game.Move;
 import polar.game.MoveReport;
 import polar.game.PolarCoordinate;
->>>>>>> 31e3b45f1fdad80845e864f12c688523497163ee
 import polar.game.UnTestedCoordinates;
 import polar.game.exceptions.BadCoordinateException;
 
