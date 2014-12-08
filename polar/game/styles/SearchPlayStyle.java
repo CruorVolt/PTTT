@@ -31,6 +31,8 @@ public class SearchPlayStyle extends PlayStyle {
 			report = new MoveReport(location.getX(), location.getY());
 			report.reportTime(getElapsedTime());
 			report.reportDepth(maxDepth);
+			report.reportNodes(SearchNode.countNodes());
+			SearchNode.reset();
 			endTurn();
 			return report;
 		} catch (BadCoordinateException e) {

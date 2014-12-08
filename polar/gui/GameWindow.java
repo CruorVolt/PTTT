@@ -1,12 +1,9 @@
 package polar.gui;
 
+import run.start;
 import polar.game.*;
 import polar.game.exceptions.BadCoordinateException;
-import polar.game.styles.GreedyPlayStyle;
-import polar.game.styles.HumanPlayStyle;
-import polar.game.styles.PlayStyle;
-import polar.game.styles.RandomPlayStyle;
-import polar.game.styles.SearchPlayStyle;
+import polar.game.styles.*;
 
 import java.awt.GridBagLayout;
 import java.awt.Dimension;
@@ -178,7 +175,7 @@ public class GameWindow implements GameViewer, ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		//game.reset();
+		start.restart();
 	}
 
 }
