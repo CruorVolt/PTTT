@@ -13,6 +13,9 @@ public class MoveReport {
 	public MoveReport(int x, int y) {
 		this.coordinates = new UnTestedCoordinates(x, y);
 		this.move = null;
+		this.searchDepth = 0;
+		this.nodesSearched = 0;
+		this.seconds = 0.0;
 	}
 	
 	public MoveReport(Move move) {

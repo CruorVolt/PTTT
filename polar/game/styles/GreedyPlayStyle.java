@@ -31,6 +31,7 @@ public class GreedyPlayStyle extends PlayStyle {
 
 	@Override
 	public MoveReport getMove() {
+		startTimer();
 
 		GameMap map = game.getMap();
 
@@ -57,6 +58,7 @@ public class GreedyPlayStyle extends PlayStyle {
 						}
 
 						if (valid) { // this move is valid, give it a score
+							addNode();
 							try {
 								tempMap = (GameMap) map.deepCopy(); //resetting tempMap
 								tempMap.removeViewers(); //make sure this map doesn't update the gui
@@ -78,14 +80,22 @@ public class GreedyPlayStyle extends PlayStyle {
 			
 		}
 
+		Integer x;
+		Integer y;
 		if (maxCoords != null) {
-			return new MoveReport(maxCoords.getX(), maxCoords.getY());
+			x = maxCoords.getX();
+			y = maxCoords.getY();
 		} else { //First move, play randomly
 			Random rand = new Random();
-			int x = rand.nextInt(4) + 1;
-			int y = rand.nextInt(12);
-			return new MoveReport(x,y);
+			x = rand.nextInt(4) + 1;
+			y = rand.nextInt(12);
 		}
+		stopTimer();
+		MoveReport report = new MoveReport(x,y);
+		report.reportTime(getElapsedTime());
+		report.reportNodes(getNodes());
+		endTurn();
+		return report;
 	}
 
 }

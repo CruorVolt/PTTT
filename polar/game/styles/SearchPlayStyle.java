@@ -1,11 +1,8 @@
 package polar.game.styles;
 
-import java.util.HashMap;
-
 import polar.game.Game;
 import polar.game.MoveReport;
 import polar.game.PolarCoordinate;
-import polar.game.UnTestedCoordinates;
 import polar.game.exceptions.BadCoordinateException;
 import logic.Search;
 import logic.SearchNode;
@@ -25,15 +22,16 @@ public class SearchPlayStyle extends PlayStyle {
 	public MoveReport getMove() {
 		MoveReport report;
 		startTimer();
-		HashMap<Integer, PolarCoordinate> minimax;
+		SearchNode minimax;
 		int maxDepth = (this.pruning) ? 4 : 3;
 		try {
-			minimax = Search.minimax(new SearchNode(this.game.getMap(), this.player), maxDepth, this.player, this.pruning, Integer.MIN_VALUE, Integer.MAX_VALUE);
-			PolarCoordinate location = (PolarCoordinate) minimax.values().toArray()[0];
+			minimax = Search.minimax(new SearchNode(this.game.getMap(), this.player, null), maxDepth, this.player, this.pruning, Integer.MIN_VALUE, Integer.MAX_VALUE);
+			PolarCoordinate location = (PolarCoordinate) minimax.getMove();
 			stopTimer();
 			report = new MoveReport(location.getX(), location.getY());
 			report.reportTime(getElapsedTime());
 			report.reportDepth(maxDepth);
+			endTurn();
 			return report;
 		} catch (BadCoordinateException e) {
 			e.printStackTrace();

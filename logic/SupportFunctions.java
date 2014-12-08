@@ -22,6 +22,8 @@ import polar.game.UnTestedCoordinates;
 import polar.game.exceptions.BadCoordinateException;
 import polar.game.styles.GreedyPlayStyle;
 import polar.game.styles.PlayStyle;
+import polar.game.styles.RandomPlayStyle;
+import polar.game.styles.SearchPlayStyle;
 
 /*
  * Shared functions for logic package classes
@@ -424,7 +426,7 @@ public class SupportFunctions {
 		for (int i = 0; i< setSize; i++) {
 			Game game = new Game();
 			PlayStyle style1 = new GreedyPlayStyle(true, game);
-			PlayStyle style2 = new GreedyPlayStyle(false, game);
+			PlayStyle style2 = new SearchPlayStyle(false, game, true);
 			game.setPlayStyles(style1, style2);
 			game.begin();
 
@@ -433,7 +435,6 @@ public class SupportFunctions {
 			thisMap.add(game.getMap());
 			
 			trainingMaps.add(thisMap);
-			System.out.println("Generated map " + i);
 		}
 		return trainingMaps;
 		
@@ -466,5 +467,22 @@ public class SupportFunctions {
 			sum += d;
 		}
 		return sum/ ( (double) list.size() );
+	}
+	
+	public static void main(String[] args) {
+		int x = 0;
+		int o = 0;
+		for (int i = 0; i < 25; i++) {
+			ArrayList<ArrayList<Object>> mapMap = SupportFunctions.generateWinStates(1);
+			Character winner = (Character) mapMap.get(0).get(0);
+			if (winner == 'X') {
+				x++;
+			} else {
+				o++;
+			}
+			System.out.println("Game " + i);
+		}
+		System.out.println("X wins: " + x);
+		System.out.println("O wins: " + o);
 	}
 }

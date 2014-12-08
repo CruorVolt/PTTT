@@ -7,30 +7,52 @@ import polar.game.exceptions.BadCoordinateException;
 import polar.game.exceptions.MoveDuplicateException;
 
 public class SearchNode {
-		
-	GameMap map; //The state of the game at this node
-	int alpha;   //The current estimated alpha value
-	int beta;	 //The current estimated beta value
-	boolean max; //Max player (X) or min player (O)
-	ArrayList<SearchNode> children; //All possible child states
 	
-	public SearchNode(GameMap map, boolean player) {
+	private static int numberOfNodes = 0;
+	
+	GameMap map; //The state of the game at this node
+	int value;   //The heuristic evaluation of map
+	boolean max; //Max player (X => true) or min player (O => false)
+	ArrayList<SearchNode> children; //All possible child states
+	PolarCoordinate newestMove; //The move that creates this node
+	SearchNode argmax; //Decision branch
+	
+	public SearchNode(GameMap map, boolean player, PolarCoordinate move) {
 		this.map = map;
+		this.value = Heuristic.evaluateMinMax(this.map, true);
 		this.max = player;
+		this.newestMove = move;
 		children = null;
+		numberOfNodes++;
+	}
+	
+	public int getValue() {
+		return value;
 	}
 	
 	public GameMap getMap() {
 		return this.map;
 	}
 	
+	//Set a move manually: for use during the first move of a game
+	public void setMove(PolarCoordinate move) {
+		this.newestMove = move;
+	}
+	
 	public PolarCoordinate getMove() { //Get the move that resulted in this gamestate
-		ArrayList<Move> moves = this.map.getMoves();
-		return moves.get(moves.size() - 1).getLoc(); //newest move
+		return this.newestMove;
 	}
 	
 	public ArrayList<SearchNode> getChildren() {
 		return this.children;
+	}
+	
+	public void setArgMax(SearchNode node) {
+		this.argmax = node;
+	}
+	
+	public SearchNode getMax() {
+		return this.argmax;
 	}
 	
 	/*
@@ -68,7 +90,7 @@ public class SearchNode {
 								tempMap = (GameMap) map.deepCopy(); //resetting tempMap
 								tempMap.removeViewers(); //make sure this map doesn't update the gui
 								tempMap.updateAll(new MoveReport(new Move(this.max, location)));
-								child = new SearchNode(tempMap, !this.max);
+								child = new SearchNode(tempMap, !this.max, location);
 								this.children.add(child);
 							} catch (MoveDuplicateException e) {
 								e.printStackTrace();
@@ -81,4 +103,13 @@ public class SearchNode {
 			}
 		}
 	}
+	
+	public static void reset() {
+		numberOfNodes = 0;
+	}
+	
+	public static int countNodes() {
+		return numberOfNodes;
+	}
+
 }

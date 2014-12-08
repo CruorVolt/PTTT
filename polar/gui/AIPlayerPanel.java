@@ -34,7 +34,7 @@ public class AIPlayerPanel extends PlayerPanel{
 		boolean turn = report.getMove().getPlayer();
 		if (turn == this.player) {
 			searchDepthLabel.setText("Search Depth: " + report.getDepth() + " plys");
-			//nodesLabel = new JLabel("Nodes Examined: " + report.getNodes());
+			nodesLabel.setText("Nodes Examined: " + report.getNodes());
 			timeLabel.setText("Time Elapsed: " + (report.getTime() / 1000.0) + " s");
 		}
 	}
