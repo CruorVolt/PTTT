@@ -16,10 +16,10 @@ public class DifferencePlayStyle implements PlayStyle {
 	protected GameMap map;
 	
 	public DifferencePlayStyle(Game game, TD td, boolean player) {
+		this.map = game.getMap();
 		this.td = new playTD(td);
 		map.addViewer(this.td);
 		this.player = player;
-		this.map = game.getMap();
 	}
 	
 	@Override
