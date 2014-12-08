@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import polar.game.GameViewer;
 import polar.game.Move;
+import polar.game.MoveReport;
 import polar.game.Player;
 import polar.game.PolarCoordinate;
 import polar.game.UnTestedCoordinates;
@@ -32,14 +33,16 @@ public class playTD implements GameViewer {
 	}
 
 	@Override
-	public void notifyMove(PolarCoordinate coord, boolean player) {
+	public void notifyMove(MoveReport report) {
+		PolarCoordinate coord = report.getCoordinates();
+		boolean player = report.getMove().getPlayer();
 		//if(player==Player.PLAYER_X)
 		//	System.out.print("X: ");
 	//	else
 	//		System.out.print("O: ");
 	//	System.out.println(coord);
 		try {
-			test.updateAll(new Move(player, coord));
+			test.updateAll(report);
 		} catch (MoveDuplicateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -72,7 +75,7 @@ public class playTD implements GameViewer {
 		Move current = new Move(player,ch);
 		
 		try {
-			test.updateAll(current);
+			test.updateAll(new MoveReport(current));
 		} catch (MoveDuplicateException e) {
 			System.out.println("Error evaluating plays in PlayTD, duplicate attempt.");
 			return 0;
@@ -95,7 +98,7 @@ public class playTD implements GameViewer {
 		Move current = new Move(player,ch);
 		
 		try {
-			test.updateAll(current);
+			test.updateAll(new MoveReport(current));
 		} catch (MoveDuplicateException e) {
 			System.out.println("Error evaluating plays in PlayTD, duplicate attempt.");
 			return 0;

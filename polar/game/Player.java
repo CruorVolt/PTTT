@@ -44,16 +44,9 @@ public class Player {
 	}
 
 	// return true if move succeeds, false if it fails
-	public Move move() {
-		try {
-			UnTestedCoordinates uc = style.getMove();
-			PolarCoordinate c = new PolarCoordinate(uc);
-			Move newMove = new Move(turn, c);
-			return newMove;
-			
-		} catch (BadCoordinateException e) {
-			return null;
-		}
+	public MoveReport move() {
+			MoveReport report = style.getMove();
+			return report;
 	}
 	public String toString() {
 		return token.toString();

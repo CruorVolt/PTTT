@@ -20,18 +20,14 @@ public class Search {
 	 */
 	
 	//function minimax(node, depth, maximizingPlayer)
-	public static HashMap<Integer, PolarCoordinate> minimax(SearchNode root, int currentDepth, boolean maxPlayer, boolean pruning, Integer alpha, Integer beta) throws BadCoordinateException {
+	public static SearchNode minimax(SearchNode root, int currentDepth, boolean maxPlayer, boolean pruning, Integer alpha, Integer beta) throws BadCoordinateException {
 		
-		HashMap<Integer, PolarCoordinate> bestHash, alphaHash, betaHash;
+		SearchNode bestNode = null, alphaNode = null, betaNode = null;
 		Integer bestValue, currentValue;
-		PolarCoordinate bestMove = null, currentMove = null, alphaMove = null, betaMove = null;
 		
-	    //if depth = 0 or node is a terminal node make heuristic evaluation
+	    //if depth = 0 or node is a terminal node return root for heuristic evaluation
 		if ((currentDepth == 0) || (root.getMap().containsWin())) {
-	        //return the heuristic value of node
-			bestHash = new HashMap<Integer, PolarCoordinate>();
-			bestHash.put(Heuristic.evaluateMinMax(root.getMap(), true), root.getMove()); 
-			return bestHash;
+			return root;
 		}
 		
 		//Make a random move if the map is empty
@@ -41,68 +37,62 @@ public class Search {
 			int x = random.nextInt(4) + 1;
 			int y = random.nextInt(12);
 			PolarCoordinate location =  new PolarCoordinate(new UnTestedCoordinates(x,y));
-			bestHash = new HashMap<Integer, PolarCoordinate>();
-			bestHash.put(0, location); 
-			return bestHash;
+			root.setMove(location);
+			return root;
 		}
 		
 		//give root correct children
 		root.createChildren();
 		
-		if (maxPlayer) { //maximizing plyaer node evaluatione
+		if (maxPlayer) { //maximizing player node evaluation
 			bestValue = Integer.MIN_VALUE;
 			for (SearchNode child : root.getChildren()) {
 				if (!pruning) { //This is standard minimax
-					currentValue = (Integer) minimax(child, currentDepth - 1, false, false, null, null).keySet().toArray()[0];
-					currentMove = child.getMove();
+					//Compare heuristic value to find the best
+					currentValue = minimax(child, currentDepth - 1, false, false, null, null).getValue();
 					if (currentValue > bestValue) { //bestValue = max(current, best)
 						bestValue= currentValue;
-						bestMove = currentMove;
+						bestNode = child;
 					}
 				} else { //This is minimax with alpha-beta pruning
-					currentValue = (Integer) minimax(child, currentDepth - 1, false, true, alpha, beta).keySet().toArray()[0];
+					//Compare heuristic value to find the best and prune if able
+					currentValue = minimax(child, currentDepth - 1, false, true, alpha, beta).getValue();
 					alpha = Math.max(alpha, currentValue);
-					alphaMove = child.getMove();
+					alphaNode = child;
 					if (beta < alpha) {
 						break;
 					}
 				}
 			}
 			if (pruning) { //return alpha and associated move
-				alphaHash = new HashMap<Integer, PolarCoordinate>();
-				alphaHash.put(alpha, alphaMove);
-				return alphaHash;
+				return alphaNode;
 			} else { //return best value so far and associated move
-				bestHash = new HashMap<Integer, PolarCoordinate>();
-				bestHash.put(bestValue, bestMove);
-				return bestHash;
+				return bestNode;
 			}
 		} else { //minimizing player node evaluation
 			bestValue = Integer.MAX_VALUE;
 			for (SearchNode child : root.getChildren()) {
 				if (!pruning) { //This is standard minimax
-					currentValue = (Integer) minimax(child, currentDepth - 1, true, false, null, null).keySet().toArray()[0];
+					//Compare heuristic value to find the best
+					currentValue = minimax(child, currentDepth - 1, true, false, null, null).getValue();
 					if (currentValue < bestValue) { //bestValue = min(current, best)
 						bestValue = currentValue;
-						bestMove = child.getMove();
+						bestNode = child;
 					}
 				} else { //This is minimax with alpha-beta pruning
-					currentValue = (Integer) minimax(child, currentDepth - 1, true, true, alpha, beta).keySet().toArray()[0];
+					//Compare heuristic value to find the best and prune if able
+					currentValue = minimax(child, currentDepth - 1, true, true, alpha, beta).getValue();
 					beta = Math.min(beta, currentValue);
-					betaMove = child.getMove();
+					betaNode = child;
 					if (beta < alpha) {
 						break;
 					}
 				}
 			}
 			if (pruning) { //return beta and associated move
-				betaHash = new HashMap<Integer, PolarCoordinate>();
-				betaHash.put(beta, betaMove);
-				return betaHash;
+				return betaNode;
 			} else { //return best value so far and associated move
-				bestHash = new HashMap<Integer, PolarCoordinate>();
-				bestHash.put(bestValue, bestMove);
-				return bestHash;
+				return bestNode;
 			}
 		}
 	}

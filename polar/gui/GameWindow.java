@@ -2,13 +2,7 @@ package polar.gui;
 
 import polar.game.*;
 import polar.game.exceptions.BadCoordinateException;
-import polar.game.styles.DifferencePlayStyle;
-import polar.game.styles.GreedyPlayStyle;
-import polar.game.styles.HumanPlayStyle;
-import polar.game.styles.PlayStyle;
-import polar.game.styles.RandomPlayStyle;
-import polar.game.styles.SearchPlayStyle;
-import polar.game.styles.TDMinPlayStyle;
+import polar.game.styles.*;
 
 import java.awt.GridBagLayout;
 import java.awt.Dimension;
@@ -131,7 +125,7 @@ public class GameWindow implements GameViewer, ActionListener {
 			style1 = new SearchPlayStyle(Player.PLAYER_X, game, true);
 			break;
 		case "Temporal Difference":
-			td = new TD(Player.PLAYER_X, "TDweights.txt");
+			td = new TD(Player.PLAYER_X, "./src/TDweights.txt");
 			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X);
 			style1 = new DifferencePlayStyle(game, td, Player.PLAYER_X);
 			break;
@@ -163,7 +157,7 @@ public class GameWindow implements GameViewer, ActionListener {
 			break;
 		case "Temporal Difference":
 			if(td==null) {
-				td = new TD(Player.PLAYER_X, "TDweights.txt");
+				td = new TD(Player.PLAYER_X, "./src/TDweights.txt");
 				player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O);
 				style2 = new DifferencePlayStyle(game, td, Player.PLAYER_O);
 			}
@@ -183,10 +177,10 @@ public class GameWindow implements GameViewer, ActionListener {
 	}
 	
 	@Override
-	public void notifyMove(PolarCoordinate coord, boolean turn) {
-		player_one_panel.update(coord, turn);
-		player_two_panel.update(coord, turn);
-		game_panel.update(coord);
+	public void notifyMove(MoveReport report) {
+		player_one_panel.update(report);
+		player_two_panel.update(report);
+		game_panel.update(report);
 	}
 
 	@Override
@@ -202,7 +196,7 @@ public class GameWindow implements GameViewer, ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		//game.reset();
+		start.restart();
 	}
 
 }

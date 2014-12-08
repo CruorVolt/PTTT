@@ -5,7 +5,11 @@ import java.util.Random;
 import polar.game.Game;
 import polar.game.GameMap;
 import polar.game.Move;
+<<<<<<< HEAD
 import polar.game.Player;
+=======
+import polar.game.MoveReport;
+>>>>>>> 31e3b45f1fdad80845e864f12c688523497163ee
 import polar.game.PolarCoordinate;
 import polar.game.UnTestedCoordinates;
 import polar.game.exceptions.BadCoordinateException;
@@ -19,7 +23,7 @@ import logic.Heuristic;
  * making the choice that improves its heuristic evaluation
  * the most for that turn.
  */
-public class GreedyPlayStyle implements PlayStyle {
+public class GreedyPlayStyle extends PlayStyle {
 	
 	private Game game;
 	private boolean player;
@@ -30,7 +34,8 @@ public class GreedyPlayStyle implements PlayStyle {
 	}
 
 	@Override
-	public UnTestedCoordinates getMove() {
+	public MoveReport getMove() {
+		startTimer();
 
 		GameMap map = game.getMap();
 
@@ -57,10 +62,11 @@ public class GreedyPlayStyle implements PlayStyle {
 						}
 
 						if (valid) { // this move is valid, give it a score
+							addNode();
 							try {
 								tempMap = (GameMap) map.deepCopy(); //resetting tempMap
 								tempMap.removeViewers(); //make sure this map doesn't update the gui
-								tempMap.updateAll(new Move(player, location));
+								tempMap.updateAll(new MoveReport(new Move(player, location)));
 								score = Heuristic.evaluateMinMax(tempMap, player);
 								if (score > maxScore) { //This is the best location seen so far
 									maxScore = score;
@@ -78,14 +84,22 @@ public class GreedyPlayStyle implements PlayStyle {
 			
 		}
 
+		Integer x;
+		Integer y;
 		if (maxCoords != null) {
-			return new UnTestedCoordinates(maxCoords.getX(), maxCoords.getY());
+			x = maxCoords.getX();
+			y = maxCoords.getY();
 		} else { //First move, play randomly
 			Random rand = new Random();
-			int x = rand.nextInt(4) + 1;
-			int y = rand.nextInt(12);
-			return new UnTestedCoordinates(x,y);
+			x = rand.nextInt(4) + 1;
+			y = rand.nextInt(12);
 		}
+		stopTimer();
+		MoveReport report = new MoveReport(x,y);
+		report.reportTime(getElapsedTime());
+		report.reportNodes(getNodes());
+		endTurn();
+		return report;
 	}
 
 	@Override

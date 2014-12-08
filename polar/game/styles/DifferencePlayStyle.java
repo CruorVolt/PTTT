@@ -8,10 +8,17 @@ import logic.TD.TD;
 import logic.TD.playTD;
 import polar.game.Game;
 import polar.game.GameMap;
+<<<<<<< HEAD
 import polar.game.Player;
+=======
+import polar.game.Move;
+import polar.game.MoveReport;
+import polar.game.PolarCoordinate;
+>>>>>>> 31e3b45f1fdad80845e864f12c688523497163ee
 import polar.game.UnTestedCoordinates;
+import polar.game.exceptions.BadCoordinateException;
 
-public class DifferencePlayStyle implements PlayStyle {
+public class DifferencePlayStyle extends PlayStyle {
 	protected playTD td;
 	protected boolean player;
 	protected GameMap map;
@@ -24,7 +31,7 @@ public class DifferencePlayStyle implements PlayStyle {
 	}
 	
 	@Override
-	public UnTestedCoordinates getMove() {
+	public MoveReport getMove() {
 		ArrayList<UnTestedCoordinates> candidates = Status.getValidPositions(map.getMoves());
 		UnTestedCoordinates bestMove = null;
 		double bestVal = 0;
@@ -35,15 +42,21 @@ public class DifferencePlayStyle implements PlayStyle {
 				bestMove = choice;
 			}
 		}
-		if(bestMove!=null)
-			return bestMove;
-		else {
-			Random rand = new Random();
-			int x = rand.nextInt(1) + 2;
-			int y = rand.nextInt(12);
-			return new UnTestedCoordinates(x,y);
+		MoveReport report;
+		try {
+			if(bestMove!=null)
+				report =  new MoveReport(new Move(player, new PolarCoordinate(bestMove)));
+			else {
+				Random rand = new Random();
+				int x = rand.nextInt(1) + 2;
+				int y = rand.nextInt(12);
+				report = new MoveReport(new Move(player, new PolarCoordinate(new UnTestedCoordinates(x,y))));
+			}
+		} catch (BadCoordinateException e) {
+			e.printStackTrace();
+			report = null;
 		}
-			
+		return report;
 	}
 
 	@Override

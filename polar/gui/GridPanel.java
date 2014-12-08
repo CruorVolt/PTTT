@@ -14,6 +14,7 @@ import javax.swing.JLayeredPane;
 
 import polar.game.Game;
 import polar.game.Move;
+import polar.game.MoveReport;
 import polar.game.PolarCoordinate;
 import polar.game.UnTestedCoordinates;
 import polar.game.exceptions.BadCoordinateException;
@@ -63,12 +64,12 @@ public class GridPanel extends JLayeredPane implements ComponentListener{
 	}
 	
 	//Update the indicated label with the new move
-	public void update(PolarCoordinate coord) {
+	public void update(MoveReport report) {
 		if (newestX != null) {
 			points[newestX - 1][newestY].setForeground(Color.RED);
 		}
-		newestX = coord.getX();
-		newestY = coord.getY();
+		newestX = report.getMove().getLoc().getX();
+		newestY = report.getMove().getLoc().getY();
 		points[newestX - 1][newestY].setText(game.currentPlayer().getToken().toString());
 		points[newestX - 1][newestY].setForeground(Color.BLUE);
 
@@ -153,6 +154,12 @@ public class GridPanel extends JLayeredPane implements ComponentListener{
 		g2.draw(new Line2D.Double(r2x,r2y,center_x-(r2x-center_x),center_y-(r2y-center_y)));
 		g2.draw(new Line2D.Double(r3x,r3y,center_x-(r3x-center_x),center_y-(r3y-center_y)));
 		g2.draw(new Line2D.Double(r4x,r4y,center_x-(r4x-center_x),center_y-(r4y-center_y)));
+		
+		//Fill in center circle
+		Ellipse2D.Double center = new Ellipse2D.Double(center_x - (slice-1) ,center_y - (slice-1), 2*(slice-1), 2*(slice-1)); 
+		g2.draw(center);
+		g2.setColor(getBackground());
+		g2.fill(center);
 		
 	}
 	

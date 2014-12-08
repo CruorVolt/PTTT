@@ -11,6 +11,7 @@ import logic.state.TimeSlice;
 import polar.game.GameMap;
 import polar.game.GameViewer;
 import polar.game.Move;
+import polar.game.MoveReport;
 import polar.game.Player;
 import polar.game.PolarCoordinate;
 import polar.game.styles.DifferencePlayStyle;
@@ -26,7 +27,7 @@ public class TrainTD implements GameViewer{
 	GameMap map;
 	
 	public TrainTD() {
-		td = new TD(Player.PLAYER_X, "TDweights.txt");
+		td = new TD(Player.PLAYER_X, "./src/TDweights.txt");
 		state = null;
 		states = new Stack<TimeSlice>();
 
@@ -36,7 +37,7 @@ public class TrainTD implements GameViewer{
 		int games = 0;
 		while(games<numGames) {
 			TestGame game = new TestGame();
-			 map = game.getMap();
+			map = game.getMap();
 			PlayStyle styleO = new DifferencePlayStyle(game, td, Player.PLAYER_X);
 			PlayStyle styleX = new TDMinPlayStyle(game, td, Player.PLAYER_O);
 			game.setPlayStyles(styleX, styleO);
@@ -50,7 +51,7 @@ public class TrainTD implements GameViewer{
 	public void saveTD(double weights[][][]) {
 		int numFeatures = 9;
 		try {
-			PrintWriter writer = new PrintWriter(new File("TDweights.txt"));
+			PrintWriter writer = new PrintWriter(new File("./src/TDweights.txt"));
 			for(int l=0;l<2;l++) {
 				for(int j=0;j<numFeatures;j++) {
 					for(int i=0;i<numFeatures;i++) {
@@ -68,7 +69,7 @@ public class TrainTD implements GameViewer{
 		}
 	}
 	@Override
-	public void notifyMove(PolarCoordinate coord, boolean turn) {
+	public void notifyMove(MoveReport report) {
 		TimeSlice slice = new TimeSlice(map.getState());
 		states.push(slice);
 	}

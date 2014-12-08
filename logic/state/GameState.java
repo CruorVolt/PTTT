@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import polar.game.GameMap;
 import polar.game.GameViewer;
 import polar.game.Move;
+import polar.game.MoveReport;
 import polar.game.Player;
 import polar.game.PolarCoordinate;
 import polar.game.UnTestedCoordinates;
@@ -25,7 +26,7 @@ public class GameState implements GameViewer {
 	}
 	
 	@Override
-	public void notifyMove(PolarCoordinate coord, boolean turn) {
+	public void notifyMove(MoveReport report) {
 		stateX.update(map.getCurrentMove());
 		stateO.update(map.getCurrentMove());
 		
