@@ -1,14 +1,9 @@
 package polar.gui;
 
+import run.start;
 import polar.game.*;
 import polar.game.exceptions.BadCoordinateException;
-import polar.game.styles.DifferencePlayStyle;
-import polar.game.styles.GreedyPlayStyle;
-import polar.game.styles.HumanPlayStyle;
-import polar.game.styles.PlayStyle;
-import polar.game.styles.RandomPlayStyle;
-import polar.game.styles.SearchPlayStyle;
-import polar.game.styles.TDMinPlayStyle;
+import polar.game.styles.*;
 
 import java.awt.GridBagLayout;
 import java.awt.Dimension;
@@ -183,10 +178,10 @@ public class GameWindow implements GameViewer, ActionListener {
 	}
 	
 	@Override
-	public void notifyMove(PolarCoordinate coord, boolean turn) {
-		player_one_panel.update(coord, turn);
-		player_two_panel.update(coord, turn);
-		game_panel.update(coord);
+	public void notifyMove(MoveReport report) {
+		player_one_panel.update(report);
+		player_two_panel.update(report);
+		game_panel.update(report);
 	}
 
 	@Override
@@ -202,7 +197,7 @@ public class GameWindow implements GameViewer, ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		//game.reset();
+		start.restart();
 	}
 
 }

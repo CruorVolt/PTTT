@@ -36,7 +36,7 @@ public class PlayerPanel extends JPanel{
 		playerLabel = new JLabel("Player " + this.token, JLabel.CENTER);
 		add(playerLabel);
 		
-		scoreLabel = new JLabel("NO SCORE YET");
+		scoreLabel = new JLabel("NO SCORE YET", JLabel.CENTER);
 		add(scoreLabel);
 
 		movesTextArea = new JTextArea("");
@@ -50,7 +50,9 @@ public class PlayerPanel extends JPanel{
 		add(movesPane);
 	}
 	
-	public void update(PolarCoordinate coord, boolean turn) {
+	public void update(MoveReport report) {
+		boolean turn = report.getMove().getPlayer();
+		PolarCoordinate coord = report.getMove().getLoc();
 		if (!setBackgroundColor(turn)) { // update belongs to this panel
 			movesTextArea.setText(movesTextArea.getText() + coord.toString() + "\n");
 		}

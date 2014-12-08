@@ -1,10 +1,11 @@
 package polar.game.styles;
 import java.util.Scanner;
 
+import polar.game.MoveReport;
 import polar.game.UnTestedCoordinates;
 
 
-public class ManualPlayStyle implements PlayStyle {
+public class ManualPlayStyle extends PlayStyle {
 	@Override
 	public MoveReport getMove() {
 		// TODO get manual move
