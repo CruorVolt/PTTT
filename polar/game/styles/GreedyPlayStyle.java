@@ -5,6 +5,7 @@ import java.util.Random;
 import polar.game.Game;
 import polar.game.GameMap;
 import polar.game.Move;
+import polar.game.Player;
 import polar.game.MoveReport;
 import polar.game.PolarCoordinate;
 import polar.game.UnTestedCoordinates;
@@ -96,6 +97,11 @@ public class GreedyPlayStyle extends PlayStyle {
 		report.reportNodes(getNodes());
 		endTurn();
 		return report;
+	}
+
+	@Override
+	public String toString() {
+		return Player.PlayerTypes.GREEDY.toString();
 	}
 
 }

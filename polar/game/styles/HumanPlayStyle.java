@@ -1,5 +1,8 @@
 package polar.game.styles;
 
+
+import polar.game.Player;
+
 import polar.game.MoveReport;
 import polar.game.UnTestedCoordinates;
 
@@ -42,5 +45,10 @@ public class HumanPlayStyle extends PlayStyle {
 			report = new MoveReport(newCoords.getX(), newCoords.getY());
 			wait.notifyAll();
 		}
+	}
+
+	@Override
+	public String toString() {
+		return Player.PlayerTypes.HUMAN.toString();
 	}
 }

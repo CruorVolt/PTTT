@@ -1,6 +1,7 @@
 package polar.game.styles;
 
 import polar.game.Game;
+import polar.game.Player;
 import polar.game.MoveReport;
 import polar.game.PolarCoordinate;
 import polar.game.exceptions.BadCoordinateException;
@@ -41,6 +42,14 @@ public class SearchPlayStyle extends PlayStyle {
 			//e.printStackTrace();
 		}
 		return null;
+	}
+
+	@Override
+	public String toString() {
+		if(pruning)
+		return Player.PlayerTypes.ALPHABETA.toString();
+		else
+			return Player.PlayerTypes.MINIMAX.toString();
 	}
 
 }

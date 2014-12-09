@@ -98,8 +98,6 @@ public class TD {
 					// each node of the next layer is the sum of sigmoid(node)*weight for each node/weight in the previous layer 
 					layers[l][j] += sigmoid(layers[l][i])*weights[l-1][i][j];
 				}
-				// take the average to maintain values between 0 and 1
-				layers[l][j] = layers[l][j]/numFeatures;
 			}
 		}
 		for(int i=0;i<numFeatures;i++)

@@ -2,7 +2,10 @@ package polar.game.styles;
 
 import java.util.Random;
 
+import polar.game.Player;
+import polar.game.UnTestedCoordinates;
 import polar.game.MoveReport;
+
 
 public class RandomPlayStyle extends PlayStyle {
 /*	
@@ -20,6 +23,11 @@ public class RandomPlayStyle extends PlayStyle {
 		int x = rand.nextInt(4) + 1;
 		int y = rand.nextInt(12);
 		return new MoveReport(x,y);
+	}
+
+	@Override
+	public String toString() {
+		return Player.PlayerTypes.RANDOM.toString();
 	}
 
 }
