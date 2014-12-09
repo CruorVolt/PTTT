@@ -12,7 +12,7 @@ public class AIPlayerPanel extends PlayerPanel{
 //time taken to decide on a move 
 
 	private static final long serialVersionUID = 1L;
-	private JLabel searchDepthLabel, nodesLabel, timeLabel;
+	private JLabel searchDepthLabel, nodesLabel, timeLabel, valueLabel;
 	
 	public AIPlayerPanel(Game game, boolean player, String descrip){
 		super(game, player);
@@ -22,9 +22,11 @@ public class AIPlayerPanel extends PlayerPanel{
 		searchDepthLabel = new JLabel("Search Depth:", JLabel.CENTER);
 		nodesLabel = new JLabel("Nodes Examined:", JLabel.CENTER);
 		timeLabel = new JLabel("Time Elapsed:", JLabel.CENTER);
+		valueLabel = new JLabel("Value:", JLabel.CENTER);
 
 		add(searchDepthLabel);
 		add(nodesLabel);
+		add(valueLabel);
 		add(timeLabel);
 	}
 
@@ -35,6 +37,7 @@ public class AIPlayerPanel extends PlayerPanel{
 		if (turn == this.player) {
 			searchDepthLabel.setText("Search Depth: " + report.getDepth() + " plys");
 			nodesLabel.setText("Nodes Examined: " + report.getNodes());
+			valueLabel.setText("Value: " + report.getValue());
 			timeLabel.setText("Time Elapsed: " + (report.getTime() / 1000.0) + " s");
 		}
 	}

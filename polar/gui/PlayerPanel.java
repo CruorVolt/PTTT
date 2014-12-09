@@ -51,7 +51,7 @@ public class PlayerPanel extends JPanel{
 			moves++;
 			movesLabel.setText(moves + " moves");
 		}
-		scoreLabel.setText("Score: " + Heuristic.evaluate(game.getMap(), player));
+		scoreLabel.setText("Heuristic: " + Heuristic.evaluate(game.getMap(), player));
 	}
 	
 	public boolean setBackgroundColor(boolean turn) {

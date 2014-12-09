@@ -28,7 +28,7 @@ public class PerformanceEval {
 		style[2] = new GreedyPlayStyle(false, game);
 		//style[3] = new ClassifierPlayStyle();
 		style[3] = new DifferencePlayStyle(game, td, false);
-		style[4] = new RandomPlayStyle();
+		style[4] = new RandomPlayStyle(false, game);
 		saveTable(style);
 		for(int i=0;i<5;i++) {
 			saveStyle(style[i], 17);
@@ -99,7 +99,7 @@ public class PerformanceEval {
 		case 3:
 			return new DifferencePlayStyle(game, td, player);
 		case 4:
-			return new RandomPlayStyle();
+			return new RandomPlayStyle(player, game);
 		}
 		return null;
 	}

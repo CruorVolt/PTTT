@@ -28,6 +28,7 @@ public class MoveReport {
 		this.searchDepth = 0;
 		this.nodesSearched = 0;
 		this.seconds = 0.0;
+		this.value = 0.0;
 	}
 	
 	public PolarCoordinate getCoordinates() {

@@ -126,7 +126,7 @@ public class GameWindow implements GameViewer, ActionListener {
 			break;
 		case "Random":
 			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Random Selection");
-			style1 = new RandomPlayStyle();
+			style1 = new RandomPlayStyle(Player.PLAYER_X, game);
 			break;
 		case "Greedy Heuristic":
 			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Greedy Heuristic");
@@ -177,7 +177,7 @@ public class GameWindow implements GameViewer, ActionListener {
 			break;
 		case "Random":
 			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O, "Random Selection");
-			style2 = new RandomPlayStyle();
+			style2 = new RandomPlayStyle(Player.PLAYER_O, game);
 			break;
 		case "Greedy Heuristic":
 			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O, "Greedy Heuristic");
