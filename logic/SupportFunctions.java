@@ -425,7 +425,7 @@ public class SupportFunctions {
 		for (int i = 0; i< setSize; i++) {
 			Game game = new Game();
 			PlayStyle style1 = new GreedyPlayStyle(true, game);
-			PlayStyle style2 = new SearchPlayStyle(false, game, false, 2);
+			PlayStyle style2 = new GreedyPlayStyle(false, game);
 			game.setPlayStyles(style1, style2);
 			game.begin();
 

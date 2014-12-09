@@ -57,14 +57,18 @@ public class Search {
 				for (UnTestedCoordinates coords : availableChildren) {
 					//Compare heuristic value to find the best and prune if able
 					SearchNode child = root.addChild(coords);
+					//minimax(root, currentDepth, maxPlayer, pruning, alpha, beta) 
 					currentValue = minimax(child, currentDepth - 1, false, true, alpha, beta).getValue();
-					alpha = Math.max(alpha, currentValue);
-					alphaNode = child;
-					if (beta < alpha) {
+					if (currentValue > alpha){ //current is largest - update alpha
+						alpha = currentValue;
+						alphaNode = child;
+						alphaNode.setValue(currentValue);
+					}
+
+					if (beta <= alpha) {
 						break;
 					}
 				}
-				alphaNode.setValue(alpha);
 				return alphaNode;
 			}
 			
@@ -86,13 +90,17 @@ public class Search {
 					SearchNode child = root.addChild(coords);
 					//Compare heuristic value to find the best and prune if able
 					currentValue = minimax(child, currentDepth - 1, true, true, alpha, beta).getValue();
-					beta = Math.min(beta, currentValue);
-					betaNode = child;
-					if (beta < alpha) {
+					
+					if (currentValue < beta) {
+						beta = currentValue;
+						betaNode = child;
+						betaNode.setValue(currentValue);
+					}
+					
+					if (beta <= alpha) {
 						break;
 					}
 				}
-				betaNode.setValue(beta);
 				return betaNode;
 			}
 		}

@@ -47,9 +47,9 @@ public class SearchPlayStyle extends PlayStyle {
 	@Override
 	public String toString() {
 		if(pruning)
-		return Player.PlayerTypes.ALPHABETA.toString();
+		return Player.PlayerTypes.ALPHABETA3.toString();
 		else
-			return Player.PlayerTypes.MINIMAX.toString();
+			return Player.PlayerTypes.MINIMAX3.toString();
 	}
 
 }
