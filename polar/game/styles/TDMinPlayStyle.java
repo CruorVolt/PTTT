@@ -12,7 +12,7 @@ import polar.game.MoveReport;
 import polar.game.PolarCoordinate;
 import polar.game.UnTestedCoordinates;
 import polar.game.exceptions.BadCoordinateException;
-// a min player for training the TD network
+// a min player which allows TD to play against itself without instantiating two TD networks.
 public class TDMinPlayStyle extends DifferencePlayStyle {
 	
 	public TDMinPlayStyle(Game game, TD td, boolean player) {
@@ -26,6 +26,7 @@ public class TDMinPlayStyle extends DifferencePlayStyle {
 		double bestVal = 100;
 		for(UnTestedCoordinates choice : candidates) {
 			double eval = td.valueOf(player, choice);
+			// when playing against max-player, select min-value of TD-net configured for max-player.
 			if(eval<bestVal) {
 				bestVal = eval;
 				bestMove = choice;
@@ -33,9 +34,12 @@ public class TDMinPlayStyle extends DifferencePlayStyle {
 		}
 		MoveReport report;
 		try {
-			if(bestMove!=null)
+			if(bestMove!=null) {
 				report =  new MoveReport(new Move(player, new PolarCoordinate(bestMove)));
+				report.reportNodes(candidates.size());
+			}
 			else {
+				// select a semi-random position if 1st move.
 				Random rand = new Random();
 				int x = rand.nextInt(1) + 2;
 				int y = rand.nextInt(12);

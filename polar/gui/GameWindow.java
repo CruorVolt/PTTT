@@ -125,7 +125,7 @@ public class GameWindow implements GameViewer, ActionListener {
 			style1 = new SearchPlayStyle(Player.PLAYER_X, game, true);
 			break;
 		case "Temporal Difference":
-			td = new TD(Player.PLAYER_X, "./src/TDweights.txt");
+			td = new TD(Player.PLAYER_X, "TDweights.txt");
 			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X);
 			style1 = new DifferencePlayStyle(game, td, Player.PLAYER_X);
 			break;
@@ -157,7 +157,7 @@ public class GameWindow implements GameViewer, ActionListener {
 			break;
 		case "Temporal Difference":
 			if(td==null) {
-				td = new TD(Player.PLAYER_X, "./src/TDweights.txt");
+				td = new TD(Player.PLAYER_X, "TDweights.txt");
 				player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O);
 				style2 = new DifferencePlayStyle(game, td, Player.PLAYER_O);
 			}

@@ -34,7 +34,7 @@ public class runTraining {
 			}
 			BufferedWriter writer = null;
 			try {
-				writer = new BufferedWriter(new FileWriter("count.txt"));
+				writer = new BufferedWriter(new FileWriter("cou nt.txt"));
 				writer.write(Integer.toString(count));
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

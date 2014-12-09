@@ -33,10 +33,14 @@ public class GameState implements GameViewer {
 	}
 	@Override
 	public void notifyWin(boolean player, Move[] winState) {
-		if(player==Player.PLAYER_X)
+		if(player==Player.PLAYER_X) {
 			stateX.notifyWin();
-		else
+			stateO.notifyLose();
+		}
+		else {
 			stateO.notifyWin();
+			stateX.notifyLose();
+		}
 	}
 	public int getNumNodes(boolean player) {
 		if(player==Player.PLAYER_X)

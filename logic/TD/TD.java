@@ -20,11 +20,12 @@ public class TD {
 	private final int numFeatures = 9;
 	// load stored weights
 	public TD(boolean maxplayer, String filename) {
+		decay = 1./9.;
 		this.maxplayer = maxplayer;
 		this.weights = loadWeights(filename);
 		outputweights = new double[numFeatures];
 		layers = new double[3][9];
-		gradient = -.1;
+		gradient = -.2;
 		estimate = 0;
 		// initialize all weights and bias inputs at random, between 0 and 1.
 		for(int l=0;l<2;l++)
@@ -57,11 +58,12 @@ public class TD {
 		return weights;
 	}
 	protected TD(boolean maxplayer) {
+		decay = 1./9.;
 		this.maxplayer = maxplayer;
 		weights = new double[2][numFeatures][numFeatures];	
 		outputweights = new double[numFeatures];
 		layers = new double[3][9];
-		gradient = -.1;
+		gradient = -.2;
 		estimate = 0;
 		// initialize all weights and bias inputs at random, between 0 and 1.
 		for(int l=0;l<2;l++)
@@ -85,9 +87,10 @@ public class TD {
 	}
 	// feed state values into network and derive resulting estimate
 	protected double feedForward(double[] state) {
+		//double bias = 100;
 		// layers of the neural net, starting with the input layer: state
 		layers[0] = state;
-		
+		//layers[0][8] += bias;		// add bias to end states.
 		estimate = 0.;
 		// iterate through weights and update layers
 		for(int l=1;l<3;l++) {
@@ -147,7 +150,7 @@ public class TD {
 						weights[l][j][i] += layerChange[j][i];
 					}
 					else if(l==0) {
-						weights[l][j][i] += gradient*backDelta[i]+decay*layerChange[j][i];
+						weights[l][j][i] += gradient*frontDelta[i]+decay*layerChange[j][i];
 					}
 				}
 			}
