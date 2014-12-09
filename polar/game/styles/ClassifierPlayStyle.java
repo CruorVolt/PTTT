@@ -47,6 +47,8 @@ public class ClassifierPlayStyle extends PlayStyle {
 		
 		ArrayList<UnTestedCoordinates> availableMoves = Status.getValidPositions(game.getMap().getMoves());
 		GameMap tempMap;
+		
+		//Return the first move found that classifies as a winning state
 		for (UnTestedCoordinates coords : availableMoves) {
 			try {
 				tempMap = game.getMap().deepCopy(); //resetting tempMap
@@ -62,12 +64,13 @@ public class ClassifierPlayStyle extends PlayStyle {
 					return report;
 				}
 			} catch (MoveDuplicateException m) {
+				m.printStackTrace();
 			} catch (BadCoordinateException b) {
+				b.printStackTrace();
 			}
 		}
 		
-		//No state has classified a win: play with greedy heuristic evaluation instead
-		System.out.println("Returning greedy move instead");
+		//No state has classified as a win: play with greedy heuristic evaluation instead
 		return backup.getMove();
 	}
 
