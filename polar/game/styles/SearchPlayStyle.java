@@ -31,6 +31,7 @@ public class SearchPlayStyle extends PlayStyle {
 			minimax = Search.minimax(new SearchNode(this.game.getMap(), this.player, null), maxDepth, this.player, this.pruning, Integer.MIN_VALUE, Integer.MAX_VALUE);
 			PolarCoordinate location = minimax.getMove();
 			stopTimer();
+			//report.reportValue();
 			report = new MoveReport(location.getX(), location.getY());
 			report.reportTime(getElapsedTime());
 			report.reportDepth(maxDepth + 1);
