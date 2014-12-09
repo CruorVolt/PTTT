@@ -141,13 +141,10 @@ public class GameWindow implements GameViewer, ActionListener {
 			style1 = new SearchPlayStyle(Player.PLAYER_X, game, true, 4);
 			break;
 		case "Temporal Difference":
-<<<<<<< HEAD
 			td = new TD(Player.PLAYER_X, "TDweights.txt");
 			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X);
-=======
 			td = new TD(Player.PLAYER_X, "./src/TDweights.txt");
 			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Temporal Difference Learning");
->>>>>>> origin/master
 			style1 = new DifferencePlayStyle(game, td, Player.PLAYER_X);
 			break;
 		case "Decision Tree Classification":
