@@ -14,10 +14,10 @@ public class AIPlayerPanel extends PlayerPanel{
 	private static final long serialVersionUID = 1L;
 	private JLabel searchDepthLabel, nodesLabel, timeLabel;
 	
-	public AIPlayerPanel(Game game, boolean player){
+	public AIPlayerPanel(Game game, boolean player, String descrip){
 		super(game, player);
 		setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		playerLabel.setText("AI " + playerLabel.getText());
+		playerLabel.setText("<html>AI " + playerLabel.getText() + "<br> Using " + descrip + "</html>");
 
 		searchDepthLabel = new JLabel("Search Depth:", JLabel.CENTER);
 		nodesLabel = new JLabel("Nodes Examined:", JLabel.CENTER);

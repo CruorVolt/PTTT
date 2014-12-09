@@ -9,8 +9,8 @@ public class Test {
 	TestPlayStyle styleX;
 	
 	public Test(UnTestedCoordinates[] tests, UnTestedCoordinates[] dummy) {
-		TestPlayStyle styleX = new TestPlayStyle(tests);
-		TestPlayStyle styleO = new TestPlayStyle(dummy);
+		styleX = new TestPlayStyle(tests);
+		styleO = new TestPlayStyle(dummy);
 	}
 	public void runTest() {
 		Player x = new Player(styleX, 'X', Player.PLAYER_X);

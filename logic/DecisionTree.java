@@ -97,8 +97,6 @@ public class DecisionTree {
 				System.out.println("DecisionTree.buildTree had a mismatch of features");
 			}
 			
-			System.out.println("Done with setup, builidng tree");
-
 			//attributes and partitions need to be sorted by gains here
 			List<Double> partitions = new ArrayList<Double>();
 			List<String> attributes = new ArrayList<String>();
@@ -150,9 +148,7 @@ public class DecisionTree {
 				System.out.println("Problem: no feature found");
 				System.exit(1);
 			}
-		} else {
-			System.out.println("Attributes is empty, we better be returning momentarily");
-		}
+		} 
 
 		// If all examples are of one type we'll return a node with that type's label
 		boolean positiveExample = false;
@@ -171,11 +167,9 @@ public class DecisionTree {
 		
 		if (!negativeExample) {
 			root.label(true); 
-			System.out.println("Labeling true");
 			return root;
 		} else if (!positiveExample) {
 			root.label(false);
-			System.out.println("Labeling false");
 			return root;
 		} else {
 			root.label((weight >= 0) ? true : false);
@@ -185,7 +179,6 @@ public class DecisionTree {
 		boolean label = (weight >= 0) ? true : false;
 		if (attributes.size() == 0 || attributes == null) {
 			root.label(label);
-			System.out.println("Weighted label " + label);
 			return root;
 		}
 		
@@ -259,7 +252,6 @@ public class DecisionTree {
 					System.out.println("No features matched!");
 				} else {
 					label = currentNode.getLabel();
-					//System.out.println("Labeled " + label);
 					currentNode = currentNode.child(currentValue);
 				}
 			}
@@ -360,7 +352,7 @@ public class DecisionTree {
 			tree.setupTree(TRAINING_FILE);
 			int correct = 0;
 			int incorrect = 0;
-			for (int i = 0; i < 200; i++) {
+			for (int i = 0; i < 50; i++) {
 				ArrayList<ArrayList<Object>> mapMap = SupportFunctions.generateWinStates(1);
 				Character actual = (Character) mapMap.get(0).get(0);
 				GameMap map = (GameMap) mapMap.get(0).get(1);

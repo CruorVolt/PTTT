@@ -127,7 +127,7 @@ public class GameMap {
 	}
 	// returns true if player has a set of winning moves as defined by resolve.
 	// Currently it is pretty dumb, and checks all move combinations!
-	private boolean win(boolean p) {
+	public boolean win(boolean p) {
 		// player X has turn true, player Y has turn false.
 		// all terms: 
 		// win or not valid(d) or not owns(u,p) or not owns(v,p) or not owns(x,p) or not owns(y,p)

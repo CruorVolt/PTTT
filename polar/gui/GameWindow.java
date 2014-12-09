@@ -109,25 +109,50 @@ public class GameWindow implements GameViewer, ActionListener {
 			style1 = HumanPlayStyle.getInstance();
 			break;
 		case "Random":
-			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X);
+			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Random Selection");
 			style1 = new RandomPlayStyle();
 			break;
 		case "Greedy Heuristic":
-			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X);
+			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Greedy Heuristic");
 			style1 = new GreedyPlayStyle(Player.PLAYER_X, game);
 			break;
-		case "Minimax Search":
-			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X);
-			style1 = new SearchPlayStyle(Player.PLAYER_X, game, false);
+		case "Minimax Search (3 plys)":
+			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Minimax (3 plys)");
+			style1 = new SearchPlayStyle(Player.PLAYER_X, game, false, 2);
 			break;
-		case "Minimax w/Alpha-Beta Pruning":
-			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X);
-			style1 = new SearchPlayStyle(Player.PLAYER_X, game, true);
+		case "Minimax Search (4 plys)":
+			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Minimax (4 plys)");
+			style1 = new SearchPlayStyle(Player.PLAYER_X, game, false, 3);
+			break;
+		case "Minimax Search (5 plys)":
+			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Minimax (5 plys)");
+			style1 = new SearchPlayStyle(Player.PLAYER_X, game, false, 4);
+			break;
+		case "Alpha-Beta Pruning (3 plys)":
+			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Alpa-Beta Pruning (3 plys)");
+			style1 = new SearchPlayStyle(Player.PLAYER_X, game, true, 2);
+			break;
+		case "Alpha-Beta Pruning (4 plys)":
+			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Alpa-Beta Pruning (4 plys)");
+			style1 = new SearchPlayStyle(Player.PLAYER_X, game, true, 3);
+			break;
+		case "Alpha-Beta Pruning (5 plys)":
+			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Alpa-Beta Pruning (5 plys)");
+			style1 = new SearchPlayStyle(Player.PLAYER_X, game, true, 4);
 			break;
 		case "Temporal Difference":
+<<<<<<< HEAD
 			td = new TD(Player.PLAYER_X, "TDweights.txt");
 			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X);
+=======
+			td = new TD(Player.PLAYER_X, "./src/TDweights.txt");
+			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Temporal Difference Learning");
+>>>>>>> origin/master
 			style1 = new DifferencePlayStyle(game, td, Player.PLAYER_X);
+			break;
+		case "Decision Tree Classification":
+			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Decision Tree Classifier");
+			style1 = new ClassifierPlayStyle(Player.PLAYER_X, game);
 			break;
 		default:
 			System.out.println("No Player of type "+choices[0]+ " found!");
@@ -140,32 +165,57 @@ public class GameWindow implements GameViewer, ActionListener {
 			style2 = HumanPlayStyle.getInstance();
 			break;
 		case "Random":
-			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O);
+			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O, "Random Selection");
 			style2 = new RandomPlayStyle();
 			break;
 		case "Greedy Heuristic":
-			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O);
+			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O, "Greedy Heuristic");
 			style2 = new GreedyPlayStyle(Player.PLAYER_O, game);
 			break;
-		case "Minimax Search":
-			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O);
-			style2 = new SearchPlayStyle(Player.PLAYER_O, game, false);
+		case "Minimax Search (3 plys)":
+			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O, "Minimax (3 plys)");
+			style2 = new SearchPlayStyle(Player.PLAYER_O, game, false, 2);
 			break;
-		case "Minimax w/Alpha-Beta Pruning":
-			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O);
-			style2 = new SearchPlayStyle(Player.PLAYER_O, game, true);
+		case "Minimax Search (4 plys)":
+			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O, "Minimax (4 plys)");
+			style2 = new SearchPlayStyle(Player.PLAYER_O, game, false, 3);
+			break;
+		case "Minimax Search (5 plys)":
+			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O, "Minimax (5 plys)");
+			style2 = new SearchPlayStyle(Player.PLAYER_O, game, false, 4);
+			break;
+		case "Alpha-Beta Pruning (3 plys)":
+			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O, "Alpa-Beta Pruning (3 plys)");
+			style2 = new SearchPlayStyle(Player.PLAYER_O, game, true, 2);
+			break;
+		case "Alpha-Beta Pruning (4 plys)":
+			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O, "Alpa-Beta Pruning (4 plys)");
+			style2 = new SearchPlayStyle(Player.PLAYER_O, game, true, 3);
+			break;
+		case "Alpha-Beta Pruning (5 plys)":
+			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O, "Alpa-Beta Pruning (5 plys)");
+			style2 = new SearchPlayStyle(Player.PLAYER_O, game, true, 4);
 			break;
 		case "Temporal Difference":
 			if(td==null) {
+<<<<<<< HEAD
 				td = new TD(Player.PLAYER_X, "TDweights.txt");
 				player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O);
+=======
+				td = new TD(Player.PLAYER_X, "./src/TDweights.txt");
+				player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O, "Temporal Difference Learning");
+>>>>>>> origin/master
 				style2 = new DifferencePlayStyle(game, td, Player.PLAYER_O);
 			}
 			// to use a single TD net for both players -- must use min playstyle 
 			else {
-				player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O);
+				player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O, "Temporal Difference Learning");
 				style2 = new TDMinPlayStyle(game, td, Player.PLAYER_O);
 			}
+			break;
+		case "Decision Tree Classification":
+			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O, "Decision Tree Classifier");
+			style2 = new ClassifierPlayStyle(Player.PLAYER_O, game);
 			break;
 		default:
 			System.out.println("No Player of type "+choices[1]+ " found!");

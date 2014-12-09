@@ -12,21 +12,23 @@ public class SearchPlayStyle extends PlayStyle {
 	
 	private Game game;
 	private boolean player, pruning;
+	private int maxDepth;
 	
-	public SearchPlayStyle(boolean player, Game game, boolean pruning) {
+	public SearchPlayStyle(boolean player, Game game, boolean pruning, int maxDepth) {
 		this.player = player;
 		this.game = game;
 		this.pruning = pruning; //Should this player us alpha-beta pruning in their search?
+		this.maxDepth = maxDepth;
 	}
 
 	@Override
 	public MoveReport getMove() {
 		MoveReport report;
 		startTimer();
-		SearchNode minimax;
-		int maxDepth = (this.pruning) ? 4 : 3;
+		SearchNode minimax = null;
 		try {
 			minimax = Search.minimax(new SearchNode(this.game.getMap(), this.player, null), maxDepth, this.player, this.pruning, Integer.MIN_VALUE, Integer.MAX_VALUE);
+			//minimax = Search.minimaxNew(new SearchNode(this.game.getMap(), this.player, null), 2, this.player);
 			PolarCoordinate location = (PolarCoordinate) minimax.getMove();
 			stopTimer();
 			report = new MoveReport(location.getX(), location.getY());
@@ -37,7 +39,7 @@ public class SearchPlayStyle extends PlayStyle {
 			endTurn();
 			return report;
 		} catch (BadCoordinateException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return null;
 	}
@@ -45,9 +47,9 @@ public class SearchPlayStyle extends PlayStyle {
 	@Override
 	public String toString() {
 		if(pruning)
-		return Player.PlayerTypes.ALPHABETA.toString();
+		return Player.PlayerTypes.ALPHABETA3.toString();
 		else
-			return Player.PlayerTypes.MINIMAX.toString();
+			return Player.PlayerTypes.MINIMAX3.toString();
 	}
 
 }

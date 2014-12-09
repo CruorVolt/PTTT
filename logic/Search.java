@@ -1,6 +1,6 @@
 package logic;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Random;
 
 import polar.game.*;
@@ -18,22 +18,19 @@ public class Search {
 	 * @param alpha        The current alpha value or NULL in standard minimax
 	 * @param beta         The current beta value or NULL in standard minimax
 	 */
-	
-	//function minimax(node, depth, maximizingPlayer)
 	public static SearchNode minimax(SearchNode root, int currentDepth, boolean maxPlayer, boolean pruning, Integer alpha, Integer beta) throws BadCoordinateException {
-		
-		SearchNode bestNode = null, alphaNode = null, betaNode = null;
 		Integer bestValue, currentValue;
-		
-	    //if depth = 0 or node is a terminal node return root for heuristic evaluation
-		if ((currentDepth == 0) || (root.getMap().containsWin())) {
+		SearchNode bestNode = null, alphaNode = null, betaNode = null;
+
+		//If the maximum depth has been reached or the map contains a win then return a heuristic evaluation
+		if ( (currentDepth == 0) || (Math.abs(root.getValue()) > 500) ) {
+			root.setValue(Heuristic.evaluateMinMax(root.getMap(), true));
 			return root;
 		}
-		
+
 		//Make a random move if the map is empty
 		if (root.getMap().getMoves().size() == 0) {
 			Random random = new Random();
-			//0(inclusive) value(exclusive)
 			int x = random.nextInt(4) + 1;
 			int y = random.nextInt(12);
 			PolarCoordinate location =  new PolarCoordinate(new UnTestedCoordinates(x,y));
@@ -41,58 +38,70 @@ public class Search {
 			return root;
 		}
 		
-		//give root correct children
-		root.createChildren();
+		ArrayList<UnTestedCoordinates> availableChildren = Status.getValidPositions(root.getMap().getMoves());
 		
-		if (maxPlayer) { //maximizing player node evaluation
-			bestValue = Integer.MIN_VALUE;
-			for (SearchNode child : root.getChildren()) {
-				if (!pruning) { //This is standard minimax
-					//Compare heuristic value to find the best
+		if (maxPlayer) {
+			if (!pruning) { //this is standard minimax
+				bestValue = Integer.MIN_VALUE;
+				for (UnTestedCoordinates coords : availableChildren) {
+					SearchNode child = root.addChild(coords);
 					currentValue = minimax(child, currentDepth - 1, false, false, null, null).getValue();
-					if (currentValue > bestValue) { //bestValue = max(current, best)
-						bestValue= currentValue;
-						bestNode = child;
-					}
-				} else { //This is minimax with alpha-beta pruning
-					//Compare heuristic value to find the best and prune if able
-					currentValue = minimax(child, currentDepth - 1, false, true, alpha, beta).getValue();
-					alpha = Math.max(alpha, currentValue);
-					alphaNode = child;
-					if (beta < alpha) {
-						break;
-					}
-				}
-			}
-			if (pruning) { //return alpha and associated move
-				return alphaNode;
-			} else { //return best value so far and associated move
-				return bestNode;
-			}
-		} else { //minimizing player node evaluation
-			bestValue = Integer.MAX_VALUE;
-			for (SearchNode child : root.getChildren()) {
-				if (!pruning) { //This is standard minimax
-					//Compare heuristic value to find the best
-					currentValue = minimax(child, currentDepth - 1, true, false, null, null).getValue();
-					if (currentValue < bestValue) { //bestValue = min(current, best)
+					if (currentValue > bestValue) {
 						bestValue = currentValue;
 						bestNode = child;
 					}
-				} else { //This is minimax with alpha-beta pruning
+				}
+				bestNode.setValue(bestValue);
+				return bestNode;
+			} else { //this is minimax with alpha-beta pruning
+				for (UnTestedCoordinates coords : availableChildren) {
 					//Compare heuristic value to find the best and prune if able
-					currentValue = minimax(child, currentDepth - 1, true, true, alpha, beta).getValue();
-					beta = Math.min(beta, currentValue);
-					betaNode = child;
-					if (beta < alpha) {
+					SearchNode child = root.addChild(coords);
+					//minimax(root, currentDepth, maxPlayer, pruning, alpha, beta) 
+					currentValue = minimax(child, currentDepth - 1, false, true, alpha, beta).getValue();
+					if (currentValue > alpha){ //current is largest - update alpha
+						alpha = currentValue;
+						alphaNode = child;
+						alphaNode.setValue(currentValue);
+					}
+
+					if (beta <= alpha) {
 						break;
 					}
 				}
+				return alphaNode;
 			}
-			if (pruning) { //return beta and associated move
-				return betaNode;
-			} else { //return best value so far and associated move
+			
+		} else {
+			if (!pruning) { //this is standard minimax
+				bestValue = Integer.MAX_VALUE;
+				for (UnTestedCoordinates coords : availableChildren) {
+					SearchNode child = root.addChild(coords);
+					currentValue = minimax(child, currentDepth - 1, true, false, null, null).getValue();
+					if (currentValue < bestValue) {
+						bestValue = currentValue;
+						bestNode = child;
+					}
+				}
+				bestNode.setValue(bestValue);
 				return bestNode;
+			} else { //this is minimax with alpha-beta pruning
+				for (UnTestedCoordinates coords : availableChildren) {
+					SearchNode child = root.addChild(coords);
+					//Compare heuristic value to find the best and prune if able
+					currentValue = minimax(child, currentDepth - 1, true, true, alpha, beta).getValue();
+					
+					if (currentValue < beta) {
+						beta = currentValue;
+						betaNode = child;
+						betaNode.setValue(currentValue);
+					}
+					
+					if (beta <= alpha) {
+						break;
+					}
+				}
+				return betaNode;
 			}
 		}
 	}
