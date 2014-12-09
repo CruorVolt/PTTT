@@ -1,7 +1,6 @@
 package logic.state;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import polar.game.GameMap;
 import polar.game.Move;
@@ -110,9 +109,9 @@ public class TimeSlice {
 		return vals;
 	}
 	private Double evalState(PlayState state) {
-		if(state==state.lose)
+		if(state==PlayState.lose)
 			return -1.0;
-		else if(state==state.win)
+		else if(state==PlayState.win)
 			return 1.0;
 		else
 			return 0.0;

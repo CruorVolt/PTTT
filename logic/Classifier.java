@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import polar.game.*;
-
 public class Classifier {
 	
 	private static final int TRAINING_SET_SIZE = 1000;
@@ -30,7 +28,6 @@ public class Classifier {
 		if ((regenerate) || (!f.exists())){ //make new features if none exist
 			SupportFunctions.generateFeatures(new File(DecisionTree.TRAINING_FILE), 'X', TRAINING_SET_SIZE);
 		}
-		HashMap<String, Double> entropyMap = new HashMap<String, Double>();
 
 		BufferedReader br = new BufferedReader(new FileReader(trainingSet));
 		String line = br.readLine(); //header line is first
@@ -73,7 +70,6 @@ public class Classifier {
 		while ((line = br.readLine()) != null) {
 			String[] features = line.split(", ");
 			Double win = Double.valueOf(features[0]);
-			String feature;
 			
 			if (win > 0) {
 				overallPositives++;
@@ -205,8 +201,6 @@ public class Classifier {
 			Arrays.fill(minimums, Double.MAX_VALUE);
 			Arrays.fill(maximums, 0);
 			
-			int numberOfFeatures = headers.length;
-	
 			while ((line = br.readLine()) != null) {
 				features = line.split(", ");
 				for (int x = 0; x < features.length; x++) {
@@ -220,6 +214,7 @@ public class Classifier {
 			HashMap<String, double[]> minMax = new HashMap<String, double[]>();
 			minMax.put("minimums", minimums);
 			minMax.put("maximums", maximums);
+			br.close();
 			return minMax;
 		} catch (IOException e) {
 			e.printStackTrace();

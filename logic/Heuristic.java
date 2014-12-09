@@ -7,7 +7,6 @@ import java.util.HashMap;
 
 import polar.game.*;
 import polar.game.exceptions.BadCoordinateException;
-import polar.game.exceptions.MoveDuplicateException;
 
 public class Heuristic extends SupportFunctions {
 	
@@ -149,7 +148,6 @@ public class Heuristic extends SupportFunctions {
 	 */
 	private static ArrayList<PolarCoordinate> isWin(Move move, GameMap map) {
 		boolean win;
-		int score = 0;
 		try {
 			HashMap<String, ArrayList<PolarCoordinate>> lines = getLines(move);
 			for (String key : lines.keySet()) {

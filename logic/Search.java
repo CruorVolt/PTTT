@@ -1,6 +1,5 @@
 package logic;
 
-import java.util.HashMap;
 import java.util.Random;
 
 import polar.game.*;
@@ -26,14 +25,13 @@ public class Search {
 		Integer bestValue, currentValue;
 		
 	    //if depth = 0 or node is a terminal node return root for heuristic evaluation
-		if ((currentDepth == 0) || (root.getMap().containsWin())) {
+		if ((currentDepth == 0) || (root.getValue() > 800) || (root.getValue() < -800)) {
 			return root;
 		}
 		
 		//Make a random move if the map is empty
 		if (root.getMap().getMoves().size() == 0) {
 			Random random = new Random();
-			//0(inclusive) value(exclusive)
 			int x = random.nextInt(4) + 1;
 			int y = random.nextInt(12);
 			PolarCoordinate location =  new PolarCoordinate(new UnTestedCoordinates(x,y));

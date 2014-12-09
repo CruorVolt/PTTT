@@ -109,24 +109,24 @@ public class GameWindow implements GameViewer, ActionListener {
 			style1 = HumanPlayStyle.getInstance();
 			break;
 		case "Random":
-			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X);
+			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Random Selection");
 			style1 = new RandomPlayStyle();
 			break;
 		case "Greedy Heuristic":
-			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X);
+			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Greedy Heuristic");
 			style1 = new GreedyPlayStyle(Player.PLAYER_X, game);
 			break;
 		case "Minimax Search":
-			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X);
+			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Minimax");
 			style1 = new SearchPlayStyle(Player.PLAYER_X, game, false);
 			break;
 		case "Minimax w/Alpha-Beta Pruning":
-			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X);
+			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Minimax w/Alpa-Beta Pruning");
 			style1 = new SearchPlayStyle(Player.PLAYER_X, game, true);
 			break;
 		case "Temporal Difference":
 			td = new TD(Player.PLAYER_X, "./src/TDweights.txt");
-			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X);
+			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Temporal Difference Learning");
 			style1 = new DifferencePlayStyle(game, td, Player.PLAYER_X);
 			break;
 		default:
@@ -140,30 +140,30 @@ public class GameWindow implements GameViewer, ActionListener {
 			style2 = HumanPlayStyle.getInstance();
 			break;
 		case "Random":
-			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O);
+			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O, "Random Selection");
 			style2 = new RandomPlayStyle();
 			break;
 		case "Greedy Heuristic":
-			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O);
+			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O, "Greedy Heuristic");
 			style2 = new GreedyPlayStyle(Player.PLAYER_O, game);
 			break;
 		case "Minimax Search":
-			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O);
+			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O, "Minimax");
 			style2 = new SearchPlayStyle(Player.PLAYER_O, game, false);
 			break;
 		case "Minimax w/Alpha-Beta Pruning":
-			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O);
+			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O, "Minimax w/Alpa-Beta Pruning");
 			style2 = new SearchPlayStyle(Player.PLAYER_O, game, true);
 			break;
 		case "Temporal Difference":
 			if(td==null) {
 				td = new TD(Player.PLAYER_X, "./src/TDweights.txt");
-				player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O);
+				player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O, "Temporal Difference Learning");
 				style2 = new DifferencePlayStyle(game, td, Player.PLAYER_O);
 			}
 			// to use a single TD net for both players -- must use min playstyle 
 			else {
-				player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O);
+				player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O, "Temporal Difference Learning");
 				style2 = new TDMinPlayStyle(game, td, Player.PLAYER_O);
 			}
 			break;

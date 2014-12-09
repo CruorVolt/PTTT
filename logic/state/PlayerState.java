@@ -1,9 +1,6 @@
 package logic.state;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.ListIterator;
 
 import polar.game.Move;
 

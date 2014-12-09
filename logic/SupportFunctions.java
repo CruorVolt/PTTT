@@ -22,7 +22,6 @@ import polar.game.UnTestedCoordinates;
 import polar.game.exceptions.BadCoordinateException;
 import polar.game.styles.GreedyPlayStyle;
 import polar.game.styles.PlayStyle;
-import polar.game.styles.RandomPlayStyle;
 import polar.game.styles.SearchPlayStyle;
 
 /*
@@ -426,7 +425,7 @@ public class SupportFunctions {
 		for (int i = 0; i< setSize; i++) {
 			Game game = new Game();
 			PlayStyle style1 = new GreedyPlayStyle(true, game);
-			PlayStyle style2 = new SearchPlayStyle(false, game, true);
+			PlayStyle style2 = new SearchPlayStyle(false, game, false);
 			game.setPlayStyles(style1, style2);
 			game.begin();
 
@@ -472,7 +471,7 @@ public class SupportFunctions {
 	public static void main(String[] args) {
 		int x = 0;
 		int o = 0;
-		for (int i = 0; i < 25; i++) {
+		for (int i = 0; i < 10; i++) {
 			ArrayList<ArrayList<Object>> mapMap = SupportFunctions.generateWinStates(1);
 			Character winner = (Character) mapMap.get(0).get(0);
 			if (winner == 'X') {
