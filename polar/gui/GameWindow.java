@@ -142,7 +142,7 @@ public class GameWindow implements GameViewer, ActionListener {
 			break;
 		case "Temporal Difference":
 			td = new TD(Player.PLAYER_X, "TDweights.txt");
-			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X);
+			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Temporal Difference Learning");
 			td = new TD(Player.PLAYER_X, "./src/TDweights.txt");
 			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Temporal Difference Learning");
 			style1 = new DifferencePlayStyle(game, td, Player.PLAYER_X);
@@ -195,13 +195,8 @@ public class GameWindow implements GameViewer, ActionListener {
 			break;
 		case "Temporal Difference":
 			if(td==null) {
-<<<<<<< HEAD
-				td = new TD(Player.PLAYER_X, "TDweights.txt");
-				player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O);
-=======
 				td = new TD(Player.PLAYER_X, "./src/TDweights.txt");
 				player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O, "Temporal Difference Learning");
->>>>>>> origin/master
 				style2 = new DifferencePlayStyle(game, td, Player.PLAYER_O);
 			}
 			// to use a single TD net for both players -- must use min playstyle 

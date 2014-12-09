@@ -28,7 +28,6 @@ public class Search {
 		int heuristic = Heuristic.evaluateMinMax(root.getMap(), true);
 		if ( (currentDepth == 0) || (Math.abs(heuristic) > 500) ) {
 			root.setValue(heuristic);
-			System.out.println("Returning a root, depth = " + currentDepth);
 			return root;
 		}
 
@@ -39,7 +38,6 @@ public class Search {
 			int y = random.nextInt(12);
 			PolarCoordinate location =  new PolarCoordinate(new UnTestedCoordinates(x,y));
 			root.setMove(location);
-			System.out.println("Returning a root, map is empty");
 			return root;
 		}
 		
@@ -74,7 +72,6 @@ public class Search {
 						break;
 					}
 				}
-				System.out.println("Returning an alpha, depth = " + currentDepth);
 				return alphaNode;
 			}
 			
@@ -107,8 +104,6 @@ public class Search {
 						break;
 					}
 				}
-				System.out.println("Returning a beta, depth = " + currentDepth);
-				System.out.println("Beta is " + betaNode.toString());
 				return betaNode;
 			}
 		}
