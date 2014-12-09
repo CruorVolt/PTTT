@@ -194,7 +194,7 @@ public class Heuristic extends SupportFunctions {
 							}
 						} else {
 							int moveY = move.getLoc().getY();
-							if (Math.abs(moveY - move.getLoc().getY()) < 3) { //Cannot be a valid line of three
+							if (Math.abs(moveY - c.getY()) < 3) { //Cannot be a valid line of three
 								valid = false;
 							}
 						}
@@ -222,27 +222,20 @@ public class Heuristic extends SupportFunctions {
 			for (String key : lines.keySet()) {
 				int invalid_count = 0; //number of nodes not marked by player
 				boolean valid = true;
-				boolean adjacent = false;
 				lineCopy = (ArrayList<PolarCoordinate>) lines.get(key).clone();
 				for (PolarCoordinate c : lines.get(key)) {
 					Character set = map.isSet(c);
 					if (move.getToken() != set) { //Move not marked by this player - check if empty
 						lineCopy.remove(c);
 						invalid_count++;
-						try {
-							if (invalid_count > 2) { //too many empty nodes in this line
-								valid = false;
-							} else if (set != null) { //opponent marked node
-								valid = false;
-							} else if (move.getLoc().compare(c) > 0) { //possible scoring pair
-								adjacent = true;
-							}
-						} catch (MoveDuplicateException m) {
-							//Nothing - move to next comparison
+						if (invalid_count > 2) { //too many empty nodes in this line
+							valid = false;
+						} else if (set != null) { //opponent marked node
+							valid = false;
 						}
 					}
 				}
-				if (valid && adjacent && lineCopy.size() == 2) {
+				if (valid && lineCopy.size() == 2) {
 					return lineCopy;
 				}
 			}
