@@ -6,6 +6,7 @@ public abstract class PlayStyle {
 	
 	//lock object for use if the game waits for prompting between moves
 	protected static Object wait = new Object();
+	public static boolean autoplay = false;
 
 	protected double elapsedTime, timestamp;
 	protected int depth;
@@ -50,13 +51,15 @@ public abstract class PlayStyle {
 
 	//lock the style until an update is sent from the gui
 	public void lock() {
-        synchronized(wait){
-            try{
-            	wait.wait();
-            }catch(InterruptedException e){
-                e.printStackTrace();
-            }
-        }
+		if (!autoplay) {
+        	synchronized(wait){
+            	try{
+            		wait.wait();
+            	}catch(InterruptedException e){
+                	e.printStackTrace();
+            	}
+        	}
+		}
 	}
 
 	//Send update to all locked styles if the game is using locks between turns

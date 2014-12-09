@@ -15,7 +15,7 @@ public class Test {
 	public void runTest() {
 		Player x = new Player(styleX, 'X', Player.PLAYER_X);
 		Player o = new Player(styleO, 'O', Player.PLAYER_O);
-		Game g = new Game();
+		Game g = new TestGame();
 		g.setPlayStyles(styleX, styleO);
 		g.begin();	
 	}

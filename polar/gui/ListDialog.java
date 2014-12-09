@@ -11,7 +11,7 @@ import java.awt.event.*;
 public class ListDialog extends JDialog
                         implements ActionListener {
     private static ListDialog dialog;
-    private static String[] values = new String[2];
+    private static String[] values = new String[3];
     private JComboBox playerOneBox, playerTwoBox;
     private JLabel label, playerOneLabel, playerTwoLabel;
     private JCheckBox autoBox;
@@ -148,6 +148,7 @@ public class ListDialog extends JDialog
         if ("Set".equals(e.getActionCommand())) {
             ListDialog.values[0] = (String)(playerOneBox.getSelectedItem());
             ListDialog.values[1] = (String)(playerTwoBox.getSelectedItem());
+            ListDialog.values[2] = autoBox.isSelected() ? "true" : "false";
         }
         ListDialog.dialog.setVisible(false);
     }

@@ -9,6 +9,7 @@ public class MoveReport {
 	Integer searchDepth;
 	Integer nodesSearched;
 	Double seconds;
+	Double value;
 	
 	public MoveReport(int x, int y) {
 		this.coordinates = new UnTestedCoordinates(x, y);
@@ -67,6 +68,12 @@ public class MoveReport {
 
 	public void reportTime(double time) {
 		this.seconds = time;
+	}
+	public void reportValue(double val) {
+		value = val;
+	}
+	public double getValue() {
+		return value;
 	}
 	
 	public double getTime() {

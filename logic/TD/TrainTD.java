@@ -51,7 +51,7 @@ public class TrainTD implements GameViewer{
 	public void saveTD(double weights[][][]) {
 		int numFeatures = 9;
 		try {
-			PrintWriter writer = new PrintWriter(new File("TDweights.txt"));
+			PrintWriter writer = new PrintWriter(new File("./src/TDweights.txt"));
 			for(int l=0;l<2;l++) {
 				for(int j=0;j<numFeatures;j++) {
 					for(int i=0;i<numFeatures;i++) {

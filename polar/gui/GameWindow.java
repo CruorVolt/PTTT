@@ -91,6 +91,9 @@ public class GameWindow implements GameViewer, ActionListener {
 		
 		turnButton = new JButton("Next Turn");
 		turnButton.addActionListener(this);
+		if (PlayStyle.autoplay){
+			turnButton.setEnabled(false);
+		}
 		GridBagConstraints gbc_turn = new GridBagConstraints();
 		gbc_turn.insets = new Insets(0, 0, 5, 0);
 		gbc_turn.gridx = 1;
@@ -109,6 +112,9 @@ public class GameWindow implements GameViewer, ActionListener {
 		}
 		String[] defaults = { players[0][0], players[1][0] };
 		String[] choices = ListDialog.showDialog(null, null, "Who is Playing?", "Choose Players", players, defaults, null);
+		if (choices[2].toString().equals("true")) {
+			PlayStyle.autoplay = true;
+		}
 		PlayStyle style1 = null;
 		PlayStyle style2 = null;
 		TD td = null;
@@ -151,8 +157,6 @@ public class GameWindow implements GameViewer, ActionListener {
 			style1 = new SearchPlayStyle(Player.PLAYER_X, game, true, 4);
 			break;
 		case "Temporal Difference":
-			td = new TD(Player.PLAYER_X, "TDweights.txt");
-			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Temporal Difference Learning");
 			td = new TD(Player.PLAYER_X, "./src/TDweights.txt");
 			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Temporal Difference Learning");
 			style1 = new DifferencePlayStyle(game, td, Player.PLAYER_X);
@@ -231,6 +235,9 @@ public class GameWindow implements GameViewer, ActionListener {
 	@Override
 	public void notifyMove(MoveReport report) {
 		turnButton.setText("Next Turn");
+		if (!PlayStyle.autoplay) {
+			turnButton.setEnabled(true);
+		}
 		player_one_panel.update(report);
 		player_two_panel.update(report);
 		game_panel.update(report);
@@ -245,11 +252,13 @@ public class GameWindow implements GameViewer, ActionListener {
 			game_panel.updateWin(winState);
 			//game.end();
 		}
+		turnButton.setEnabled(false);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("Next Turn")) {
+			turnButton.setEnabled(false);
 			turnButton.setText("Waiting....");
 			PlayStyle.update();
 		} else { //reset button

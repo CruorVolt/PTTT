@@ -60,6 +60,7 @@ public class ClassifierPlayStyle extends PlayStyle {
 					stopTimer();
 					report.reportTime(getElapsedTime());
 					report.reportNodes(SearchNode.countNodes());
+					report.reportValue(1);
 					SearchNode.reset();
 					endTurn();
 					return report;
@@ -70,7 +71,6 @@ public class ClassifierPlayStyle extends PlayStyle {
 				b.printStackTrace();
 			}
 		}
-		
 		//No state has classified as a win: play with greedy heuristic evaluation instead
 		return backup.getMove();
 	}
