@@ -11,6 +11,23 @@ public final class Status {
 	public static boolean resolve(Move u, Move v, Move x, Move y, int d, boolean p) {
 	return	(!valid(d)||!owns(u,p)||!owns(v,p)||!owns(x,p)||!owns(y,p)||!direction(u,v,d)||!direction(v,x,d)||!direction(x,y,d));
 	}
+	public static boolean printResolve(Move u, Move v, Move x, Move y, int d, boolean p) {
+		if(!valid(d)) {
+			System.out.println("Invalid direction.");
+		}
+		else if(!owns(u,p)||!owns(v,p)||!owns(x,p)||!owns(y,p)) {
+			System.out.println("One or more moves not owned by this player.");
+		}
+		else if(!direction(u,v,d)||!direction(v,x,d)||!direction(x,y,d)) {
+			System.out.println("One or more moves do not line up");
+		}
+		else {
+			System.out.println("No contradictions found");
+			return false;
+		}
+		System.out.println("One or more contradictions found.");
+		return true;
+	}
 	// predicate to check directionality
 	public static boolean direction(Move a, Move b, int i) {
 		return a.compare(b)==i;
