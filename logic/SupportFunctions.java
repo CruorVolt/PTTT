@@ -425,7 +425,7 @@ public class SupportFunctions {
 		for (int i = 0; i< setSize; i++) {
 			Game game = new Game();
 			PlayStyle style1 = new GreedyPlayStyle(true, game);
-			PlayStyle style2 = new SearchPlayStyle(false, game, false);
+			PlayStyle style2 = new SearchPlayStyle(false, game, false, 2);
 			game.setPlayStyles(style1, style2);
 			game.begin();
 
@@ -471,7 +471,7 @@ public class SupportFunctions {
 	public static void main(String[] args) {
 		int x = 0;
 		int o = 0;
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 25; i++) {
 			ArrayList<ArrayList<Object>> mapMap = SupportFunctions.generateWinStates(1);
 			Character winner = (Character) mapMap.get(0).get(0);
 			if (winner == 'X') {

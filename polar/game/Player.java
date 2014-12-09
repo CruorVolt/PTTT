@@ -9,9 +9,14 @@ public class Player {
 		HUMAN ("Human"), 
 			RANDOM ("Random"), 
 			GREEDY ("Greedy Heuristic"), 
-			MINIMAX ("Minimax Search"),
-			ALPHABETA ("Minimax w/Alpha-Beta Pruning"),
-			TEMPORALDIFF ("Temporal Difference");
+			TEMPORALDIFF ("Temporal Difference"),
+			CLASSIFIER ("Decision Tree Classification"),
+			MINIMAX3 ("Minimax Search (3 plys)"),
+			MINIMAX4 ("Minimax Search (4 plys)"),
+			MINIMAX5 ("Minimax Search (5 plys)"),
+			ALPHABETA3 ("Alpha-Beta Pruning (3 plys)"),
+			ALPHABETA4 ("Alpha-Beta Pruning (4 plys)"),
+			ALPHABETA5 ("Alpha-Beta Pruning (5 plys)");
 		public String string;
 		private PlayerTypes(String s) {
 			this.string = s;

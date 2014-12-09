@@ -86,7 +86,34 @@ public class Heuristic extends SupportFunctions {
 							markScored(toRemove, scoredWins, scoredThrees, scoredPairs);
 							switch (toRemove.size()) {
 							case 2:
-								score += SCORE_ADJACENT;
+								int firstX = toRemove.get(0).getX();
+								int secondX = toRemove.get(1).getX();
+								if (firstX == secondX) { //horizontal pair: special scoring
+									int firstY = toRemove.get(0).getY();
+									int secondY = toRemove.get(1).getY();
+									//System.out.println("line of two: " + toRemove);
+									//The horizontal directions for adjacency are 2 and 6
+									PolarCoordinate firstOffset = (toRemove.get(0).getAdjacent(2) == toRemove.get(1)) ? toRemove.get(1).getAdjacent(2) : toRemove.get(0).getAdjacent(2);
+									PolarCoordinate secondOffset = (toRemove.get(0).getAdjacent(6) == toRemove.get(1)) ? toRemove.get(1).getAdjacent(6) : toRemove.get(0).getAdjacent(6);
+									Character currentToken = map.isSet(toRemove.get(0));
+									//System.out.println("outliers: " + firstX + "," + firstOffset + " and " + firstX + "," + secondOffset);
+									//try {
+										Character lower = map.isSet(firstOffset);
+										Character upper = map.isSet(secondOffset);
+										if ( ((lower != null) && (lower != currentToken)) || ((upper != null) && (upper != currentToken))) {
+											//System.out.println("Found a blocked end");
+											score += SCORE_ADJACENT; //one pair scoring given since one end is blocked
+										} else {
+											//System.out.println("Found an open end: extra points!");
+											score += (SCORE_ADJACENT * 3); //extra pair scoring since both ends are open
+										}
+									//} catch (BadCoordinateException b) {
+										//System.out.println("Offset is off the board: Actual points: " + toRemove + ". Offsets: " + firstX + "," + firstOffset + " and " + firstX + "," + secondOffset);
+									//}
+
+								} else { //vertical or diagonal pair: normal scoring
+									score += SCORE_ADJACENT;
+								}
 								break;
 							case 3: 
 								score += SCORE_THREE;
