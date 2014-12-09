@@ -13,7 +13,6 @@ class PlayerState {
 	private ArrayList<Sequence> pairs; 		// all sequences of size 2
 	private ArrayList<Sequence> triples;	// all sequences of size 3
 	
-	private boolean winState;				// Indicates if player has any 4-move sequence, ie they have won.
 	private boolean player; 				// indicates which player is represented by this player state. 
 	private int numOpenPairs;				// number of fully open sequences of size 2
 	private int numClosedPairs;				// number of partially blocked sequences of size 2
@@ -27,7 +26,6 @@ class PlayerState {
 		nodes = new ArrayList<Move>();
 		pairs = new ArrayList<Sequence>();
 		triples = new ArrayList<Sequence>();
-		winState = false;
 		numNodes = 0;
 		numOpenPairs = 0;
 		numClosedPairs = 0;
@@ -243,7 +241,7 @@ class PlayerState {
 		state = PlayState.lose;
 	}
 	protected boolean hasWon() {
-		return winState;
+		return state==PlayState.win;
 	}
 	protected PlayState getState() {
 		return state;

@@ -13,7 +13,7 @@ public class PerformanceEval {
 	static TD td;
 	
 	public static void main(String[] args) {
-		int tests = 2;
+		int tests = 1;
 		try {
 			writer = new PrintWriter(new File("performance.txt"));
 		} catch (FileNotFoundException e) {
@@ -31,7 +31,7 @@ public class PerformanceEval {
 		style[4] = new RandomPlayStyle();
 		saveTable(style);
 		for(int i=0;i<5;i++) {
-			writer.print(style[i]);
+			saveStyle(style[i], 17);
 			if(i==4)
 				td = new TD(Player.PLAYER_X, "TDweights.txt");
 			for( int j=0;j<5;j++) {
@@ -63,23 +63,24 @@ public class PerformanceEval {
 	}
 	public static void saveMetric(int wins, int tests, int size) {
 		String write = "";
-		write += ((double)wins)/tests;
+		write += Math.round((((double)wins)/(double)tests)*100);
+		write += "%";
 		save(write, size);
 	}
 	public static void saveTable(PlayStyle[] styles) {
 		writer.print("| Player Opponent |");
 		for(PlayStyle style : styles)
-		saveStyle(style);
+		saveStyle(style, 0);
 		writer.println();
 	}
-	public static void saveStyle(PlayStyle style) {
+	public static void saveStyle(PlayStyle style, int size) {
 		String write = "";
 		write += style.toString();
-		save(write, 30);
+		save(write, size);
 	}
 	public static void save(String write, int length) {
 		while(write.length()<length) {
-			if(write.length() % 2==1)
+			if((write.length() % 2==1)&&(length%2==0))
 				write += " ";
 			else {
 				write = " "+write+" ";

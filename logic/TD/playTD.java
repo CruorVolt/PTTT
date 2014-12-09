@@ -28,8 +28,6 @@ public class playTD implements GameViewer {
 		Xwin = false;
 		Owin = false;
 		discount = .5;
-		learnRate = .1;
-		
 	}
 
 	@Override
