@@ -19,6 +19,7 @@ public class RandomPlayStyle extends PlayStyle {
 */
 	@Override
 	public MoveReport getMove() {
+		lock();
 		Random rand = new Random();
 		int x = rand.nextInt(4) + 1;
 		int y = rand.nextInt(12);

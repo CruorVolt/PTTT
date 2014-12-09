@@ -23,6 +23,7 @@ public class SearchPlayStyle extends PlayStyle {
 
 	@Override
 	public MoveReport getMove() {
+		lock();
 		MoveReport report;
 		startTimer();
 		SearchNode minimax = null;

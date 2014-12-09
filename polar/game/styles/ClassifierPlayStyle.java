@@ -42,6 +42,7 @@ public class ClassifierPlayStyle extends PlayStyle {
 
 	@Override
 	public MoveReport getMove() {
+		lock();
 		MoveReport report;
 		startTimer();
 		

@@ -29,6 +29,7 @@ public class DifferencePlayStyle extends PlayStyle {
 	
 	@Override
 	public MoveReport getMove() {
+		lock();
 		ArrayList<UnTestedCoordinates> candidates = Status.getValidPositions(map.getMoves());
 		UnTestedCoordinates bestMove = null;
 		double bestVal = 0;

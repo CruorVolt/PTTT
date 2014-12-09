@@ -32,6 +32,7 @@ public class GreedyPlayStyle extends PlayStyle {
 
 	@Override
 	public MoveReport getMove() {
+		lock();
 		startTimer();
 
 		GameMap map = game.getMap();
