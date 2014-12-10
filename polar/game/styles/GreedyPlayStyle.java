@@ -32,6 +32,7 @@ public class GreedyPlayStyle extends PlayStyle {
 
 	@Override
 	public MoveReport getMove() {
+		lock();
 		startTimer();
 
 		GameMap map = game.getMap();
@@ -91,8 +92,10 @@ public class GreedyPlayStyle extends PlayStyle {
 			x = rand.nextInt(4) + 1;
 			y = rand.nextInt(12);
 		}
+		
 		stopTimer();
 		MoveReport report = new MoveReport(x,y);
+		report.reportValue(maxScore);
 		report.reportTime(getElapsedTime());
 		report.reportNodes(getNodes());
 		endTurn();

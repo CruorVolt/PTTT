@@ -11,9 +11,10 @@ import java.awt.event.*;
 public class ListDialog extends JDialog
                         implements ActionListener {
     private static ListDialog dialog;
-    private static String[] values = new String[2];
+    private static String[] values = new String[3];
     private JComboBox playerOneBox, playerTwoBox;
     private JLabel label, playerOneLabel, playerTwoLabel;
+    private JCheckBox autoBox;
     private JPanel panel;
 
     public static String[] showDialog(Component frameComp,
@@ -59,6 +60,7 @@ public class ListDialog extends JDialog
 
         playerOneBox = new JComboBox(data[0]);
         playerTwoBox = new JComboBox(data[1]);
+        autoBox = new JCheckBox("Autoplay", false);
 
         playerOneBox.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
@@ -119,10 +121,16 @@ public class ListDialog extends JDialog
 		boxTwoConstraints.gridy = 2;
 		panel.add(playerTwoBox, boxTwoConstraints);
 
+		GridBagConstraints boxConstraints = new GridBagConstraints();
+		boxConstraints.insets = new Insets(0, 0, 5, 0);
+		boxConstraints.gridx = 1;
+		boxConstraints.gridy = 3;
+		panel.add(autoBox, boxConstraints);
+
 		GridBagConstraints buttonConstraints = new GridBagConstraints();
 		buttonConstraints.insets = new Insets(0, 0, 5, 0);
 		buttonConstraints.gridx = 1;
-		buttonConstraints.gridy = 3;
+		buttonConstraints.gridy = 4;
 		panel.add(playButton, buttonConstraints);
 
         //Put everything together, using the content pane's BorderLayout.
@@ -140,6 +148,7 @@ public class ListDialog extends JDialog
         if ("Set".equals(e.getActionCommand())) {
             ListDialog.values[0] = (String)(playerOneBox.getSelectedItem());
             ListDialog.values[1] = (String)(playerTwoBox.getSelectedItem());
+            ListDialog.values[2] = autoBox.isSelected() ? "true" : "false";
         }
         ListDialog.dialog.setVisible(false);
     }

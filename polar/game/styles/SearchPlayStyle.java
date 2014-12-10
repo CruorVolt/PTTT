@@ -23,17 +23,19 @@ public class SearchPlayStyle extends PlayStyle {
 
 	@Override
 	public MoveReport getMove() {
+		lock();
 		MoveReport report;
 		startTimer();
 		SearchNode minimax = null;
 		try {
+			//PolarCoordinate lastMove = game.getMap().getCurrentMove().getLoc();
 			minimax = Search.minimax(new SearchNode(this.game.getMap(), this.player, null), maxDepth, this.player, this.pruning, Integer.MIN_VALUE, Integer.MAX_VALUE);
-			//minimax = Search.minimaxNew(new SearchNode(this.game.getMap(), this.player, null), 2, this.player);
-			PolarCoordinate location = (PolarCoordinate) minimax.getMove();
+			PolarCoordinate location = minimax.getMove();
 			stopTimer();
+			//report.reportValue();
 			report = new MoveReport(location.getX(), location.getY());
 			report.reportTime(getElapsedTime());
-			report.reportDepth(maxDepth);
+			report.reportDepth(maxDepth + 1);
 			report.reportNodes(SearchNode.countNodes());
 			SearchNode.reset();
 			endTurn();

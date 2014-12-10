@@ -20,20 +20,20 @@ public class PerformanceEval {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		td = new TD(Player.PLAYER_O, "TDweights.txt");
+		td = new TD(Player.PLAYER_O, "./src/TDweights.txt");
 		Game game = new Game();
 		PlayStyle[] style = new PlayStyle[5];
-		style[0] = new SearchPlayStyle(false, game, false);
-		style[1] = new SearchPlayStyle(false, game, false);
+		style[0] = new SearchPlayStyle(false, game, false, 2);
+		style[1] = new SearchPlayStyle(false, game, false, 2);
 		style[2] = new GreedyPlayStyle(false, game);
 		//style[3] = new ClassifierPlayStyle();
 		style[3] = new DifferencePlayStyle(game, td, false);
-		style[4] = new RandomPlayStyle();
+		style[4] = new RandomPlayStyle(false, game);
 		saveTable(style);
 		for(int i=0;i<5;i++) {
 			saveStyle(style[i], 17);
 			if(i==4)
-				td = new TD(Player.PLAYER_X, "TDweights.txt");
+				td = new TD(Player.PLAYER_X, "./src/TDweights.txt");
 			for( int j=0;j<5;j++) {
 				int size = style[j].toString().length();
 				if(j>i) {
@@ -91,15 +91,15 @@ public class PerformanceEval {
 	public static PlayStyle getInstance(int type, Game game, boolean player) {
 		switch(type) {
 		case 0:
-			return new SearchPlayStyle(player, game, false);
+			return new SearchPlayStyle(player, game, false, 2);
 		case 1:
-			return new SearchPlayStyle(player, game, true);
+			return new SearchPlayStyle(player, game, true, 2);
 		case 2:
 			return new GreedyPlayStyle(player, game);
 		case 3:
 			return new DifferencePlayStyle(game, td, player);
 		case 4:
-			return new RandomPlayStyle();
+			return new RandomPlayStyle(player, game);
 		}
 		return null;
 	}

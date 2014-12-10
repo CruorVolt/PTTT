@@ -20,11 +20,14 @@ public class Search {
 	 */
 	public static SearchNode minimax(SearchNode root, int currentDepth, boolean maxPlayer, boolean pruning, Integer alpha, Integer beta) throws BadCoordinateException {
 		Integer bestValue, currentValue;
-		SearchNode bestNode = null, alphaNode = null, betaNode = null;
+		SearchNode bestNode = null;
+		SearchNode alphaNode = root;
+		SearchNode betaNode = root;
 
 		//If the maximum depth has been reached or the map contains a win then return a heuristic evaluation
-		if ( (currentDepth == 0) || (Math.abs(root.getValue()) > 500) ) {
-			root.setValue(Heuristic.evaluateMinMax(root.getMap(), true));
+		int heuristic = Heuristic.evaluateMinMax(root.getMap(), true);
+		if ( (currentDepth == 0) || (Math.abs(heuristic) > 500) ) {
+			root.setValue(heuristic);
 			return root;
 		}
 
@@ -57,7 +60,7 @@ public class Search {
 				for (UnTestedCoordinates coords : availableChildren) {
 					//Compare heuristic value to find the best and prune if able
 					SearchNode child = root.addChild(coords);
-					//minimax(root, currentDepth, maxPlayer, pruning, alpha, beta) 
+
 					currentValue = minimax(child, currentDepth - 1, false, true, alpha, beta).getValue();
 					if (currentValue > alpha){ //current is largest - update alpha
 						alpha = currentValue;
@@ -89,8 +92,8 @@ public class Search {
 				for (UnTestedCoordinates coords : availableChildren) {
 					SearchNode child = root.addChild(coords);
 					//Compare heuristic value to find the best and prune if able
+
 					currentValue = minimax(child, currentDepth - 1, true, true, alpha, beta).getValue();
-					
 					if (currentValue < beta) {
 						beta = currentValue;
 						betaNode = child;

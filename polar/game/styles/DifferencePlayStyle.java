@@ -29,6 +29,9 @@ public class DifferencePlayStyle extends PlayStyle {
 	
 	@Override
 	public MoveReport getMove() {
+		lock();
+		MoveReport report;
+		startTimer();
 		ArrayList<UnTestedCoordinates> candidates = Status.getValidPositions(map.getMoves());
 		UnTestedCoordinates bestMove = null;
 		double bestVal = 0;
@@ -39,20 +42,28 @@ public class DifferencePlayStyle extends PlayStyle {
 				bestMove = choice;
 			}
 		}
-		MoveReport report;
 		try {
-			if(bestMove!=null)
+			if(bestMove!=null) 
+			{
 				report =  new MoveReport(new Move(player, new PolarCoordinate(bestMove)));
+				report.reportValue(bestVal);
+				report.reportNodes(candidates.size());
+			}
 			else {
 				Random rand = new Random();
 				int x = rand.nextInt(1) + 2;
 				int y = rand.nextInt(12);
 				report = new MoveReport(new Move(player, new PolarCoordinate(new UnTestedCoordinates(x,y))));
+				report.reportNodes(0);
+				report.reportValue(0);
 			}
 		} catch (BadCoordinateException e) {
 			e.printStackTrace();
 			report = null;
 		}
+		stopTimer();
+		report.reportValue(bestVal);
+		report.reportNodes(candidates.size());
 		return report;
 	}
 

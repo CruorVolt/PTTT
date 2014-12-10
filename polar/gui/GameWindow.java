@@ -24,6 +24,7 @@ public class GameWindow implements GameViewer, ActionListener {
 	private GridPanel game_panel;
 	private PlayerPanel player_one_panel, player_two_panel;
 	private JButton resetButton;
+	private JButton turnButton;
 
 	public GameWindow(Game game) {
 		this.game = game;
@@ -42,9 +43,9 @@ public class GameWindow implements GameViewer, ActionListener {
 		frame.setBounds(100, 100, 1000, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 0, 0};
+		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0};
 		gridBagLayout.rowHeights = new int[] {1, 0};
-		gridBagLayout.columnWeights = new double[]{1.0, 0.4, 0.4};
+		gridBagLayout.columnWeights = new double[]{1.0, 1.0, 0.7, 0.7};
 		gridBagLayout.rowWeights = new double[]{2.0, 0.1};
 		frame.getContentPane().setLayout(gridBagLayout);
 		
@@ -56,6 +57,7 @@ public class GameWindow implements GameViewer, ActionListener {
 			gbc_game_panel.fill = GridBagConstraints.BOTH;
 			gbc_game_panel.gridx = 0;
 			gbc_game_panel.gridy = 0;
+			gbc_game_panel.gridwidth = 2;
 			frame.getContentPane().add(game_panel, gbc_game_panel);
 		} catch (BadCoordinateException e) {
 			System.out.println("Could not construct PolarCoordinates correctly");
@@ -65,7 +67,7 @@ public class GameWindow implements GameViewer, ActionListener {
 		GridBagConstraints gbc_player_one_panel = new GridBagConstraints();
 		gbc_player_one_panel.insets = new Insets(0, 0, 5, 0);
 		gbc_player_one_panel.fill = GridBagConstraints.BOTH;
-		gbc_player_one_panel.gridx = 1;
+		gbc_player_one_panel.gridx = 2;
 		gbc_player_one_panel.gridy = 0;
 		gbc_player_one_panel.gridheight = 2;
 		frame.getContentPane().add(player_one_panel, gbc_player_one_panel);
@@ -74,7 +76,7 @@ public class GameWindow implements GameViewer, ActionListener {
 		GridBagConstraints gbc_player_two_panel = new GridBagConstraints();
 		gbc_player_two_panel.insets = new Insets(0, 0, 5, 0);
 		gbc_player_two_panel.fill = GridBagConstraints.BOTH;
-		gbc_player_two_panel.gridx = 2;
+		gbc_player_two_panel.gridx = 3;
 		gbc_player_two_panel.gridy = 0;
 		gbc_player_two_panel.gridheight = 2;
 		frame.getContentPane().add(player_two_panel, gbc_player_two_panel);
@@ -86,6 +88,17 @@ public class GameWindow implements GameViewer, ActionListener {
 		gbc_reset.gridx = 0;
 		gbc_reset.gridy = 1;
 		frame.getContentPane().add(resetButton, gbc_reset);
+		
+		turnButton = new JButton("Next Turn");
+		turnButton.addActionListener(this);
+		if (PlayStyle.autoplay){
+			turnButton.setEnabled(false);
+		}
+		GridBagConstraints gbc_turn = new GridBagConstraints();
+		gbc_turn.insets = new Insets(0, 0, 5, 0);
+		gbc_turn.gridx = 1;
+		gbc_turn.gridy = 1;
+		frame.getContentPane().add(turnButton, gbc_turn);
 	}
 	
 	private PlayerPanel[] choosePlayers() {
@@ -99,6 +112,9 @@ public class GameWindow implements GameViewer, ActionListener {
 		}
 		String[] defaults = { players[0][0], players[1][0] };
 		String[] choices = ListDialog.showDialog(null, null, "Who is Playing?", "Choose Players", players, defaults, null);
+		if (choices[2].toString().equals("true")) {
+			PlayStyle.autoplay = true;
+		}
 		PlayStyle style1 = null;
 		PlayStyle style2 = null;
 		TD td = null;
@@ -110,7 +126,7 @@ public class GameWindow implements GameViewer, ActionListener {
 			break;
 		case "Random":
 			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Random Selection");
-			style1 = new RandomPlayStyle();
+			style1 = new RandomPlayStyle(Player.PLAYER_X, game);
 			break;
 		case "Greedy Heuristic":
 			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Greedy Heuristic");
@@ -141,8 +157,6 @@ public class GameWindow implements GameViewer, ActionListener {
 			style1 = new SearchPlayStyle(Player.PLAYER_X, game, true, 4);
 			break;
 		case "Temporal Difference":
-			td = new TD(Player.PLAYER_X, "TDweights.txt");
-			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X);
 			td = new TD(Player.PLAYER_X, "./src/TDweights.txt");
 			player_one_panel = new AIPlayerPanel(game, Player.PLAYER_X, "Temporal Difference Learning");
 			style1 = new DifferencePlayStyle(game, td, Player.PLAYER_X);
@@ -163,7 +177,7 @@ public class GameWindow implements GameViewer, ActionListener {
 			break;
 		case "Random":
 			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O, "Random Selection");
-			style2 = new RandomPlayStyle();
+			style2 = new RandomPlayStyle(Player.PLAYER_O, game);
 			break;
 		case "Greedy Heuristic":
 			player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O, "Greedy Heuristic");
@@ -195,13 +209,8 @@ public class GameWindow implements GameViewer, ActionListener {
 			break;
 		case "Temporal Difference":
 			if(td==null) {
-<<<<<<< HEAD
-				td = new TD(Player.PLAYER_X, "TDweights.txt");
-				player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O);
-=======
 				td = new TD(Player.PLAYER_X, "./src/TDweights.txt");
 				player_two_panel = new AIPlayerPanel(game, Player.PLAYER_O, "Temporal Difference Learning");
->>>>>>> origin/master
 				style2 = new DifferencePlayStyle(game, td, Player.PLAYER_O);
 			}
 			// to use a single TD net for both players -- must use min playstyle 
@@ -225,6 +234,10 @@ public class GameWindow implements GameViewer, ActionListener {
 	
 	@Override
 	public void notifyMove(MoveReport report) {
+		turnButton.setText("Next Turn");
+		if (!PlayStyle.autoplay) {
+			turnButton.setEnabled(true);
+		}
 		player_one_panel.update(report);
 		player_two_panel.update(report);
 		game_panel.update(report);
@@ -239,11 +252,18 @@ public class GameWindow implements GameViewer, ActionListener {
 			game_panel.updateWin(winState);
 			//game.end();
 		}
+		turnButton.setEnabled(false);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		start.restart();
+		if (e.getActionCommand().equals("Next Turn")) {
+			turnButton.setEnabled(false);
+			turnButton.setText("Waiting....");
+			PlayStyle.update();
+		} else { //reset button
+			start.restart();
+		}
 	}
 
 }
