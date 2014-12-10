@@ -1,10 +1,7 @@
 package logic.TD;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
 
 import logic.state.GameState;
 import logic.state.TimeSlice;
@@ -14,13 +11,11 @@ public class TD {
 	private double outputweights[];
 	private double[][] layers;
 	private double estimate;
-	private double decay;
 	private double gradient;
 	private boolean maxplayer;
 	private final int numFeatures = 9;
 	// load stored weights
 	public TD(boolean maxplayer, String filename) {
-		decay = 1./9.;
 		this.maxplayer = maxplayer;
 		this.weights = loadWeights(filename);
 		outputweights = new double[numFeatures];
@@ -57,8 +52,7 @@ public class TD {
 		}
 		return weights;
 	}
-	protected TD(boolean maxplayer) {
-		decay = 1./9.;
+	public TD(boolean maxplayer) {
 		this.maxplayer = maxplayer;
 		weights = new double[2][numFeatures][numFeatures];	
 		outputweights = new double[numFeatures];
@@ -87,10 +81,8 @@ public class TD {
 	}
 	// feed state values into network and derive resulting estimate
 	protected double feedForward(double[] state) {
-		//double bias = 100;
-		// layers of the neural net, starting with the input layer: state
+		// layers of the neural net, starting with the input layer.
 		layers[0] = state;
-		//layers[0][8] += bias;		// add bias to end states.
 		estimate = 0.;
 		// iterate through weights and update layers
 		for(int l=1;l<3;l++) {
@@ -99,13 +91,12 @@ public class TD {
 				layers[l][j] = 0.;
 				for(int i=0;i<numFeatures;i++) {
 					// each node of the next layer is the sum of sigmoid(node)*weight for each node/weight in the previous layer 
-					layers[l][j] += sigmoid(layers[l][i])*weights[l-1][i][j];
+					layers[l][j] += sigmoid(layers[l-1][i])*weights[l-1][i][j];
 				}
 			}
 		}
 		for(int i=0;i<numFeatures;i++)
 		estimate += sigmoid(layers[2][i])*outputweights[i];
-		estimate = estimate/numFeatures;
 		return estimate;
 	}
 	// extract state values and feed them into network to be used by DifferencePlayerStyle
@@ -132,28 +123,26 @@ public class TD {
 		
 		// get deltas from last layer to first layer
 		double outDelta = outDelta(expected, target);
-		backDelta = calcInnerDeltas(1, outDelta);
-		frontDelta = calcInnerDeltas(0,backDelta);
-		double outputChange = gradient*outDelta;
-		double[][] layerChange = new double[numFeatures][numFeatures];
+		
 		
 		// update final weights first
 		for(int i=0;i<numFeatures;i++) {
-			outputweights[i] += outputChange;
+			outputweights[i] += gradient*outDelta*layers[2][i];
 		}
+		backDelta = calcInnerDeltas(2, outDelta);
 		// update weights between hidden layers and input layer
-		for(int l=1;l>=0;l--)
 			for(int j=0;j<numFeatures;j++) {
 				for(int i=0;i<numFeatures;i++) {
-					if(l==1) {
-						layerChange[j][i] = gradient*backDelta[i]+decay*outputChange;
-						weights[l][j][i] += layerChange[j][i];
-					}
-					else if(l==0) {
-						weights[l][j][i] += gradient*frontDelta[i]+decay*layerChange[j][i];
+						weights[2][j][i] += gradient*backDelta[i]*layers[2][j];
 					}
 				}
-			}
+			frontDelta = calcInnerDeltas(1,backDelta);
+			// update weights between hidden layers
+			for(int j=0;j<numFeatures;j++) {
+				for(int i=0;i<numFeatures;i++) {
+					weights[2][j][i] += gradient*frontDelta[i]*layers[2][j];
+					}
+				}
 	}
 	private double[] calcInnerDeltas(int layer, double[] priors) {
 		double[] deltas = new double[priors.length];
@@ -180,8 +169,7 @@ public class TD {
 	}
 	private double innerDelta(double output,double prior, double weight) {
 		// calculate weighted delta
-		double delta = prior*weight;
-		delta = delta*output*(1-output);
+		double delta = prior*weight*output*(1-output);
 		return delta;
 	}
 	private double outDelta(double output, double target) {

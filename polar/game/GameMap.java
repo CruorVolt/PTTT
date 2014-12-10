@@ -68,7 +68,7 @@ public class GameMap {
 		// end the game if a win is found, or if the board is out of moves.
 		if ( (win(n.getMove().getPlayer())||(moves.size() >= 48)) && (!viewers.isEmpty()) ){
 			for(GameViewer viewer : viewers) {
-				viewer.notifyWin(true, winSequence);
+				viewer.notifyWin(n.getMove().getPlayer(), winSequence);
 			}
 		}
 		return validMove;
