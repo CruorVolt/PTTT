@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 import polar.game.GameMap;
+import polar.game.styles.PlayStyle;
 
 /*
  * Decision tree built from the training 
@@ -24,7 +25,6 @@ public class DecisionTree {
     ArrayList<Double> partitionVals;
     ArrayList<gainMap> gainMaps;
 	Node root;
-	
 	
 	/*
 	 * New DecisionTrees have sorted gains and associated partition values
@@ -347,6 +347,7 @@ public class DecisionTree {
 	 * a single new win state
 	 */
 	public static void main(String[] args) {
+		PlayStyle.autoplay = true;
 		DecisionTree tree = new DecisionTree();
 		try {
 			tree.setupTree(TRAINING_FILE);
