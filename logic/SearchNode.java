@@ -6,17 +6,21 @@ import polar.game.*;
 import polar.game.exceptions.BadCoordinateException;
 import polar.game.exceptions.MoveDuplicateException;
 
+/*
+ * SearchNode instances are nodes in the trees built by minimax and 
+ * alpha-beta pruning. They know the current state of the game and 
+ * its associated estimated value.
+ */
 public class SearchNode {
 	
 	//Track the number of instances to report how many nodes a search examines
 	private static int numberOfNodes = 0;
 	
 	GameMap map; //The state of the game at this node
-	int value, alpha, beta; //The heuristic evaluations observed deeper in the tree
+	int value; //The heuristic evaluations observed deeper in the tree
 	boolean max; //Max player (X => true) or min player (O => false)
 	ArrayList<SearchNode> children; //All possible child states
 	PolarCoordinate newestMove; //The move that creates this node
-	SearchNode argmax; //Decision branch
 	
 	public SearchNode(GameMap map, boolean player, PolarCoordinate move) {
 		this.map = map;
@@ -34,22 +38,6 @@ public class SearchNode {
 		this.value = val;
 	}
 	
-	public int getAlpha() {
-		return alpha;
-	}
-	
-	public void setAlpha(int val) {
-		this.alpha = val;
-	}
-	
-	public int getBeta() {
-		return beta;
-	}
-	
-	public void setBeta(int val) {
-		this.beta = val;
-	}
-
 	public GameMap getMap() {
 		return this.map;
 	}
@@ -66,14 +54,6 @@ public class SearchNode {
 	
 	public ArrayList<SearchNode> getChildren() {
 		return this.children;
-	}
-	
-	public void setArgMax(SearchNode node) {
-		this.argmax = node;
-	}
-	
-	public SearchNode getMax() {
-		return this.argmax;
 	}
 	
 	public SearchNode addChild(UnTestedCoordinates location) {

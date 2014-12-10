@@ -17,7 +17,6 @@ import polar.game.styles.PlayStyle;
  */
 public class DecisionTree {
 	
-	
 	public static int nodes = 0;
 	
 	public static final int TREE_DEPTH = 7;
@@ -262,6 +261,11 @@ public class DecisionTree {
 		return false;
 	}
 	
+	/*
+	 * Node instances make up the decision tree. 
+	 * The have a partition value for their specified feature
+	 * and can point to the associated child given a numeric value.
+	 */
 	class Node {
 		public String featureName;
 		public double partition;
@@ -344,7 +348,7 @@ public class DecisionTree {
 
 	/*
 	 * Test the decision tree here by testing it against
-	 * a single new win state
+	 * newly generated test states.
 	 */
 	public static void main(String[] args) {
 		PlayStyle.autoplay = true;

@@ -43,7 +43,7 @@ public class Search {
 		
 		ArrayList<UnTestedCoordinates> availableChildren = Status.getValidPositions(root.getMap().getMoves());
 		
-		if (maxPlayer) {
+		if (maxPlayer) { //this is a max-player node
 			if (!pruning) { //this is standard minimax
 				bestValue = Integer.MIN_VALUE;
 				for (UnTestedCoordinates coords : availableChildren) {
@@ -75,7 +75,7 @@ public class Search {
 				return alphaNode;
 			}
 			
-		} else {
+		} else { //This is a min-player node
 			if (!pruning) { //this is standard minimax
 				bestValue = Integer.MAX_VALUE;
 				for (UnTestedCoordinates coords : availableChildren) {
@@ -100,7 +100,7 @@ public class Search {
 						betaNode.setValue(currentValue);
 					}
 					
-					if (beta <= alpha) {
+					if (beta <= alpha) { 
 						break;
 					}
 				}

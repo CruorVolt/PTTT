@@ -469,6 +469,7 @@ public class SupportFunctions {
 	}
 	
 	public static void main(String[] args) {
+		PlayStyle.autoplay = true;
 		int x = 0;
 		int o = 0;
 		for (int i = 0; i < 25; i++) {
