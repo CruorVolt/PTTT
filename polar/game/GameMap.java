@@ -7,12 +7,12 @@ import logic.state.GameState;
 
 public class GameMap {
 
-	private ArrayList<Move> moves;
-	private Move[] winSequence;
+	protected ArrayList<Move> moves;
+	protected Move[] winSequence;
 	private ArrayList<GameViewer> viewers;
 	private Move currentMove;
 	private GameState state;	
-	private boolean hasWin;
+	protected boolean hasWin;
 	
 	public GameMap() {
 		hasWin = false;

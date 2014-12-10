@@ -11,7 +11,7 @@ public class HumanPlayerPanel extends PlayerPanel{
 	public HumanPlayerPanel(Game game, boolean player){
 		super(game, player);
 		setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		playerLabel.setText("Human " + playerLabel.getText());
+		playerLabel.setText("Human/Manual " + playerLabel.getText());
 	}
 	
 }

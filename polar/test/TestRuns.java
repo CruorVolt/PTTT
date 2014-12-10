@@ -1,12 +1,10 @@
 package polar.test;
 
 import polar.game.UnTestedCoordinates;
-import polar.game.styles.PlayStyle;
 
 public class TestRuns {
 
 	public static void main(String[] args) {
-		PlayStyle.autoplay = true;
 		// Test win checker
 		UnTestedCoordinates[] tests1 = new UnTestedCoordinates[4];
 		UnTestedCoordinates[] dummy1 = new UnTestedCoordinates[4];

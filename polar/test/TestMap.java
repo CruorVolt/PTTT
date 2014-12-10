@@ -1,5 +1,6 @@
 package polar.test;
 
+import logic.Status;
 import polar.game.GameMap;
 import polar.game.Move;
 
@@ -44,5 +45,4 @@ public class TestMap extends GameMap {
 						}
 			return false;
 		}
-	}
 }

@@ -1,6 +1,7 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import polar.game.Move;
 import polar.game.UnTestedCoordinates;
@@ -12,6 +13,13 @@ public final class Status {
 	return	(!valid(d)||!owns(u,p)||!owns(v,p)||!owns(x,p)||!owns(y,p)||!direction(u,v,d)||!direction(v,x,d)||!direction(x,y,d));
 	}
 	public static boolean printResolve(Move u, Move v, Move x, Move y, int d, boolean p) {
+		
+		System.out.println();
+		System.out.print("Resolving: "+u.getLoc()+","+"v.getLoc()"+x.getLoc()+""+y.getLoc()+","+" for direction "+d);
+		if(p)
+			System.out.println(" and player X");
+		else
+			System.out.println(" and player O");
 		if(!valid(d)) {
 			System.out.println("Invalid direction.");
 		}
@@ -23,10 +31,8 @@ public final class Status {
 		}
 		else {
 			System.out.println("No contradictions found");
-			return false;
 		}
-		System.out.println("One or more contradictions found.");
-		return true;
+		return resolve(u,v,x,y,d,p);
 	}
 	// predicate to check directionality
 	public static boolean direction(Move a, Move b, int i) {
